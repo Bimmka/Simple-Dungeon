@@ -11,10 +11,7 @@ namespace GameStates.States
     private readonly ISceneLoader sceneLoader;
     private readonly IPersistentProgressService progressService;
     private readonly ISaveLoadService saveLoadProgress;
-    
-    private const string Game = "MainWindow";
-    private const string Register = "RegisterWindow";
-
+ 
     public LoadProgressState(IGameStateMachine gameStateMachine, ISceneLoader sceneLoader, IPersistentProgressService progressService, ISaveLoadService saveLoadProgress)
     {
       this.gameStateMachine = gameStateMachine;
@@ -37,11 +34,5 @@ namespace GameStates.States
     {
       
     }
-
-    private void EnterMainWindow() =>
-      gameStateMachine.Enter<MainWindowState>();
-
-    private void EnterRegistration() => 
-      gameStateMachine.Enter<RegisterState>();
   }
 }
