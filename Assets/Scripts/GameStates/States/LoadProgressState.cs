@@ -23,6 +23,7 @@ namespace GameStates.States
     public void Enter()
     {
       LoadData();
+      gameStateMachine.Enter<LoadSceneState>();
     }
 
     public void Exit()

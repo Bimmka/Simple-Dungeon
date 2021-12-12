@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using GameStates.States;
 using GameStates.States.Interfaces;
-
 using SceneLoading;
 using Services;
+using Services.Factories.GameFactories;
 using Services.Progress;
 using Services.SaveLoad;
 using Services.UI.Factory;
-using Services.UI.Windows;
 
 namespace GameStates
 {
@@ -23,9 +22,8 @@ namespace GameStates
       {
         [typeof(BootstrapState)] = new BootstrapState(this, sceneLoader,ref services),
         [typeof(LoadProgressState)] = new LoadProgressState(this, sceneLoader, services.Single<IPersistentProgressService>(), services.Single<ISaveLoadService>()),
-        [typeof(LoadPVPLevelState)] = new LoadPVPLevelState(this, sceneLoader, services.Single<IWindowsService>(), services.Single<UIFactory>()),
         [typeof(GameLoopState)] = new GameLoopState(this),
-        [typeof(LoadSceneState)] = new LoadSceneState(sceneLoader)
+        [typeof(LoadSceneState)] = new LoadSceneState(sceneLoader, this, services.Single<IGameFactory>(), services.Single<IPersistentProgressService>(), services.Single<IUIFactory>())
       };
     }
     

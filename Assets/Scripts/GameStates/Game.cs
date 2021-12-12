@@ -1,8 +1,8 @@
-﻿using GameStates;
+﻿using Bootstrapp;
 using SceneLoading;
 using Services;
 
-namespace Bootstrapp
+namespace GameStates
 {
   public class Game
   {

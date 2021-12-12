@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07eb610b813d4cbea9c4aeb80d893b1f, type: 3}
-  m_Name: Statistic Displayer Data
+  m_Script: {fileID: 11500000, guid: 645a6e4c4d013374fb32bbcc3acf84f3, type: 3}
+  m_Name: SpawnData
   m_EditorClassIdentifier: 
-  WinColor: {r: 0.28235295, g: 0.6901961, b: 1, a: 1}
-  LoseColor: {r: 0.9960785, g: 0.3372549, b: 0.3372549, a: 1}
-  DrawColor: {r: 1, g: 1, b: 1, a: 1}
+  HeroPrefab: {fileID: 4684724166972553566, guid: 1fcfa855187e0394592237b88d456e5c, type: 3}
+  Hud: {fileID: 0}
+  SpawnPoint: {x: 0, y: 0, z: 0}

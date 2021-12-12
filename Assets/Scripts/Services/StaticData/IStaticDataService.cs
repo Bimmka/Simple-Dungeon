@@ -1,5 +1,7 @@
 ﻿using Services.UI.Factory;
+using StaticData.Hero;
 using StaticData.UI;
+using UnityEngine;
 
 namespace Services.StaticData
 {
@@ -7,5 +9,6 @@ namespace Services.StaticData
   {
     void Load();
     WindowInstantiateData ForWindow(WindowId id);
+    HeroSpawnStaticData ForHero();
   }
 }

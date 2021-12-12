@@ -1,7 +1,10 @@
 ﻿using GameStates.States.Interfaces;
+using Input;
 using SceneLoading;
 using Services;
 using Services.Assets;
+using Services.Factories.GameFactories;
+using Services.Input;
 using Services.Progress;
 using Services.Random;
 using Services.SaveLoad;
@@ -27,7 +30,7 @@ namespace GameStates.States
 
     public void Enter()
     {
-      
+      gameStateMachine.Enter<LoadProgressState>();
     }
 
     public void Exit()
@@ -38,17 +41,36 @@ namespace GameStates.States
     private void RegisterServices()
     {
       RegisterStateMachine();
+      RegisterInputService();
       RegisterRandom();
       RegisterProgress();
       RegisterSaveLoad();
       RegisterStaticDataService();
       RegisterAssets();
       RegisterUIFactory();
+      RegisterGameFactory();
       RegisterWindowsService();
+    }
+
+    private void RegisterGameFactory()
+    {
+      services.RegisterSingle<IGameFactory>(new GameFactory(
+        services.Single<IAssetProvider>(), 
+        services.Single<IStaticDataService>(), 
+        services.Single<IPersistentProgressService>(),
+        services.Single<IWindowsService>(), 
+        services.Single<IInputService>()));
     }
 
     private void RegisterStateMachine() => 
       services.RegisterSingle(gameStateMachine);
+
+    private void RegisterInputService()
+    {
+      IInputService inputService = new InputService(new HeroControls());
+      inputService.Enable();
+      services.RegisterSingle<IInputService>(inputService);
+    }
 
     private void RegisterAssets()
     {
