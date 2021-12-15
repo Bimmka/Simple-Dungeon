@@ -7,5 +7,8 @@ namespace StateMachines.Player
     public PlayerHurtState(StateMachine stateMachine, string animationName, SimpleAnimator animator) : base(stateMachine, animationName, animator)
     {
     }
+
+    public override bool IsCanBeInterapted() => 
+      true;
   }
 }

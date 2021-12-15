@@ -1304,6 +1304,8 @@ GameObject:
   - component: {fileID: 5352716601934636004}
   - component: {fileID: 1929033858}
   - component: {fileID: 8779422808152574895}
+  - component: {fileID: 7163124626810390331}
+  - component: {fileID: -4207395459456028544}
   m_Layer: 0
   m_Name: Hero
   m_TagString: Untagged
@@ -1344,7 +1346,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: 5ae058a3e04290649b0e676c248d9dbf, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_WarningMessage: 
@@ -1363,6 +1365,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86fb6497c37448ca857628bbd67d7f0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stateMachine: {fileID: 7163124626810390331}
+--- !u!114 &7163124626810390331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4684724166972553566}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08346a489c7bc43458ebcca41fe53c0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: -4207395459456028544}
+--- !u!114 &-4207395459456028544
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4684724166972553566}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dabc6e03579821f4b867636f955587f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 1929033858}
 --- !u!1 &4718620376972774224
 GameObject:
   m_ObjectHideFlags: 0

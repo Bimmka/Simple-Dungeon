@@ -3,11 +3,11 @@ using UnityEngine;
 
 namespace StateMachines.Player
 {
-  public class PlayerBaseMachineState : BaseStateMachineState
+  public abstract class PlayerBaseMachineState : BaseStateMachineState
   {
     private readonly StateMachine stateMachine;
     private readonly SimpleAnimator animator;
-    
+
     public PlayerBaseMachineState(StateMachine stateMachine, string animationName, SimpleAnimator animator)
     {
       this.stateMachine = stateMachine;
@@ -26,5 +26,8 @@ namespace StateMachines.Player
       base.Exit();
       animator.SetBool(animationName, false);
     }
+
+    public void ChangeState(PlayerBaseMachineState state) => 
+      stateMachine.ChangeState(state);
   }
 }

@@ -7,5 +7,8 @@ namespace StateMachines.Player
     public PlayerRollState(StateMachine stateMachine, string animationName, SimpleAnimator animator) : base(stateMachine, animationName, animator)
     {
     }
+
+    public override bool IsCanBeInterapted() => 
+      true;
   }
 }

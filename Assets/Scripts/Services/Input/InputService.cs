@@ -27,8 +27,8 @@ namespace Services.Input
     public bool IsRollButtonDown() => 
       input.Player.Roll.triggered;
 
-    public bool IsBlockButtonDown() => 
-      input.Player.Block.triggered;
+    public bool IsBlockButtonPressed() => 
+      input.Player.Block.IsPressed();
 
     protected Vector2 SimpleInputAxis() => 
       input.Player.Move.ReadValue<Vector2>();

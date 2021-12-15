@@ -5,6 +5,8 @@ namespace Hero
 {
   public class HeroInput : MonoBehaviour
   {
+    [SerializeField] private HeroStateMachine stateMachine;
+    
     private IInputService inputService;
 
     public void Construct(IInputService inputService)
@@ -15,13 +17,13 @@ namespace Hero
     private void Update()
     {
       if (inputService.IsAttackButtonDown())
-        Debug.Log("Attack");
-      if (inputService.IsBlockButtonDown())
-        Debug.Log("Block");
+        stateMachine.SetAttackState();
+
       if (inputService.IsRollButtonDown())
-        Debug.Log("Roll");
-            
-      Debug.Log($"Move {inputService.Axis}");
+        stateMachine.SetRollState();
+      
+      stateMachine.SetIsBlocking(inputService.IsBlockButtonPressed());
+      stateMachine.SetWalkState(inputService.Axis);
     }
   }
 }

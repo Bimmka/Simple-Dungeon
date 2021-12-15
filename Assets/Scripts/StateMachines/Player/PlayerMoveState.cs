@@ -4,11 +4,11 @@ using UnityEngine;
 
 namespace StateMachines.Player
 {
-  public class PlayerIdleState : PlayerBaseMachineState
+  public class PlayerMoveState : PlayerBaseMachineState
   {
     private readonly HeroStateMachine hero;
 
-    public PlayerIdleState(StateMachine stateMachine, string animationName, SimpleAnimator animator, HeroStateMachine hero) : base(stateMachine, animationName, animator)
+    public PlayerMoveState(StateMachine stateMachine, string animationName, SimpleAnimator animator, HeroStateMachine hero) : base(stateMachine, animationName, animator)
     {
       this.hero = hero;
     }
@@ -16,8 +16,8 @@ namespace StateMachines.Player
     public override void LogicUpdate()
     {
       base.LogicUpdate();
-      if (hero.MoveAxis != Vector2.zero)
-        ChangeState(hero.MoveState);
+      if (hero.MoveAxis == Vector2.zero)
+        ChangeState(hero.IdleState);
     }
 
     public override bool IsCanBeInterapted() => 
