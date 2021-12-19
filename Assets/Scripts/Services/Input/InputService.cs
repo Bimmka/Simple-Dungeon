@@ -30,7 +30,7 @@ namespace Services.Input
     public bool IsBlockButtonPressed() => 
       input.Player.Block.IsPressed();
 
-    protected Vector2 SimpleInputAxis() => 
+    private Vector2 SimpleInputAxis() => 
       input.Player.Move.ReadValue<Vector2>();
   }
 }

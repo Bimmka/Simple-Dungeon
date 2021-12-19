@@ -29,5 +29,8 @@ namespace StateMachines.Player
 
     public void ChangeState(PlayerBaseMachineState state) => 
       stateMachine.ChangeState(state);
+
+    public void SetFloat(int hash, float value) => 
+      animator.SetFloat(hash, value);
   }
 }

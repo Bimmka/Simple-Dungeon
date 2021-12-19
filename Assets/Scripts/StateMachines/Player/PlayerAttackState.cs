@@ -23,10 +23,20 @@ namespace StateMachines.Player
     public override void AnimationTrigger()
     {
       base.AnimationTrigger();
-      if (hero.MoveAxis == Vector2.zero)
-        ChangeState(hero.IdleState);
+      if (hero.IsBlocking)
+      {
+        if (hero.MoveAxis != Vector2.zero)
+          ChangeState(hero.ShieldMoveState);
+        else
+          ChangeState(hero.IdleShieldState);
+      }
       else
-        ChangeState(hero.MoveState);
+      {
+        if (hero.MoveAxis == Vector2.zero)
+          ChangeState(hero.IdleState);
+        else
+          ChangeState(hero.MoveState);
+      }
     }
 
     private bool IsAttackEnded()
