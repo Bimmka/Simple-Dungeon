@@ -1,4 +1,5 @@
-﻿using ConstantsValue;
+﻿using CodeBase.CameraLogic;
+using ConstantsValue;
 using GameStates.States.Interfaces;
 using SceneLoading;
 using Services.Factories.GameFactories;
@@ -9,7 +10,7 @@ using UnityEngine;
 
 namespace GameStates.States
 {
-  public class LoadSceneState : IState
+  public class LoadGameLevelState : IState
   {
     private readonly ISceneLoader sceneLoader;
     private readonly IGameStateMachine gameStateMachine;
@@ -17,7 +18,7 @@ namespace GameStates.States
     private readonly IPersistentProgressService progressService;
     private readonly IUIFactory uiFactory;
 
-    public LoadSceneState(ISceneLoader sceneLoader, IGameStateMachine gameStateMachine, IGameFactory gameFactory, IPersistentProgressService progressService, IUIFactory uiFactory)
+    public LoadGameLevelState(ISceneLoader sceneLoader, IGameStateMachine gameStateMachine, IGameFactory gameFactory, IPersistentProgressService progressService, IUIFactory uiFactory)
     {
       this.sceneLoader = sceneLoader;
       this.gameStateMachine = gameStateMachine;
@@ -44,6 +45,7 @@ namespace GameStates.States
       InitUIRoot();
       GameObject hero = gameFactory.CreateHero();
       //InitHud(hero);
+      CameraFollow(hero);
     }
 
     private void InitHud(GameObject hero)
@@ -53,5 +55,8 @@ namespace GameStates.States
 
     private void InitUIRoot() => 
       uiFactory.CreateUIRoot();
+    
+    private void CameraFollow(GameObject hero) =>
+      Camera.main.GetComponent<CameraFollow>().Follow(hero);
   }
 }

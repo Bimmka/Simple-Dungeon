@@ -64,6 +64,15 @@ namespace Input
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Mouse"",
+                    ""type"": ""Value"",
+                    ""id"": ""917bc696-d1e6-47ac-8ebf-5233d8d86320"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -154,6 +163,17 @@ namespace Input
                     ""action"": ""Roll"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""96668156-e29f-45f8-8b61-89c082b4f0d1"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Mouse"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -166,6 +186,7 @@ namespace Input
             m_Player_Block = m_Player.FindAction("Block", throwIfNotFound: true);
             m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
             m_Player_Roll = m_Player.FindAction("Roll", throwIfNotFound: true);
+            m_Player_Mouse = m_Player.FindAction("Mouse", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -229,6 +250,7 @@ namespace Input
         private readonly InputAction m_Player_Block;
         private readonly InputAction m_Player_Move;
         private readonly InputAction m_Player_Roll;
+        private readonly InputAction m_Player_Mouse;
         public struct PlayerActions
         {
             private @HeroControls m_Wrapper;
@@ -237,6 +259,7 @@ namespace Input
             public InputAction @Block => m_Wrapper.m_Player_Block;
             public InputAction @Move => m_Wrapper.m_Player_Move;
             public InputAction @Roll => m_Wrapper.m_Player_Roll;
+            public InputAction @Mouse => m_Wrapper.m_Player_Mouse;
             public InputActionMap Get() { return m_Wrapper.m_Player; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -258,6 +281,9 @@ namespace Input
                     @Roll.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRoll;
                     @Roll.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRoll;
                     @Roll.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRoll;
+                    @Mouse.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMouse;
+                    @Mouse.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMouse;
+                    @Mouse.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMouse;
                 }
                 m_Wrapper.m_PlayerActionsCallbackInterface = instance;
                 if (instance != null)
@@ -274,6 +300,9 @@ namespace Input
                     @Roll.started += instance.OnRoll;
                     @Roll.performed += instance.OnRoll;
                     @Roll.canceled += instance.OnRoll;
+                    @Mouse.started += instance.OnMouse;
+                    @Mouse.performed += instance.OnMouse;
+                    @Mouse.canceled += instance.OnMouse;
                 }
             }
         }
@@ -284,6 +313,7 @@ namespace Input
             void OnBlock(InputAction.CallbackContext context);
             void OnMove(InputAction.CallbackContext context);
             void OnRoll(InputAction.CallbackContext context);
+            void OnMouse(InputAction.CallbackContext context);
         }
     }
 }

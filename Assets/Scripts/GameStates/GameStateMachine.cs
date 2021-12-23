@@ -23,7 +23,7 @@ namespace GameStates
         [typeof(BootstrapState)] = new BootstrapState(this, sceneLoader,ref services),
         [typeof(LoadProgressState)] = new LoadProgressState(this, sceneLoader, services.Single<IPersistentProgressService>(), services.Single<ISaveLoadService>()),
         [typeof(GameLoopState)] = new GameLoopState(this),
-        [typeof(LoadSceneState)] = new LoadSceneState(sceneLoader, this, services.Single<IGameFactory>(), services.Single<IPersistentProgressService>(), services.Single<IUIFactory>())
+        [typeof(LoadGameLevelState)] = new LoadGameLevelState(sceneLoader, this, services.Single<IGameFactory>(), services.Single<IPersistentProgressService>(), services.Single<IUIFactory>())
       };
     }
     

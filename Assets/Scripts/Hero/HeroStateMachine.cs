@@ -8,6 +8,7 @@ namespace Hero
     public class HeroStateMachine : MonoBehaviour
     {
         [SerializeField] private HeroMove move;
+        [SerializeField] private HeroRotate rotate;
         [SerializeField] private SimpleAnimator animator;
         
         private StateMachine stateMachine;
@@ -25,7 +26,7 @@ namespace Hero
         public bool IsBlocking { get; private set; }
         
         public Vector2 MoveAxis { get; private set; }
-        public float MouseRotation;
+        public float RotateAngle { get; private set; }
 
         private void Awake()
         {
@@ -54,8 +55,8 @@ namespace Hero
         {
             AttackState = new PlayerAttackState(stateMachine, "IsSimpleAttack", animator, this);
             ImpactState = new PlayerHurtState(stateMachine, "IsImpact", animator, this);
-            IdleShieldState = new PlayerIdleShieldState(stateMachine, "IsBlocking", "MouseRotation", animator, this);
-            IdleState = new PlayerIdleState(stateMachine, "IsIdle", "MouseRotation", animator, this);
+            IdleShieldState = new PlayerIdleShieldState(stateMachine, "IsBlocking", "MouseRotation", animator, this, rotate);
+            IdleState = new PlayerIdleState(stateMachine, "IsIdle", "MouseRotation", animator, this, rotate);
             RollState = new PlayerRollState(stateMachine, "IsRoll", animator, this, move);
             ShieldImpactState = new PlayerShieldImpactState(stateMachine, "IsShieldImpact", animator, this);
             MoveState = new PlayerMoveState(stateMachine, "IsIdle", "MoveX", animator, this, move);
@@ -71,7 +72,7 @@ namespace Hero
                 stateMachine.ChangeState(AttackState);
         }
 
-        public void SetWalkState(Vector2 moveDirection) => 
+        public void SetMoveAxis(Vector2 moveDirection) => 
             MoveAxis = moveDirection;
 
         public void SetIsBlocking(bool isBlocking) => 
@@ -85,5 +86,8 @@ namespace Hero
 
         private void AnimationTriggered() => 
             stateMachine.State.AnimationTrigger();
+
+        public void SetRotate(float rotateAngle) => 
+            RotateAngle = rotateAngle;
     }
 }

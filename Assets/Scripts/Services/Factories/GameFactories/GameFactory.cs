@@ -27,7 +27,6 @@ namespace Services.Factories.GameFactories
       this.inputService = inputService;
     }
     
-    
     public GameObject CreateHero()
     {
       HeroSpawnStaticData spawnData = staticData.ForHero();

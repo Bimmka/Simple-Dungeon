@@ -1307,6 +1307,7 @@ GameObject:
   - component: {fileID: 7163124626810390331}
   - component: {fileID: -4207395459456028544}
   - component: {fileID: 8124249772606008009}
+  - component: {fileID: 3149872168373664166}
   - component: {fileID: -2693136154511395499}
   m_Layer: 0
   m_Name: Hero
@@ -1381,6 +1382,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   move: {fileID: 8124249772606008009}
+  rotate: {fileID: 3149872168373664166}
   animator: {fileID: -4207395459456028544}
   MouseRotation: 0
 --- !u!114 &-4207395459456028544
@@ -1410,6 +1412,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterController: {fileID: -2693136154511395499}
   moveData: {fileID: 11400000, guid: 45b0a94616990a941a7ccb2d790f8bab, type: 2}
+--- !u!114 &3149872168373664166
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4684724166972553566}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0587ebb036f44b9b8f5ed764fcdbb550, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotateSpeed: 150
 --- !u!143 &-2693136154511395499
 CharacterController:
   m_ObjectHideFlags: 0
