@@ -9,14 +9,16 @@ namespace StateMachines.Player
     private readonly int floatValueHash;
     private readonly HeroStateMachine hero;
     private readonly HeroMove heroMove;
+    private readonly HeroRotate heroRotate;
 
     public PlayerMoveState(StateMachine stateMachine, string animationName, string floatValueName,
       SimpleAnimator animator,
-      HeroStateMachine hero, HeroMove heroMove) : base(stateMachine, animationName, animator)
+      HeroStateMachine hero, HeroMove heroMove, HeroRotate heroRotate) : base(stateMachine, animationName, animator)
     {
       floatValueHash = Animator.StringToHash(floatValueName);
       this.hero = hero;
       this.heroMove = heroMove;
+      this.heroRotate = heroRotate;
     }
 
     public override void Enter()
@@ -38,7 +40,10 @@ namespace StateMachines.Player
       else if (Mathf.Approximately(hero.MoveAxis.y, 0))
         ChangeState(hero.IdleState);
       else
-        heroMove.Move(Vector3.forward * hero.MoveAxis.y);     
+      {
+        heroMove.Move(hero.transform.forward * hero.MoveAxis.y);
+        heroRotate.Rotate(hero.RotateAngle);
+      }     
     }
 
     public override void Exit()

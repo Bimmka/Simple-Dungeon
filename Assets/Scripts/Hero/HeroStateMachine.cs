@@ -59,8 +59,8 @@ namespace Hero
             IdleState = new PlayerIdleState(stateMachine, "IsIdle", "MouseRotation", animator, this, rotate);
             RollState = new PlayerRollState(stateMachine, "IsRoll", animator, this, move);
             ShieldImpactState = new PlayerShieldImpactState(stateMachine, "IsShieldImpact", animator, this);
-            MoveState = new PlayerMoveState(stateMachine, "IsIdle", "MoveX", animator, this, move);
-            ShieldMoveState = new PlayerShieldMoveState(stateMachine, "IsBlocking", "MoveY", animator, this, move);
+            MoveState = new PlayerMoveState(stateMachine, "IsIdle", "MoveX", animator, this, move, rotate);
+            ShieldMoveState = new PlayerShieldMoveState(stateMachine, "IsBlocking", "MoveY", animator, this, move, rotate);
             DeathState = new PlayerDeathState(stateMachine, "IsDead", animator);
         }
         private void SetDefaultState() => 
