@@ -46,9 +46,11 @@ namespace Hero
 
     private float Angle(Vector3 mouseClick)
     {
-      Vector2 mouseGround = new Vector2(mouseClick.x, mouseClick.z);
+      Vector2 differenceDirection = new Vector2(mouseClick.x - transform.position.x, mouseClick.z - transform.position.z).normalized;
       Vector2 forward = new Vector2(transform.forward.x, transform.forward.z);
-      return Vector2.SignedAngle(mouseGround, forward);
+      
+      Debug.Log($"Mouse Ground {new Vector2(mouseClick.x, mouseClick.z)}, angle {Vector2.SignedAngle(differenceDirection, forward)}");
+      return Vector2.SignedAngle(differenceDirection, forward);
     }
   }
 }
