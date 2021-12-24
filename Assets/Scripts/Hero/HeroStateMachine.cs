@@ -1,18 +1,13 @@
-using Animations;
-using StateMachines;
 using StateMachines.Player;
 using UnityEngine;
 
 namespace Hero
 {
-    public class HeroStateMachine : MonoBehaviour
+    public class HeroStateMachine : BaseEntityStateMachine
     {
         [SerializeField] private HeroMove move;
         [SerializeField] private HeroRotate rotate;
-        [SerializeField] private SimpleAnimator animator;
-        
-        private StateMachine stateMachine;
-        
+
         public PlayerAttackState AttackState { get; private set; }
         public PlayerHurtState ImpactState { get; private set; }
         public PlayerIdleShieldState IdleShieldState { get; private set; }
@@ -28,43 +23,23 @@ namespace Hero
         public Vector2 MoveAxis { get; private set; }
         public float RotateAngle { get; private set; }
 
-        private void Awake()
+        
+        protected override void CreateStates()
         {
-            CreateStateMachine();
-            CreateStates();
-            SetDefaultState();
-            Subscribe();
+            AttackState = new PlayerAttackState(stateMachine, "IsSimpleAttack", simpleAnimator, this);
+            ImpactState = new PlayerHurtState(stateMachine, "IsImpact", simpleAnimator, this);
+            IdleShieldState = new PlayerIdleShieldState(stateMachine, "IsBlocking", "MouseRotation", simpleAnimator, this, rotate);
+            IdleState = new PlayerIdleState(stateMachine, "IsIdle", "MouseRotation", simpleAnimator, this, rotate);
+            RollState = new PlayerRollState(stateMachine, "IsRoll", simpleAnimator, this, move);
+            ShieldImpactState = new PlayerShieldImpactState(stateMachine, "IsShieldImpact", simpleAnimator, this);
+            MoveState = new PlayerMoveState(stateMachine, "IsIdle", "MoveX", simpleAnimator, this, move, rotate);
+            ShieldMoveState = new PlayerShieldMoveState(stateMachine, "IsBlocking", "MoveY", simpleAnimator, this, move, rotate);
+            DeathState = new PlayerDeathState(stateMachine, "IsDead", simpleAnimator);
         }
 
-        private void OnDestroy() => 
-            Cleanup();
-
-        private void Update() => 
-            stateMachine.State.LogicUpdate();
-
-        private void Subscribe() => 
-            animator.Triggered += AnimationTriggered;
-
-        private void Cleanup() => 
-            animator.Triggered -= AnimationTriggered;
-
-        private void CreateStateMachine() => 
-            stateMachine = new StateMachine();
-
-        private void CreateStates()
-        {
-            AttackState = new PlayerAttackState(stateMachine, "IsSimpleAttack", animator, this);
-            ImpactState = new PlayerHurtState(stateMachine, "IsImpact", animator, this);
-            IdleShieldState = new PlayerIdleShieldState(stateMachine, "IsBlocking", "MouseRotation", animator, this, rotate);
-            IdleState = new PlayerIdleState(stateMachine, "IsIdle", "MouseRotation", animator, this, rotate);
-            RollState = new PlayerRollState(stateMachine, "IsRoll", animator, this, move);
-            ShieldImpactState = new PlayerShieldImpactState(stateMachine, "IsShieldImpact", animator, this);
-            MoveState = new PlayerMoveState(stateMachine, "IsIdle", "MoveX", animator, this, move, rotate);
-            ShieldMoveState = new PlayerShieldMoveState(stateMachine, "IsBlocking", "MoveY", animator, this, move, rotate);
-            DeathState = new PlayerDeathState(stateMachine, "IsDead", animator);
-        }
-        private void SetDefaultState() => 
+        protected override void SetDefaultState() => 
             stateMachine.Initialize(IdleState);
+
 
         public void SetAttackState()
         {
