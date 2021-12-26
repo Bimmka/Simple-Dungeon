@@ -14,7 +14,7 @@ namespace StateMachines.Enemies
 
     private float currentCheckTime;
 
-    public EnemySearchState(StateMachine stateMachine, string animationName, SimpleAnimator animator,
+    public EnemySearchState(StateMachine stateMachine, string animationName, BattleAnimator animator,
       EntitySearcher entitySearcher, EnemyMove enemyMove, EnemyStateMachine enemy) : base(stateMachine, animationName, animator)
     {
       this.entitySearcher = entitySearcher;

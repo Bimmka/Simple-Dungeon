@@ -6,9 +6,9 @@ namespace StateMachines.Enemies
   public abstract class EnemyBaseMachineState : BaseStateMachineState
   {
     private readonly StateMachine stateMachine;
-    private readonly SimpleAnimator animator;
+    protected readonly BattleAnimator animator;
 
-    public EnemyBaseMachineState(StateMachine stateMachine, string animationName, SimpleAnimator animator)
+    public EnemyBaseMachineState(StateMachine stateMachine, string animationName, BattleAnimator animator)
     {
       this.stateMachine = stateMachine;
       this.animationName = Animator.StringToHash(animationName);

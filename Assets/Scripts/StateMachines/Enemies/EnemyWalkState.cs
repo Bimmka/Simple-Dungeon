@@ -11,7 +11,7 @@ namespace StateMachines.Enemies
     private readonly EnemiesMoveStaticData moveData;
     private readonly EnemyStateMachine enemy;
 
-    public EnemyWalkState(StateMachine stateMachine, string animationName, SimpleAnimator animator, EnemyMove enemyMove,
+    public EnemyWalkState(StateMachine stateMachine, string animationName, BattleAnimator animator, EnemyMove enemyMove,
       EnemiesMoveStaticData moveData, EnemyStateMachine enemy) : base(stateMachine, animationName, animator)
     {
       this.enemyMove = enemyMove;

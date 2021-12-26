@@ -1,12 +1,18 @@
+using Animations;
 using StateMachines.Player;
+using StaticData.Hero.Components;
 using UnityEngine;
 
 namespace Hero
 {
     public class HeroStateMachine : BaseEntityStateMachine
     {
+        [SerializeField] protected BattleAnimator battleAnimator;
         [SerializeField] private HeroMove move;
         [SerializeField] private HeroRotate rotate;
+        [SerializeField] private HeroAttack attack;
+        [SerializeField] private HeroAttackStaticData attackData;
+        [SerializeField] private HeroImpactsStaticData impactsData;
 
         public PlayerAttackState AttackState { get; private set; }
         public PlayerHurtState ImpactState { get; private set; }
@@ -18,23 +24,43 @@ namespace Hero
         public PlayerShieldMoveState ShieldMoveState { get; private set; }
         public PlayerDeathState DeathState { get; private set; }
         
-        public bool IsBlocking { get; private set; }
+        public bool IsBlockingPressed { get; private set; }
+        public bool IsBlockingUp => stateMachine.State == IdleShieldState;
         
         public Vector2 MoveAxis { get; private set; }
         public float RotateAngle { get; private set; }
 
-        
+        protected override void Init()
+        {
+            base.Init();
+            attack.Construct(attackData);
+        }
+
+        protected override void Subscribe()
+        {
+            base.Subscribe();
+            battleAnimator.Triggered += AnimationTriggered;
+        }
+
+        protected override void Cleanup()
+        {
+            base.Cleanup();
+            battleAnimator.Triggered -= AnimationTriggered;
+            AttackState.Cleanup();
+        }
+
+
         protected override void CreateStates()
         {
-            AttackState = new PlayerAttackState(stateMachine, "IsSimpleAttack", simpleAnimator, this);
-            ImpactState = new PlayerHurtState(stateMachine, "IsImpact", simpleAnimator, this);
-            IdleShieldState = new PlayerIdleShieldState(stateMachine, "IsBlocking", "MouseRotation", simpleAnimator, this, rotate);
-            IdleState = new PlayerIdleState(stateMachine, "IsIdle", "MouseRotation", simpleAnimator, this, rotate);
-            RollState = new PlayerRollState(stateMachine, "IsRoll", simpleAnimator, this, move);
-            ShieldImpactState = new PlayerShieldImpactState(stateMachine, "IsShieldImpact", simpleAnimator, this);
-            MoveState = new PlayerMoveState(stateMachine, "IsIdle", "MoveX", simpleAnimator, this, move, rotate);
-            ShieldMoveState = new PlayerShieldMoveState(stateMachine, "IsBlocking", "MoveY", simpleAnimator, this, move, rotate);
-            DeathState = new PlayerDeathState(stateMachine, "IsDead", simpleAnimator);
+            AttackState = new PlayerAttackState(stateMachine, "IsSimpleAttack", battleAnimator, this, attack, attackData);
+            ImpactState = new PlayerHurtState(stateMachine, "IsImpact", battleAnimator, this, impactsData.ImpactCooldown);
+            IdleShieldState = new PlayerIdleShieldState(stateMachine, "IsBlocking", "MouseRotation", battleAnimator, this, rotate);
+            IdleState = new PlayerIdleState(stateMachine, "IsIdle", "MouseRotation", battleAnimator, this, rotate);
+            RollState = new PlayerRollState(stateMachine, "IsRoll", battleAnimator, this, move);
+            ShieldImpactState = new PlayerShieldImpactState(stateMachine, "IsShieldImpact", battleAnimator, this, impactsData.ShieldImpactCooldown);
+            MoveState = new PlayerMoveState(stateMachine, "IsIdle", "MoveX", battleAnimator, this, move, rotate);
+            ShieldMoveState = new PlayerShieldMoveState(stateMachine, "IsBlocking", "MoveY", battleAnimator, this, move, rotate);
+            DeathState = new PlayerDeathState(stateMachine, "IsDead", battleAnimator);
         }
 
         protected override void SetDefaultState() => 
@@ -43,7 +69,7 @@ namespace Hero
 
         public void SetAttackState()
         {
-            if (stateMachine.State.IsCanBeInterapted())
+            if (stateMachine.State.IsCanBeInterapted() && AttackState.IsCanAttack())
                 stateMachine.ChangeState(AttackState);
         }
 
@@ -51,7 +77,7 @@ namespace Hero
             MoveAxis = moveDirection;
 
         public void SetIsBlocking(bool isBlocking) => 
-            IsBlocking = isBlocking;
+            IsBlockingPressed = isBlocking;
 
         public void SetRollState()
         {
@@ -59,8 +85,14 @@ namespace Hero
                 stateMachine.ChangeState(RollState);
         }
 
-        private void AnimationTriggered() => 
-            stateMachine.State.AnimationTrigger();
+        public void ImpactInShield() => 
+            stateMachine.ChangeState(ShieldImpactState);
+
+        public void Impact()
+        {
+            if (ImpactState.IsKnockbackCooldown() && stateMachine.State.IsCanBeInterapted())
+                stateMachine.ChangeState(ImpactState);
+        }
 
         public void SetRotate(float rotateAngle) => 
             RotateAngle = rotateAngle;

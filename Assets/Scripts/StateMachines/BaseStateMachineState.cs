@@ -19,6 +19,6 @@
 
     public virtual void Exit() { }
 
-    public virtual void AnimationTrigger() { }
+    public virtual void TriggerAnimation() { }
   }
 }

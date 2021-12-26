@@ -1,16 +1,26 @@
 ﻿using Animations;
+using Enemies;
 
 namespace StateMachines.Enemies
 {
   public class EnemyHurtState : EnemyBaseMachineState
   {
-    public EnemyHurtState(StateMachine stateMachine, string animationName, SimpleAnimator animator) : base(stateMachine, animationName, animator)
+    private readonly EnemyStateMachine enemy;
+
+    public EnemyHurtState(StateMachine stateMachine, string animationName, BattleAnimator animator, EnemyStateMachine enemy) : base(stateMachine, animationName, animator)
     {
+      this.enemy = enemy;
     }
 
     public override bool IsCanBeInterapted()
     {
       return false;
+    }
+
+    public override void TriggerAnimation()
+    {
+      base.TriggerAnimation();
+      ChangeState(enemy.IdleState);
     }
   }
 }

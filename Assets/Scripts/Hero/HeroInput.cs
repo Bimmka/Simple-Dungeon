@@ -48,8 +48,6 @@ namespace Hero
     {
       Vector2 differenceDirection = new Vector2(mouseClick.x - transform.position.x, mouseClick.z - transform.position.z).normalized;
       Vector2 forward = new Vector2(transform.forward.x, transform.forward.z);
-      
-      Debug.Log($"Mouse Ground {new Vector2(mouseClick.x, mouseClick.z)}, angle {Vector2.SignedAngle(differenceDirection, forward)}");
       return Vector2.SignedAngle(differenceDirection, forward);
     }
   }

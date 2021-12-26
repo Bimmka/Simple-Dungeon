@@ -6,9 +6,9 @@ namespace StateMachines.Player
   public abstract class PlayerBaseMachineState : BaseStateMachineState
   {
     private readonly StateMachine stateMachine;
-    private readonly SimpleAnimator animator;
+    protected readonly BattleAnimator animator;
 
-    public PlayerBaseMachineState(StateMachine stateMachine, string animationName, SimpleAnimator animator)
+    public PlayerBaseMachineState(StateMachine stateMachine, string animationName, BattleAnimator animator)
     {
       this.stateMachine = stateMachine;
       this.animationName = Animator.StringToHash(animationName);
@@ -32,5 +32,6 @@ namespace StateMachines.Player
 
     public void SetFloat(int hash, float value) => 
       animator.SetFloat(hash, value);
+    
   }
 }

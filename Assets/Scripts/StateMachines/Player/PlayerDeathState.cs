@@ -4,7 +4,7 @@ namespace StateMachines.Player
 {
   public class PlayerDeathState : PlayerBaseMachineState
   {
-    public PlayerDeathState(StateMachine stateMachine, string animationName, SimpleAnimator animator) : base(stateMachine, animationName, animator)
+    public PlayerDeathState(StateMachine stateMachine, string animationName, BattleAnimator animator) : base(stateMachine, animationName, animator)
     {
       
     }

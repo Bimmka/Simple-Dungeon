@@ -11,7 +11,7 @@ namespace StateMachines.Player
     private readonly HeroRotate heroRotate;
 
     public PlayerIdleShieldState(StateMachine stateMachine, string animationName, string floatValueName,
-      SimpleAnimator animator, HeroStateMachine hero, HeroRotate heroRotate) : base(stateMachine, animationName, animator)
+      BattleAnimator animator, HeroStateMachine hero, HeroRotate heroRotate) : base(stateMachine, animationName, animator)
     {
       floatValueHash = Animator.StringToHash(floatValueName);
       this.hero = hero;
@@ -21,7 +21,7 @@ namespace StateMachines.Player
     public override void LogicUpdate()
     {
       base.LogicUpdate();
-      if (hero.IsBlocking)
+      if (hero.IsBlockingPressed)
       {
         if (hero.MoveAxis != Vector2.zero)
           ChangeState(hero.ShieldMoveState);

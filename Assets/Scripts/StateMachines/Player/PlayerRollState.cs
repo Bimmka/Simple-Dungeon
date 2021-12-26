@@ -9,7 +9,7 @@ namespace StateMachines.Player
     private readonly HeroStateMachine hero;
     private readonly HeroMove heroMove;
 
-    public PlayerRollState(StateMachine stateMachine, string animationName, SimpleAnimator animator,
+    public PlayerRollState(StateMachine stateMachine, string animationName, BattleAnimator animator,
       HeroStateMachine hero, HeroMove heroMove) : base(stateMachine, animationName, animator)
     {
       this.hero = hero;
@@ -25,10 +25,10 @@ namespace StateMachines.Player
     public override bool IsCanBeInterapted() => 
       true;
 
-    public override void AnimationTrigger()
+    public override void TriggerAnimation()
     {
-      base.AnimationTrigger();
-      if (hero.IsBlocking)
+      base.TriggerAnimation();
+      if (hero.IsBlockingPressed)
       {
         if (hero.MoveAxis != Vector2.zero)
           ChangeState(hero.ShieldMoveState);

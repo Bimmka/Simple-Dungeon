@@ -11,13 +11,15 @@ namespace StateMachines.Enemies
     private readonly EnemyMove enemyMove;
     private readonly EnemiesMoveStaticData moveData;
     private readonly EnemyStateMachine enemy;
+    private readonly EnemyRotate enemyRotate;
 
-    public EnemyIdleState(StateMachine stateMachine, string animationName, SimpleAnimator animator, EnemyMove enemyMove,
-      EnemiesMoveStaticData moveData, EnemyStateMachine enemy) : base(stateMachine, animationName, animator)
+    public EnemyIdleState(StateMachine stateMachine, string animationName, BattleAnimator animator, EnemyMove enemyMove,
+      EnemiesMoveStaticData moveData, EnemyStateMachine enemy, EnemyRotate enemyRotate) : base(stateMachine, animationName, animator)
     {
       this.enemyMove = enemyMove;
       this.moveData = moveData;
       this.enemy = enemy;
+      this.enemyRotate = enemyRotate;
     }
     public override bool IsCanBeInterapted()
     {
@@ -31,6 +33,8 @@ namespace StateMachines.Enemies
         ChangeState(enemy.AttackState);
       else if (IsTargetCameOff())
         ChangeState(enemy.WalkState);
+      else
+        enemyRotate.LookAt(enemyMove.TargetPosition);
     }
 
     private bool IsTargetCameOff() => 

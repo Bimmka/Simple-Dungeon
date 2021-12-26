@@ -1,5 +1,6 @@
 ﻿using Animations;
 using Hero;
+using StaticData.Hero.Components;
 using UnityEngine;
 
 namespace StateMachines.Player
@@ -7,23 +8,39 @@ namespace StateMachines.Player
   public class PlayerAttackState : PlayerBaseMachineState
   {
     private readonly HeroStateMachine hero;
-    private float lastAttackTime;
+    private readonly HeroAttack heroAttack;
+    private readonly float attackCooldown;
     
-    public PlayerAttackState(StateMachine stateMachine, string animationName, SimpleAnimator animator, HeroStateMachine hero) : base(stateMachine, animationName, animator)
+    private float lastAttackTime;
+
+    private bool isAttackEnded;
+
+    public PlayerAttackState(StateMachine stateMachine, string animationName, BattleAnimator animator,
+      HeroStateMachine hero, HeroAttack heroAttack, HeroAttackStaticData attackData) : base(stateMachine, animationName, animator)
     {
       this.hero = hero;
+      this.heroAttack = heroAttack;
+      this.animator.Attacked += Attack;
+      attackCooldown = attackData.AttackCooldown;
+      UpdateAttackTime();
+    }
+
+    public void Cleanup()
+    {
+      animator.Attacked -= Attack;
     }
 
     public bool IsCanAttack() => 
-      true;
+      Time.time >= lastAttackTime + attackCooldown;
 
     public override bool IsCanBeInterapted() => 
-      IsAttackEnded();
+      isAttackEnded;
 
-    public override void AnimationTrigger()
+    public override void TriggerAnimation()
     {
-      base.AnimationTrigger();
-      if (hero.IsBlocking)
+      base.TriggerAnimation();
+      isAttackEnded = true;
+      if (hero.IsBlockingPressed)
       {
         if (hero.MoveAxis != Vector2.zero)
           ChangeState(hero.ShieldMoveState);
@@ -39,11 +56,13 @@ namespace StateMachines.Player
       }
     }
 
-    private bool IsAttackEnded()
+    private void Attack()
     {
-      return true;
+      heroAttack.Attack();
+      isAttackEnded = false;
     }
-    
-    
+
+    private void UpdateAttackTime() => 
+      lastAttackTime = Time.time;
   }
 }

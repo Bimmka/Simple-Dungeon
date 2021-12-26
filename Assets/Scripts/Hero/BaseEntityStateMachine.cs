@@ -7,8 +7,6 @@ namespace Hero
   
   public abstract class BaseEntityStateMachine : MonoBehaviour
   {
-    [SerializeField] protected SimpleAnimator simpleAnimator;
-        
     protected StateMachine stateMachine;
         
     private void Awake()
@@ -16,6 +14,7 @@ namespace Hero
       CreateStateMachine();
       CreateStates();
       SetDefaultState();
+      Init();
       Subscribe();
     }
 
@@ -25,11 +24,11 @@ namespace Hero
     private void Update() => 
       stateMachine.State.LogicUpdate();
 
-    protected virtual void Subscribe() => 
-      simpleAnimator.Triggered += AnimationTriggered;
+    protected virtual void Init() { }
 
-    protected virtual void Cleanup() => 
-      simpleAnimator.Triggered -= AnimationTriggered;
+    protected virtual void Subscribe() {}
+
+    protected virtual void Cleanup() {}
 
     protected abstract void CreateStates();
 
@@ -38,7 +37,7 @@ namespace Hero
     private void CreateStateMachine() => 
       stateMachine = new StateMachine();
 
-    private void AnimationTriggered() => 
-      stateMachine.State.AnimationTrigger();
+    protected void AnimationTriggered() => 
+      stateMachine.State.TriggerAnimation();
   }
 }

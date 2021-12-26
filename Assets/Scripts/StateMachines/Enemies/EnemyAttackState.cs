@@ -1,5 +1,6 @@
 ﻿using Animations;
 using Enemies;
+using StaticData.Enemies;
 using UnityEngine;
 
 namespace StateMachines.Enemies
@@ -7,19 +8,28 @@ namespace StateMachines.Enemies
   public class EnemyAttackState : EnemyBaseMachineState
   {
     private readonly EnemyStateMachine enemy;
+    private readonly EnemyAttack enemyAttack;
+    private readonly float attackCooldown;
+    
     private float lastAttackTime;
-    private float attackCooldown = 2f;
 
-    public EnemyAttackState(StateMachine stateMachine, string animationName, SimpleAnimator animator, EnemyStateMachine enemy) : base(stateMachine, animationName, animator)
+    public EnemyAttackState(StateMachine stateMachine, string animationName, BattleAnimator animator,
+      EnemyStateMachine enemy, EnemyAttack enemyAttack, EnemyAttackData attackData) : base(stateMachine, animationName, animator)
     {
       this.enemy = enemy;
+      this.enemyAttack = enemyAttack;
+      attackCooldown = attackData.AttackCooldown;
       UpdateAttackTime();
+      this.animator.Attacked += Attack;
     }
 
-    public override bool IsCanBeInterapted()
+    public void Cleanup()
     {
-      return true;
+     animator.Attacked -= Attack;
     }
+
+    public override bool IsCanBeInterapted() => 
+      true;
 
     public override void Enter()
     {
@@ -27,14 +37,17 @@ namespace StateMachines.Enemies
       UpdateAttackTime();
     }
 
-    public override void AnimationTrigger()
+    public override void TriggerAnimation()
     {
-      base.AnimationTrigger();
+      base.TriggerAnimation();
       ChangeState(enemy.IdleState);
     }
 
     public bool IsCanAttack() =>
       Time.time >= lastAttackTime + attackCooldown;
+
+    private void Attack() => 
+      enemyAttack.Attack();
 
     private void UpdateAttackTime() => 
       lastAttackTime = Time.time;
