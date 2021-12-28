@@ -1,27 +1,26 @@
 using System;
-using Interfaces;
 using UnityEngine;
 
 namespace Systems.Healths
 {
-  public class Health : MonoBehaviour
+  public class Health : MonoBehaviour, IHealth
   {
-    [SerializeField] private float maxHealth;
-
+    private float maxHealth;
     private float currentHealth;
 
-    public event Action Damaged;
+    public event Action<float, float> Changed;
     public event Action Dead;
 
-    private void Awake()
+    public void SetHp(float current, float max)
     {
-      currentHealth = maxHealth;
+      currentHealth = current;
+      maxHealth = max;
     }
 
     public void TakeDamage(float damage)
     {
       currentHealth -= damage;
-      Damaged?.Invoke();
+      Changed?.Invoke(currentHealth, maxHealth);
     }
   }
 }

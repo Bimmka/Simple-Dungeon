@@ -1,11 +1,21 @@
-﻿using Hero;
+﻿using System.Collections.Generic;
+using Systems.Healths;
+using ConstantsValue;
+using Enemies;
+using Enemies.Spawn;
+using Hero;
 using Services.Assets;
 using Services.Input;
 using Services.Progress;
 using Services.StaticData;
 using Services.UI.Windows;
+using StateMachines.Enemies;
+using StaticData.Enemies;
 using StaticData.Hero;
+using StaticData.Level;
+using UI.Displaying;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace Services.Factories.GameFactories
 {
@@ -13,18 +23,16 @@ namespace Services.Factories.GameFactories
   {
     private readonly IAssetProvider assets;
     private readonly IStaticDataService staticData;
-    private readonly IPersistentProgressService progressService;
-    private readonly IWindowsService windowsService;
     private readonly IInputService inputService;
+    private readonly IEnemiesFactory enemiesFactory;
     private GameObject heroGameObject;
     
-    public GameFactory(IAssetProvider assets, IStaticDataService staticData, IPersistentProgressService progressService, IWindowsService windowsService, IInputService inputService)
+    public GameFactory(IAssetProvider assets, IStaticDataService staticData, IInputService inputService, IEnemiesFactory enemiesFactory)
     {
       this.assets = assets;
       this.staticData = staticData;
-      this.progressService = progressService;
-      this.windowsService = windowsService;
       this.inputService = inputService;
+      this.enemiesFactory = enemiesFactory;
     }
     
     public GameObject CreateHero()
@@ -32,12 +40,33 @@ namespace Services.Factories.GameFactories
       HeroSpawnStaticData spawnData = staticData.ForHero();
       heroGameObject = InstantiateObject(spawnData.HeroPrefab, spawnData.SpawnPoint);
       heroGameObject.GetComponent<HeroInput>().Construct(inputService);
+      heroGameObject.GetComponent<HeroStateMachine>().Construct(spawnData.AttackData, spawnData.ImpactsData, heroGameObject.GetComponentInChildren<IHealth>());
       return heroGameObject;
     }
 
-    public GameObject CreateHud()
+    public GameObject CreateHud(GameObject hero)
     {
-      return null;
+      GameObject hud = assets.Instantiate(AssetsPath.Hud);
+      hud.GetComponentInChildren<HPDisplayer>().Construct(hero.GetComponentInChildren<IHealth>());
+      hud.GetComponentInChildren<StaminaDisplayer>().Construct(hero.GetComponentInChildren<IStamina>());
+      return hud;
+    }
+
+    public void CreateEnemySpawner(List<EnemySpawnerStaticData> spawnPoints, EnemySpawner spawnerPrefab, SpawnPoint pointPrefab)
+    {
+      EnemySpawner spawnedSpawner = assets.Instantiate(spawnerPrefab);
+      spawnedSpawner.Construct(enemiesFactory);
+      for (int i = 0; i < spawnPoints.Count; i++)
+      {
+        spawnedSpawner.AddPoint(CreateEnemySpawnPoint(spawnPoints[i], pointPrefab));
+      }
+    }
+
+    private SpawnPoint CreateEnemySpawnPoint(EnemySpawnerStaticData data, SpawnPoint prefab)
+    {
+      SpawnPoint spawner = assets.Instantiate(prefab, data.Position).GetComponent<SpawnPoint>();
+      spawner.Construct(data.Id);
+      return spawner;
     }
 
     private GameObject InstantiateObject(GameObject prefab, Vector3 at) => 

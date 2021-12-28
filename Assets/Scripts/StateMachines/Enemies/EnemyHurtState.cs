@@ -1,5 +1,6 @@
 ﻿using Animations;
 using Enemies;
+using Enemies.Entity;
 
 namespace StateMachines.Enemies
 {

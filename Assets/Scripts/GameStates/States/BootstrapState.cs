@@ -48,18 +48,21 @@ namespace GameStates.States
       RegisterStaticDataService();
       RegisterAssets();
       RegisterUIFactory();
+      RegisterEnemiesFactory();
       RegisterGameFactory();
       RegisterWindowsService();
     }
+
+    private void RegisterEnemiesFactory() => 
+      services.RegisterSingle<IEnemiesFactory>(new EnemiesFactory(services.Single<IAssetProvider>(), services.Single<IStaticDataService>()));
 
     private void RegisterGameFactory()
     {
       services.RegisterSingle<IGameFactory>(new GameFactory(
         services.Single<IAssetProvider>(), 
-        services.Single<IStaticDataService>(), 
-        services.Single<IPersistentProgressService>(),
-        services.Single<IWindowsService>(), 
-        services.Single<IInputService>()));
+        services.Single<IStaticDataService>(),
+        services.Single<IInputService>(),
+        services.Single<IEnemiesFactory>()));
     }
 
     private void RegisterStateMachine() => 

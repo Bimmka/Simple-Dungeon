@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using StaticData.Hero.Components;
+using UnityEngine;
 
 namespace StaticData.Hero
 {
@@ -6,7 +7,8 @@ namespace StaticData.Hero
   public class HeroSpawnStaticData : ScriptableObject
   {
     public GameObject HeroPrefab;
-    public GameObject Hud;
     public Vector3 SpawnPoint;
+    public HeroAttackStaticData AttackData;
+    public HeroImpactsStaticData ImpactsData;
   }
 }

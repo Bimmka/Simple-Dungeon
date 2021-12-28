@@ -1,4 +1,5 @@
 ﻿using Animations;
+using StaticData.Enemies;
 using UnityEngine;
 
 namespace StateMachines.Enemies

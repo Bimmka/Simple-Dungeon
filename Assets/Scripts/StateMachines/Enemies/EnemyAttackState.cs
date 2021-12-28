@@ -1,5 +1,6 @@
 ﻿using Animations;
 using Enemies;
+using Enemies.Entity;
 using StaticData.Enemies;
 using UnityEngine;
 
@@ -14,7 +15,7 @@ namespace StateMachines.Enemies
     private float lastAttackTime;
 
     public EnemyAttackState(StateMachine stateMachine, string animationName, BattleAnimator animator,
-      EnemyStateMachine enemy, EnemyAttack enemyAttack, EnemyAttackData attackData) : base(stateMachine, animationName, animator)
+      EnemyStateMachine enemy, EnemyAttack enemyAttack, EnemyAttackStaticData attackData) : base(stateMachine, animationName, animator)
     {
       this.enemy = enemy;
       this.enemyAttack = enemyAttack;

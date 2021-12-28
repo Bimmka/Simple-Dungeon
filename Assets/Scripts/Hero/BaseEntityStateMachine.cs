@@ -9,12 +9,12 @@ namespace Hero
   {
     protected StateMachine stateMachine;
         
-    private void Awake()
+    protected void Initialize()
     {
       CreateStateMachine();
       CreateStates();
       SetDefaultState();
-      Init();
+      
       Subscribe();
     }
 
@@ -23,8 +23,6 @@ namespace Hero
 
     private void Update() => 
       stateMachine.State.LogicUpdate();
-
-    protected virtual void Init() { }
 
     protected virtual void Subscribe() {}
 

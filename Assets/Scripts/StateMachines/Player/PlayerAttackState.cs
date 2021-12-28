@@ -9,6 +9,7 @@ namespace StateMachines.Player
   {
     private readonly HeroStateMachine hero;
     private readonly HeroAttack heroAttack;
+    private readonly HeroStamina heroStamina;
     private readonly float attackCooldown;
     
     private float lastAttackTime;
@@ -16,10 +17,11 @@ namespace StateMachines.Player
     private bool isAttackEnded;
 
     public PlayerAttackState(StateMachine stateMachine, string animationName, BattleAnimator animator,
-      HeroStateMachine hero, HeroAttack heroAttack, HeroAttackStaticData attackData) : base(stateMachine, animationName, animator)
+      HeroStateMachine hero, HeroAttack heroAttack, HeroAttackStaticData attackData, HeroStamina heroStamina) : base(stateMachine, animationName, animator)
     {
       this.hero = hero;
       this.heroAttack = heroAttack;
+      this.heroStamina = heroStamina;
       this.animator.Attacked += Attack;
       attackCooldown = attackData.AttackCooldown;
       UpdateAttackTime();
@@ -31,7 +33,7 @@ namespace StateMachines.Player
     }
 
     public bool IsCanAttack() => 
-      Time.time >= lastAttackTime + attackCooldown;
+      Time.time >= lastAttackTime + attackCooldown && heroStamina.IsCanAttack();
 
     public override bool IsCanBeInterapted() => 
       isAttackEnded;
@@ -60,6 +62,7 @@ namespace StateMachines.Player
     {
       heroAttack.Attack();
       isAttackEnded = false;
+      heroStamina.WasteToAttack();
     }
 
     private void UpdateAttackTime() => 

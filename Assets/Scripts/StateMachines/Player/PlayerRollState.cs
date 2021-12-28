@@ -8,12 +8,20 @@ namespace StateMachines.Player
   {
     private readonly HeroStateMachine hero;
     private readonly HeroMove heroMove;
+    private readonly HeroStamina heroStamina;
 
     public PlayerRollState(StateMachine stateMachine, string animationName, BattleAnimator animator,
-      HeroStateMachine hero, HeroMove heroMove) : base(stateMachine, animationName, animator)
+      HeroStateMachine hero, HeroMove heroMove, HeroStamina heroStamina) : base(stateMachine, animationName, animator)
     {
       this.hero = hero;
       this.heroMove = heroMove;
+      this.heroStamina = heroStamina;
+    }
+
+    public override void Enter()
+    {
+      base.Enter();
+      heroStamina.WasteToRoll();
     }
 
     public override void LogicUpdate()
@@ -43,5 +51,8 @@ namespace StateMachines.Player
           ChangeState(hero.MoveState);
       }
     }
+
+    public bool IsCanRoll() => 
+      heroStamina.IsCanRoll();
   }
 }

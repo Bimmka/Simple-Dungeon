@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f1c10523dffaf047b88fc3d5a295a97, type: 3}
+  m_Name: LevelStaticData
+  m_EditorClassIdentifier: 
+  LevelKey: Game
+  EnemySpawners:
+  - Id: Game_49885fc0-dca9-4030-a405-5bfc1140b8d6
+    Position: {x: 11.53, y: 0.95, z: 3.96}
+  - Id: Game_55e33d5b-fda5-44b0-aa25-5549142f27f3
+    Position: {x: 0, y: 0.43, z: 0}
+  SpawnPointPrefab: {fileID: 8470030554799664647, guid: 7f0adb6a5377b8543a7882b841ca9ba8, type: 3}
+  EnemySpawner: {fileID: 8162345706943241642, guid: 66544e4842560ee4dbb55847ea4be931, type: 3}

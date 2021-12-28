@@ -1,5 +1,6 @@
 ﻿using Animations;
 using Enemies;
+using Enemies.Entity;
 using UnityEngine;
 using Utilities;
 

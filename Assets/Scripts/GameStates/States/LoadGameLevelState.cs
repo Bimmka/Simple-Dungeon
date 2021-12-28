@@ -1,12 +1,16 @@
-﻿using CodeBase.CameraLogic;
+﻿using Systems.Healths;
+using CodeBase.CameraLogic;
 using ConstantsValue;
+using Enemies;
 using GameStates.States.Interfaces;
 using SceneLoading;
 using Services.Factories.GameFactories;
 using Services.Progress;
 using Services.StaticData;
 using Services.UI.Factory;
+using StaticData.Level;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace GameStates.States
 {
@@ -17,14 +21,16 @@ namespace GameStates.States
     private readonly IGameFactory gameFactory;
     private readonly IPersistentProgressService progressService;
     private readonly IUIFactory uiFactory;
+    private readonly IStaticDataService staticData;
 
-    public LoadGameLevelState(ISceneLoader sceneLoader, IGameStateMachine gameStateMachine, IGameFactory gameFactory, IPersistentProgressService progressService, IUIFactory uiFactory)
+    public LoadGameLevelState(ISceneLoader sceneLoader, IGameStateMachine gameStateMachine, IGameFactory gameFactory, IPersistentProgressService progressService, IUIFactory uiFactory, IStaticDataService staticData)
     {
       this.sceneLoader = sceneLoader;
       this.gameStateMachine = gameStateMachine;
       this.gameFactory = gameFactory;
       this.progressService = progressService;
       this.uiFactory = uiFactory;
+      this.staticData = staticData;
     }
 
 
@@ -43,15 +49,22 @@ namespace GameStates.States
     private void InitGameWorld()
     {
       InitUIRoot();
+      InitSpawners();
       GameObject hero = gameFactory.CreateHero();
-      //InitHud(hero);
+      InitHud(hero);
       CameraFollow(hero);
     }
 
-    private void InitHud(GameObject hero)
+    private void InitSpawners()
     {
-      GameObject hud = gameFactory.CreateHud();
+      string sceneKey = SceneManager.GetActiveScene().name;
+      LevelStaticData levelData = staticData.ForLevel(sceneKey);
+      
+      gameFactory.CreateEnemySpawner(levelData.EnemySpawners, levelData.EnemySpawner, levelData.SpawnPointPrefab);
     }
+
+    private void InitHud(GameObject hero) => 
+      gameFactory.CreateHud(hero);
 
     private void InitUIRoot() => 
       uiFactory.CreateUIRoot();

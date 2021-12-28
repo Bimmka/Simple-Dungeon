@@ -1,3 +1,4 @@
+using Systems.Healths;
 using Animations;
 using StateMachines.Player;
 using StaticData.Hero.Components;
@@ -7,12 +8,16 @@ namespace Hero
 {
     public class HeroStateMachine : BaseEntityStateMachine
     {
-        [SerializeField] protected BattleAnimator battleAnimator;
+        [SerializeField] private BattleAnimator battleAnimator;
         [SerializeField] private HeroMove move;
         [SerializeField] private HeroRotate rotate;
         [SerializeField] private HeroAttack attack;
-        [SerializeField] private HeroAttackStaticData attackData;
-        [SerializeField] private HeroImpactsStaticData impactsData;
+        [SerializeField] private HeroStamina stamina;
+        
+        private HeroAttackStaticData attackData;
+        private HeroImpactsStaticData impactsData;
+
+        private IHealth health;
 
         public PlayerAttackState AttackState { get; private set; }
         public PlayerHurtState ImpactState { get; private set; }
@@ -30,33 +35,38 @@ namespace Hero
         public Vector2 MoveAxis { get; private set; }
         public float RotateAngle { get; private set; }
 
-        protected override void Init()
+        public void Construct(HeroAttackStaticData attackData, HeroImpactsStaticData impactData, IHealth health)
         {
-            base.Init();
+            this.attackData = attackData;
+            this.health = health;
+            impactsData = impactData;
             attack.Construct(attackData);
+            Initialize();
         }
 
         protected override void Subscribe()
         {
             base.Subscribe();
             battleAnimator.Triggered += AnimationTriggered;
+            health.Dead += Dead;
         }
 
         protected override void Cleanup()
         {
             base.Cleanup();
             battleAnimator.Triggered -= AnimationTriggered;
+            health.Dead -= Dead;
             AttackState.Cleanup();
         }
 
 
         protected override void CreateStates()
         {
-            AttackState = new PlayerAttackState(stateMachine, "IsSimpleAttack", battleAnimator, this, attack, attackData);
+            AttackState = new PlayerAttackState(stateMachine, "IsSimpleAttack", battleAnimator, this, attack, attackData, stamina);
             ImpactState = new PlayerHurtState(stateMachine, "IsImpact", battleAnimator, this, impactsData.ImpactCooldown);
             IdleShieldState = new PlayerIdleShieldState(stateMachine, "IsBlocking", "MouseRotation", battleAnimator, this, rotate);
             IdleState = new PlayerIdleState(stateMachine, "IsIdle", "MouseRotation", battleAnimator, this, rotate);
-            RollState = new PlayerRollState(stateMachine, "IsRoll", battleAnimator, this, move);
+            RollState = new PlayerRollState(stateMachine, "IsRoll", battleAnimator, this, move, stamina);
             ShieldImpactState = new PlayerShieldImpactState(stateMachine, "IsShieldImpact", battleAnimator, this, impactsData.ShieldImpactCooldown);
             MoveState = new PlayerMoveState(stateMachine, "IsIdle", "MoveX", battleAnimator, this, move, rotate);
             ShieldMoveState = new PlayerShieldMoveState(stateMachine, "IsBlocking", "MoveY", battleAnimator, this, move, rotate);
@@ -81,7 +91,7 @@ namespace Hero
 
         public void SetRollState()
         {
-            if (stateMachine.State.IsCanBeInterapted())
+            if (stateMachine.State.IsCanBeInterapted() && RollState.IsCanRoll())
                 stateMachine.ChangeState(RollState);
         }
 
@@ -96,5 +106,10 @@ namespace Hero
 
         public void SetRotate(float rotateAngle) => 
             RotateAngle = rotateAngle;
+
+        private void Dead()
+        {
+            stateMachine.ChangeState(DeathState);
+        }
     }
 }

@@ -18,5 +18,8 @@ namespace Services.Assets
 
     public T Instantiate<T>(T prefab, Transform parent) where T : Object => 
       Object.Instantiate(prefab, parent);
+
+    public T Instantiate<T>(T prefab, Vector3 at, Quaternion rotation, Transform parent) where T : Object => 
+      Object.Instantiate(prefab, at, rotation, parent);
   }
 }
