@@ -25,14 +25,16 @@ namespace Services.Factories.GameFactories
     private readonly IStaticDataService staticData;
     private readonly IInputService inputService;
     private readonly IEnemiesFactory enemiesFactory;
+    private readonly IEnemySpawner spawner;
     private GameObject heroGameObject;
     
-    public GameFactory(IAssetProvider assets, IStaticDataService staticData, IInputService inputService, IEnemiesFactory enemiesFactory)
+    public GameFactory(IAssetProvider assets, IStaticDataService staticData, IInputService inputService, IEnemiesFactory enemiesFactory, IEnemySpawner spawner)
     {
       this.assets = assets;
       this.staticData = staticData;
       this.inputService = inputService;
       this.enemiesFactory = enemiesFactory;
+      this.spawner = spawner;
     }
     
     public GameObject CreateHero()
@@ -52,13 +54,11 @@ namespace Services.Factories.GameFactories
       return hud;
     }
 
-    public void CreateEnemySpawner(List<EnemySpawnerStaticData> spawnPoints, EnemySpawner spawnerPrefab, SpawnPoint pointPrefab)
+    public void CreateEnemySpawnPoints(List<EnemySpawnerStaticData> spawnPoints, SpawnPoint pointPrefab)
     {
-      EnemySpawner spawnedSpawner = assets.Instantiate(spawnerPrefab);
-      spawnedSpawner.Construct(enemiesFactory);
       for (int i = 0; i < spawnPoints.Count; i++)
       {
-        spawnedSpawner.AddPoint(CreateEnemySpawnPoint(spawnPoints[i], pointPrefab));
+        spawner.AddPoint(CreateEnemySpawnPoint(spawnPoints[i], pointPrefab));
       }
     }
 

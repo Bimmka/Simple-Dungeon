@@ -18,5 +18,5 @@ MonoBehaviour:
     Position: {x: 11.53, y: 0.95, z: 3.96}
   - Id: Game_55e33d5b-fda5-44b0-aa25-5549142f27f3
     Position: {x: 0, y: 0.43, z: 0}
+  LevelWaves: {fileID: 11400000, guid: 7fc8ef2828526ee4d8623005c32e01be, type: 2}
   SpawnPointPrefab: {fileID: 8470030554799664647, guid: 7f0adb6a5377b8543a7882b841ca9ba8, type: 3}
-  EnemySpawner: {fileID: 8162345706943241642, guid: 66544e4842560ee4dbb55847ea4be931, type: 3}

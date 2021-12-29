@@ -1,4 +1,5 @@
-﻿using GameStates.States.Interfaces;
+﻿using Enemies.Spawn;
+using GameStates.States.Interfaces;
 using Input;
 using SceneLoading;
 using Services;
@@ -11,6 +12,7 @@ using Services.SaveLoad;
 using Services.StaticData;
 using Services.UI.Factory;
 using Services.UI.Windows;
+using Services.Waves;
 
 namespace GameStates.States
 {
@@ -49,9 +51,17 @@ namespace GameStates.States
       RegisterAssets();
       RegisterUIFactory();
       RegisterEnemiesFactory();
+      RegisterEnemiesSpawner();
       RegisterGameFactory();
+      RegisterWaveService();
       RegisterWindowsService();
     }
+
+    private void RegisterWaveService() => 
+      services.RegisterSingle<IWaveServices>(new WaveServices(services.Single<IEnemySpawner>()));
+
+    private void RegisterEnemiesSpawner() => 
+      services.RegisterSingle<IEnemySpawner>(new EnemySpawner(services.Single<IEnemiesFactory>()));
 
     private void RegisterEnemiesFactory() => 
       services.RegisterSingle<IEnemiesFactory>(new EnemiesFactory(services.Single<IAssetProvider>(), services.Single<IStaticDataService>()));
@@ -62,7 +72,8 @@ namespace GameStates.States
         services.Single<IAssetProvider>(), 
         services.Single<IStaticDataService>(),
         services.Single<IInputService>(),
-        services.Single<IEnemiesFactory>()));
+        services.Single<IEnemiesFactory>(), 
+        services.Single<IEnemySpawner>()));
     }
 
     private void RegisterStateMachine() => 

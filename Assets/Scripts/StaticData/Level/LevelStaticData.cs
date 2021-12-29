@@ -10,6 +10,7 @@ namespace StaticData.Level
   {
     public string LevelKey;
     public List<EnemySpawnerStaticData> EnemySpawners;
+    public LevelWaveStaticData LevelWaves;
 
     public SpawnPoint SpawnPointPrefab;
     public EnemySpawner EnemySpawner;

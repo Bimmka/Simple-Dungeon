@@ -15,12 +15,18 @@ namespace Systems.Healths
     {
       currentHealth = current;
       maxHealth = max;
+      Display();
     }
 
     public void TakeDamage(float damage)
     {
       currentHealth -= damage;
-      Changed?.Invoke(currentHealth, maxHealth);
+      Display();
+      if (currentHealth <= 0)
+        Dead?.Invoke();
     }
+
+    private void Display() => 
+      Changed?.Invoke(currentHealth, maxHealth);
   }
 }

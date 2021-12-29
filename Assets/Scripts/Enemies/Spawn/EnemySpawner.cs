@@ -1,34 +1,28 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using Services.Factories.GameFactories;
 using UnityEngine;
 
 namespace Enemies.Spawn
 {
-  public class EnemySpawner : MonoBehaviour
+  public class EnemySpawner : IEnemySpawner
   {
-    private IEnemiesFactory enemiesFactory;
-    private List<SpawnPoint> spawnPoints = new List<SpawnPoint>(20);
+    private readonly IEnemiesFactory enemiesFactory;
+    private readonly List<SpawnPoint> spawnPoints = new List<SpawnPoint>(20);
 
-    public void Construct(IEnemiesFactory enemiesFactory)
-    {
+    public event Action<GameObject> Spawned;
+
+    public EnemySpawner(IEnemiesFactory enemiesFactory) => 
       this.enemiesFactory = enemiesFactory;
-    }
 
     public void AddPoint(SpawnPoint spawnPoint) => 
       spawnPoints.Add(spawnPoint);
 
-    private void Start()
+    public void Spawn(EnemyTypeId[] enemies)
     {
-      StartCoroutine(Spawn());
-    }
-
-    private IEnumerator Spawn()
-    {
-      while (true)
+      for (int i = 0; i < enemies.Length; i++)
       {
-        yield return new WaitForSeconds(2f);
-        enemiesFactory.SpawnMonster(EnemyTypeId.Guard, spawnPoints[0].transform);
+        Spawned?.Invoke(enemiesFactory.SpawnMonster(enemies[i], spawnPoints[0].transform));
       }
     }
   }

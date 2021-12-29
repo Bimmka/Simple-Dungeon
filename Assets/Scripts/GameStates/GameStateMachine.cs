@@ -9,6 +9,7 @@ using Services.Progress;
 using Services.SaveLoad;
 using Services.StaticData;
 using Services.UI.Factory;
+using Services.Waves;
 
 namespace GameStates
 {
@@ -23,8 +24,8 @@ namespace GameStates
       {
         [typeof(BootstrapState)] = new BootstrapState(this, sceneLoader,ref services),
         [typeof(LoadProgressState)] = new LoadProgressState(this, sceneLoader, services.Single<IPersistentProgressService>(), services.Single<ISaveLoadService>()),
-        [typeof(GameLoopState)] = new GameLoopState(this),
-        [typeof(LoadGameLevelState)] = new LoadGameLevelState(sceneLoader, this, services.Single<IGameFactory>(), services.Single<IPersistentProgressService>(), services.Single<IUIFactory>(), services.Single<IStaticDataService>())
+        [typeof(GameLoopState)] = new GameLoopState(this, services.Single<IWaveServices>()),
+        [typeof(LoadGameLevelState)] = new LoadGameLevelState(sceneLoader, this, services.Single<IGameFactory>(), services.Single<IUIFactory>(), services.Single<IStaticDataService>(), services.Single<IWaveServices>())
       };
     }
     

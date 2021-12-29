@@ -35,6 +35,7 @@ namespace Enemies.Entity
       this.moveData = moveData;
       this.attackData = attackData;
       this.health = health;
+      this.health.Dead += Dead;
       Initialize();
     }
 
@@ -42,7 +43,7 @@ namespace Enemies.Entity
     {
       base.Subscribe();
       battleAnimator.Triggered += AnimationTriggered;
-      health.Dead += Dead;
+      death.Revived += Revive;
     }
 
     protected override void Cleanup()
@@ -50,6 +51,7 @@ namespace Enemies.Entity
       base.Cleanup();
       battleAnimator.Triggered -= AnimationTriggered;
       health.Dead -= Dead;
+      death.Revived -= Revive;
       AttackState.Cleanup();
     }
 
@@ -73,9 +75,10 @@ namespace Enemies.Entity
         stateMachine.ChangeState(ImpactState);
     }
 
-    private void Dead()
-    {
+    private void Dead() => 
       stateMachine.ChangeState(DeathState);
-    }
+
+    private void Revive() => 
+      stateMachine.ChangeState(SearchState);
   }
 }

@@ -10,6 +10,6 @@ namespace Services.Factories.GameFactories
   {
     GameObject CreateHero();
     GameObject CreateHud(GameObject gameObject);
-    void CreateEnemySpawner(List<EnemySpawnerStaticData> spawnPoints, EnemySpawner spawnerPrefab, SpawnPoint pointPrefab);
+    void CreateEnemySpawnPoints(List<EnemySpawnerStaticData> spawnPoints, SpawnPoint pointPrefab);
   }
 }
