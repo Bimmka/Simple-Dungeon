@@ -1,4 +1,5 @@
-﻿using GameStates;
+﻿using System;
+using GameStates;
 using GameStates.States;
 using SceneLoading;
 using Services;
@@ -19,6 +20,11 @@ namespace Bootstrapp
       game.StateMachine.Enter<BootstrapState>();
 
       DontDestroyOnLoad(this);
+    }
+
+    private void OnDestroy()
+    {
+      allServices.Cleanup();
     }
   }
 }

@@ -10,7 +10,7 @@ namespace GameStates
 
     public Game(ICoroutineRunner coroutineRunner, LoadingCurtain curtain, ref AllServices services)
     {
-      StateMachine = new GameStateMachine(new SceneLoader(coroutineRunner,curtain), ref services);
+      StateMachine = new GameStateMachine(new SceneLoader(coroutineRunner,curtain), ref services, coroutineRunner);
     }
   }
 }

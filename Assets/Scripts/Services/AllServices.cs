@@ -19,5 +19,13 @@ namespace Services
       return default;
     }
 
+    public void Cleanup()
+    {
+      for (int i = 0; i < services.Count; i++)
+      {
+        if (services[i] is ICleanupService)
+          ((ICleanupService)services[i]).Cleanup();
+      }
+    }
   }
 }

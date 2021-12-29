@@ -1,4 +1,6 @@
-﻿using Enemies.Entity;
+﻿using System.Collections;
+using Bootstrapp;
+using Enemies.Entity;
 using Enemies.Spawn;
 using Services.Factories.GameFactories;
 using StaticData.Level;
@@ -9,21 +11,26 @@ namespace Services.Waves
   public class WaveServices : IWaveServices
   {
     private readonly IEnemySpawner enemiesSpawner;
+    private readonly ICoroutineRunner coroutineRunner;
     private LevelWaveStaticData waves;
 
     private int currentEnemiesCount;
     private int currentWaveIndex;
 
-    public WaveServices(IEnemySpawner spawner)
+    public WaveServices(IEnemySpawner spawner, ICoroutineRunner coroutineRunner)
     {
       enemiesSpawner = spawner;
+      this.coroutineRunner = coroutineRunner;
       enemiesSpawner.Spawned += OnEnemySpawned;
     }
+
+    public void Cleanup() => 
+      enemiesSpawner.Spawned -= OnEnemySpawned;
 
     public void Start()
     {
       currentWaveIndex = 0;
-      StartWave();
+      coroutineRunner.StartCoroutine(StartWave());
     }
     
     public void SetLevelWaves(LevelWaveStaticData wavesData) => 
@@ -42,13 +49,15 @@ namespace Services.Waves
 
     private void CompleteWave()
     {
+      coroutineRunner.StartCoroutine(StartWave());
       currentWaveIndex++;
       currentWaveIndex = Mathf.Clamp(currentWaveIndex, 0, waves.Waves.Length);
-      StartWave();
     }
 
-    private void StartWave()
+    private IEnumerator StartWave()
     {
+      yield return new WaitForSeconds(waves.Waves[currentWaveIndex].WaveWaitTime);
+      
       enemiesSpawner.Spawn(waves.Waves[currentWaveIndex].Enemies);
       currentEnemiesCount = waves.Waves[currentWaveIndex].Enemies.Length;
     }

@@ -1,4 +1,5 @@
-﻿using Enemies.Spawn;
+﻿using Bootstrapp;
+using Enemies.Spawn;
 using GameStates.States.Interfaces;
 using Input;
 using SceneLoading;
@@ -22,12 +23,12 @@ namespace GameStates.States
     private readonly IGameStateMachine gameStateMachine;
     private readonly AllServices services;
 
-    public BootstrapState(IGameStateMachine gameStateMachine, ISceneLoader sceneLoader, ref AllServices services)
+    public BootstrapState(IGameStateMachine gameStateMachine, ISceneLoader sceneLoader, ref AllServices services, ICoroutineRunner coroutineRunner)
     {
       this.gameStateMachine = gameStateMachine;
       this.sceneLoader = sceneLoader;
       this.services = services;
-      RegisterServices();
+      RegisterServices(coroutineRunner);
     }
 
     public void Enter()
@@ -40,7 +41,7 @@ namespace GameStates.States
       
     }
 
-    private void RegisterServices()
+    private void RegisterServices(ICoroutineRunner coroutineRunner)
     {
       RegisterStateMachine();
       RegisterInputService();
@@ -53,12 +54,12 @@ namespace GameStates.States
       RegisterEnemiesFactory();
       RegisterEnemiesSpawner();
       RegisterGameFactory();
-      RegisterWaveService();
+      RegisterWaveService(coroutineRunner);
       RegisterWindowsService();
     }
 
-    private void RegisterWaveService() => 
-      services.RegisterSingle<IWaveServices>(new WaveServices(services.Single<IEnemySpawner>()));
+    private void RegisterWaveService(ICoroutineRunner coroutineRunner) => 
+      services.RegisterSingle<IWaveServices>(new WaveServices(services.Single<IEnemySpawner>(), coroutineRunner));
 
     private void RegisterEnemiesSpawner() => 
       services.RegisterSingle<IEnemySpawner>(new EnemySpawner(services.Single<IEnemiesFactory>()));
