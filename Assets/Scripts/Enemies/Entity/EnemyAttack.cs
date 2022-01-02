@@ -8,17 +8,20 @@ namespace Enemies.Entity
     public class EnemyAttack : MonoBehaviour
     {
         [SerializeField] private Transform attackPoint;
-        [SerializeField] private EnemyAttackStaticData attackData;
+        
+        private EnemyAttackStaticData attackData;
         
         private Collider[] hits;
-
-        private void Awake() => 
+        public void Construct(EnemyAttackStaticData data)
+        {
+            attackData = data;
             hits = new Collider[attackData.MaxAttackedEntitiesCount];
+        }
 
-        public void Attack()
+        public void Attack(float damageCoeff)
         {
             if (Hit(out Collider hit))
-                hit.GetComponentInChildren<IDamageableEntity>().TakeDamage(attackData.Damage, transform.position);
+                hit.GetComponentInChildren<IDamageableEntity>().TakeDamage(attackData.Damage * damageCoeff, transform.position);
         }
 
         private bool Hit(out Collider hit)
@@ -28,7 +31,10 @@ namespace Enemies.Entity
             return hitAmount > 0;
         }
 
-        private void OnDrawGizmosSelected() => 
-            Gizmos.DrawWireSphere(attackPoint.position, attackData.AttackRadius);
+        private void OnDrawGizmosSelected()
+        {
+            if (attackData != null)
+                Gizmos.DrawWireSphere(attackPoint.position, attackData.AttackRadius);
+        }
     }
 }

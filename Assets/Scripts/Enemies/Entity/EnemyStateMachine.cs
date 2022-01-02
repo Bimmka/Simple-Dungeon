@@ -19,6 +19,7 @@ namespace Enemies.Entity
     
     private EnemiesMoveStaticData moveData;
     private EnemyAttackStaticData attackData;
+    private float damageCoeff;
 
     private IHealth health;
     
@@ -30,12 +31,14 @@ namespace Enemies.Entity
     public EnemySearchState SearchState { get; private set; }
     public EnemyWalkState WalkState { get; private set; }
 
-    public void Construct(EnemiesMoveStaticData moveData, EnemyAttackStaticData attackData, IHealth health)
+    public void Construct(EnemiesMoveStaticData moveData, EnemyAttackStaticData attackData, float damageCoeff, IHealth health)
     {
       this.moveData = moveData;
       this.attackData = attackData;
+      this.damageCoeff = damageCoeff;
       this.health = health;
       this.health.Dead += Dead;
+      attack.Construct(this.attackData);
       Initialize();
     }
 
@@ -57,7 +60,7 @@ namespace Enemies.Entity
 
     protected override void CreateStates()
     {
-      AttackState = new EnemyAttackState(stateMachine, "IsSimpleAttack", battleAnimator, this, attack, attackData);
+      AttackState = new EnemyAttackState(stateMachine, "IsSimpleAttack", battleAnimator, this, attack, attackData, damageCoeff);
       DeathState = new EnemyDeathState(stateMachine, "IsDead", battleAnimator, death);
       ImpactState = new EnemyHurtState(stateMachine, "IsImpact", battleAnimator, this);
       IdleState = new EnemyIdleState(stateMachine, "IsIdle", battleAnimator, move, moveData, this, rotate);
@@ -73,6 +76,12 @@ namespace Enemies.Entity
     {
       if (stateMachine.State.IsCanBeInterapted())
         stateMachine.ChangeState(ImpactState);
+    }
+
+    public void UpdateDamageCoeff(float coeff)
+    {
+      damageCoeff = coeff;
+      AttackState.UpdateDamageCoeff(damageCoeff);
     }
 
     private void Dead() => 

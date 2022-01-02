@@ -1,5 +1,4 @@
 ﻿using System;
-using Enemies.Spawn;
 
 namespace StaticData.Level
 {
@@ -7,7 +6,7 @@ namespace StaticData.Level
   public struct WaveData
   {
     public int WaveIndex;
-    public EnemyTypeId[] Enemies;
+    public WaveEnemy[] Enemies;
     public float WaveWaitTime;
   }
 }

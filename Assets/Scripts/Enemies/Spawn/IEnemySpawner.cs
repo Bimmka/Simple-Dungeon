@@ -1,5 +1,6 @@
 ﻿using System;
 using Services;
+using StaticData.Level;
 using UnityEngine;
 
 namespace Enemies.Spawn
@@ -8,6 +9,6 @@ namespace Enemies.Spawn
   {
     event Action<GameObject> Spawned;
     void AddPoint(SpawnPoint spawnPoint);
-    void Spawn(EnemyTypeId[] enemies);
+    void Spawn(WaveEnemy[] enemies);
   }
 }

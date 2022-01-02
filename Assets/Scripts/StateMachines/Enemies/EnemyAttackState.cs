@@ -10,24 +10,27 @@ namespace StateMachines.Enemies
   {
     private readonly EnemyStateMachine enemy;
     private readonly EnemyAttack enemyAttack;
+    private float damageCoeff;
     private readonly float attackCooldown;
     
     private float lastAttackTime;
 
     public EnemyAttackState(StateMachine stateMachine, string animationName, BattleAnimator animator,
-      EnemyStateMachine enemy, EnemyAttack enemyAttack, EnemyAttackStaticData attackData) : base(stateMachine, animationName, animator)
+      EnemyStateMachine enemy, EnemyAttack enemyAttack, EnemyAttackStaticData attackData, float damageCoeff) : base(stateMachine, animationName, animator)
     {
       this.enemy = enemy;
       this.enemyAttack = enemyAttack;
+      this.damageCoeff = damageCoeff;
       attackCooldown = attackData.AttackCooldown;
       UpdateAttackTime();
       this.animator.Attacked += Attack;
     }
 
-    public void Cleanup()
-    {
-     animator.Attacked -= Attack;
-    }
+    public void Cleanup() => 
+      animator.Attacked -= Attack;
+
+    public void UpdateDamageCoeff(float coeff) => 
+      damageCoeff = coeff;
 
     public override bool IsCanBeInterapted() => 
       true;
@@ -48,7 +51,7 @@ namespace StateMachines.Enemies
       Time.time >= lastAttackTime + attackCooldown;
 
     private void Attack() => 
-      enemyAttack.Attack();
+      enemyAttack.Attack(damageCoeff);
 
     private void UpdateAttackTime() => 
       lastAttackTime = Time.time;

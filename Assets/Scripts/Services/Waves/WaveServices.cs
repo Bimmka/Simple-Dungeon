@@ -2,7 +2,6 @@
 using Bootstrapp;
 using Enemies.Entity;
 using Enemies.Spawn;
-using Services.Factories.GameFactories;
 using StaticData.Level;
 using UnityEngine;
 
@@ -59,7 +58,11 @@ namespace Services.Waves
       yield return new WaitForSeconds(waves.Waves[currentWaveIndex].WaveWaitTime);
       
       enemiesSpawner.Spawn(waves.Waves[currentWaveIndex].Enemies);
-      currentEnemiesCount = waves.Waves[currentWaveIndex].Enemies.Length;
+      currentEnemiesCount = 0;
+      for (int i = 0; i < waves.Waves[currentWaveIndex].Enemies.Length; i++)
+      {
+        currentEnemiesCount += waves.Waves[currentWaveIndex].Enemies[i].Count;
+      }
     }
   }
 }

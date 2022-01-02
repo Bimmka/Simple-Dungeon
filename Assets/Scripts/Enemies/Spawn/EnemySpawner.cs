@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Services.Factories.GameFactories;
+using StaticData.Level;
 using UnityEngine;
 
 namespace Enemies.Spawn
@@ -18,12 +19,21 @@ namespace Enemies.Spawn
     public void AddPoint(SpawnPoint spawnPoint) => 
       spawnPoints.Add(spawnPoint);
 
-    public void Spawn(EnemyTypeId[] enemies)
+    public void Spawn(WaveEnemy[] enemies)
     {
       for (int i = 0; i < enemies.Length; i++)
       {
-        Spawned?.Invoke(enemiesFactory.SpawnMonster(enemies[i], spawnPoints[0].transform));
+        SpawnEnemy(enemies[i]);
       }
+    }
+
+    private void SpawnEnemy(WaveEnemy waveEnemy)
+    {
+      for (int i = 0; i < waveEnemy.Count; i++)
+      {
+        Spawned?.Invoke(enemiesFactory.SpawnMonster(waveEnemy.Id, spawnPoints[0].transform, waveEnemy.DamageCoeff, waveEnemy.HpCoeff));
+      }
+      
     }
   }
 }

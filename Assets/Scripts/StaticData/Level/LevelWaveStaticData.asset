@@ -14,11 +14,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Waves:
   - WaveIndex: 1
-    Enemies: 000000000000000000000000
-    WaveWaitTime: 0
+    Enemies:
+    - Id: 0
+      Count: 1
+      HpCoeff: 1
+      DamageCoeff: 1
+    WaveWaitTime: 5
   - WaveIndex: 2
-    Enemies: 000000000000000000000000
-    WaveWaitTime: 0
+    Enemies:
+    - Id: 0
+      Count: 3
+      HpCoeff: 0.5
+      DamageCoeff: 0
+    WaveWaitTime: 10
   - WaveIndex: 3
-    Enemies: 00000000000000000000000000000000000000000000000000000000000000000000000000000000
-    WaveWaitTime: 0
+    Enemies:
+    - Id: 0
+      Count: 10
+      HpCoeff: 0.5
+      DamageCoeff: 1
+    WaveWaitTime: 20

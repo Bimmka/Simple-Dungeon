@@ -32,7 +32,6 @@ namespace Hero
 
         private bool IsAttackForward(Vector3 attackPosition)
         {
-            Debug.Log($"{attackPosition}, {(Vector2)attackPosition}");
             Vector2 attackVector = new Vector2( attackPosition.x - hero.transform.position.x, attackPosition.z - hero.transform.position.z );
             Vector2 forward = new Vector2(hero.transform.forward.x, hero.transform.forward.z);
             return Vector2.Angle(forward, attackVector) <= maxAngle;

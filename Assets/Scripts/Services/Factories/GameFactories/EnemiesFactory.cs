@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Systems.Healths;
-using Enemies;
 using Enemies.Entity;
 using Enemies.Spawn;
 using Services.Assets;
@@ -36,15 +35,15 @@ namespace Services.Factories.GameFactories
       enemiesPool.Clear();
     }
     
-    public GameObject SpawnMonster(EnemyTypeId typeId, Transform parent)
+    public GameObject SpawnMonster(EnemyTypeId typeId, Transform parent, float damageCoeff = 1f, float hpCoeff = 1f)
     {
       if (IsContainsInPool(typeId))
-        return RecreateMonster(typeId, parent);
+        return RecreateMonster(typeId, parent, damageCoeff, hpCoeff);
 
-      return CreateMonster(typeId, parent);
+      return CreateMonster(typeId, parent, damageCoeff, hpCoeff);
     }
 
-    private GameObject RecreateMonster(EnemyTypeId typeId, Transform parent)
+    private GameObject RecreateMonster(EnemyTypeId typeId, Transform parent, float damageCoeff = 1f, float hpCoeff = 1f)
     {
       EnemyStaticData enemyData = staticData.ForMonster(typeId);
       SlainedEnemy slainedEnemy = PooledMonster(typeId);
@@ -52,25 +51,27 @@ namespace Services.Factories.GameFactories
       GameObject monster = slainedEnemy.Enemy;
       
       IHealth health = monster.GetComponentInChildren<IHealth>();
-      health.SetHp(enemyData.Hp, enemyData.Hp);
+      health.SetHp(enemyData.Hp * hpCoeff, enemyData.Hp * hpCoeff);
       EnemyDeath death = monster.GetComponent<EnemyDeath>();
       death.Revive();
       death.Happened += OnMonsterSlained;
       RemoveFromPool(slainedEnemy);
       monster.transform.position = parent.position;
+      
+      monster.GetComponent<EnemyStateMachine>().UpdateDamageCoeff(damageCoeff);
       return monster;
     }
 
-    private GameObject CreateMonster(EnemyTypeId typeId, Transform parent)
+    private GameObject CreateMonster(EnemyTypeId typeId, Transform parent, float damageCoeff = 1f, float hpCoeff = 1f)
     {
       EnemyStaticData enemyData = staticData.ForMonster(typeId);
       GameObject monster = assets.Instantiate(enemyData.Prefab, parent.position, Quaternion.identity, parent);
 
       IHealth health = monster.GetComponentInChildren<IHealth>();
-      health.SetHp(enemyData.Hp, enemyData.Hp);
+      health.SetHp(enemyData.Hp * hpCoeff, enemyData.Hp * hpCoeff);
 
       monster.GetComponentInChildren<HPDisplayer>().Construct(health);
-      monster.GetComponent<EnemyStateMachine>().Construct(enemyData.MoveData, enemyData.AttackData, health);
+      monster.GetComponent<EnemyStateMachine>().Construct(enemyData.MoveData, enemyData.AttackData, damageCoeff, health);
       EnemyDeath death = monster.GetComponent<EnemyDeath>();
       death.Construct(enemyData.Id);
       death.Happened += OnMonsterSlained;
