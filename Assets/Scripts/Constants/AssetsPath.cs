@@ -8,5 +8,8 @@
     public static string HeroDataPath = "StaticData/Hero/SpawnData";
     public static string EnemiesDataPath = "StaticData/Enemies";
     public static string LevelsDataPath = "StaticData/Levels";
+    public static string LootsDataPath = "StaticData/Loots";
+
+    public static string MoneyPrefabPath = "Loot/Money";
   }
 }

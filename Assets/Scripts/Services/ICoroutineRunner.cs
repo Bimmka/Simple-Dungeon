@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-namespace Bootstrapp
+namespace Services
 {
   public interface ICoroutineRunner
   {

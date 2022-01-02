@@ -3,7 +3,7 @@ using Services.UI.Windows;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UI.Buttons
+namespace Services.UI.Buttons
 {
   public class OpenWindowButton : MonoBehaviour
   {

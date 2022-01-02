@@ -18,7 +18,7 @@ namespace Services.UI.Factory
     private readonly IStaticDataService staticData;
     private readonly IPersistentProgressService progressService;
 
-    private Transform _uiRoot;
+    private Transform uiRoot;
 
     private Camera mainCamera;
 
@@ -34,8 +34,8 @@ namespace Services.UI.Factory
 
     public void CreateUIRoot()
     {
-      _uiRoot = assets.Instantiate(AssetsPath.UIRootPath).transform;
-      _uiRoot.GetComponent<UIRoot>().SetCamera(GetCamera());
+      uiRoot = assets.Instantiate<GameObject>(AssetsPath.UIRootPath).transform;
+      uiRoot.GetComponent<UIRoot>().SetCamera(GetCamera());
     }
 
     public void CreateWindow(WindowId id)
@@ -67,7 +67,7 @@ namespace Services.UI.Factory
       Spawned?.Invoke(id, window);
 
     private BaseWindow InstantiateWindow(WindowInstantiateData config) => 
-      Object.Instantiate(config.Window, _uiRoot);
+      Object.Instantiate(config.Window, uiRoot);
 
     private WindowInstantiateData LoadWindowInstantiateData(WindowId id) => 
       staticData.ForWindow(id);

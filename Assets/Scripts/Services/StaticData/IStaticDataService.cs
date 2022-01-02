@@ -4,6 +4,7 @@ using Services.UI.Factory;
 using StaticData.Enemies;
 using StaticData.Hero;
 using StaticData.Level;
+using StaticData.Loot;
 using StaticData.UI;
 
 namespace Services.StaticData
@@ -15,5 +16,6 @@ namespace Services.StaticData
     HeroSpawnStaticData ForHero();
     EnemyStaticData ForMonster(EnemyTypeId typeId);
     LevelStaticData ForLevel(string sceneKey);
+    EnemyLoot ForLoot(string levelKey, EnemyTypeId typeId);
   }
 }

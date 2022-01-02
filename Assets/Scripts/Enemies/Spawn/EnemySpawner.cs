@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Services.Factories.Enemy;
 using Services.Factories.GameFactories;
 using StaticData.Level;
 using UnityEngine;

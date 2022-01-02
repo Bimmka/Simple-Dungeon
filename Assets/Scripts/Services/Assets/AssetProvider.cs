@@ -4,9 +4,9 @@ namespace Services.Assets
 {
   public class AssetProvider : IAssetProvider
   {
-    public GameObject Instantiate(string prefabPath)
+    public T Instantiate<T>(string prefabPath) where T : Object
     {
-      var prefab = Resources.Load<GameObject>(prefabPath);
+      var prefab = Resources.Load<T>(prefabPath);
       return Object.Instantiate(prefab);
     }
 

@@ -17,7 +17,7 @@ MonoBehaviour:
     Enemies:
     - Id: 0
       Count: 1
-      HpCoeff: 1
+      HpCoeff: 0.5
       DamageCoeff: 1
     WaveWaitTime: 5
   - WaveIndex: 2

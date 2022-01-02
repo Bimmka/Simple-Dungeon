@@ -8,7 +8,7 @@ using StaticData.Enemies;
 using UI.Displaying;
 using UnityEngine;
 
-namespace Services.Factories.GameFactories
+namespace Services.Factories.Enemy
 {
   public class EnemiesFactory : IEnemiesFactory
   {

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Services.UI.Buttons;
 using Services.UI.Factory;
 using UI.Base;
-using UI.Buttons;
 
 namespace Services.UI.Windows
 {

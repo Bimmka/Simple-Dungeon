@@ -6,6 +6,7 @@ using GameStates.States.Interfaces;
 using SceneLoading;
 using Services;
 using Services.Factories.GameFactories;
+using Services.Loot;
 using Services.Progress;
 using Services.SaveLoad;
 using Services.StaticData;
@@ -26,7 +27,7 @@ namespace GameStates
         [typeof(BootstrapState)] = new BootstrapState(this, sceneLoader,ref services, coroutineRunner),
         [typeof(LoadProgressState)] = new LoadProgressState(this, sceneLoader, services.Single<IPersistentProgressService>(), services.Single<ISaveLoadService>()),
         [typeof(GameLoopState)] = new GameLoopState(this, services.Single<IWaveServices>()),
-        [typeof(LoadGameLevelState)] = new LoadGameLevelState(sceneLoader, this, services.Single<IGameFactory>(), services.Single<IUIFactory>(), services.Single<IStaticDataService>(), services.Single<IWaveServices>())
+        [typeof(LoadGameLevelState)] = new LoadGameLevelState(sceneLoader, this, services.Single<IGameFactory>(), services.Single<IUIFactory>(), services.Single<IStaticDataService>(), services.Single<IWaveServices>(), services.Single<ILootService>())
       };
     }
     

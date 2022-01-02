@@ -1,8 +1,7 @@
-﻿using Enemies;
-using Enemies.Spawn;
+﻿using Enemies.Spawn;
 using UnityEngine;
 
-namespace Services.Factories.GameFactories
+namespace Services.Factories.Enemy
 {
   public interface IEnemiesFactory : IService
   {

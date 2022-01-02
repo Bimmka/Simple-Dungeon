@@ -5,6 +5,7 @@ using Enemies;
 using Enemies.Spawn;
 using Hero;
 using Services.Assets;
+using Services.Factories.Enemy;
 using Services.Input;
 using Services.Progress;
 using Services.StaticData;
@@ -48,7 +49,7 @@ namespace Services.Factories.GameFactories
 
     public GameObject CreateHud(GameObject hero)
     {
-      GameObject hud = assets.Instantiate(AssetsPath.Hud);
+      GameObject hud = assets.Instantiate<GameObject>(AssetsPath.Hud);
       hud.GetComponentInChildren<HPDisplayer>().Construct(hero.GetComponentInChildren<IHealth>());
       hud.GetComponentInChildren<StaminaDisplayer>().Construct(hero.GetComponentInChildren<IStamina>());
       return hud;

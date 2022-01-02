@@ -5,8 +5,11 @@ using Input;
 using SceneLoading;
 using Services;
 using Services.Assets;
+using Services.Factories.Enemy;
 using Services.Factories.GameFactories;
+using Services.Factories.Loot;
 using Services.Input;
+using Services.Loot;
 using Services.Progress;
 using Services.Random;
 using Services.SaveLoad;
@@ -55,6 +58,8 @@ namespace GameStates.States
       RegisterEnemiesSpawner();
       RegisterGameFactory();
       RegisterWaveService(coroutineRunner);
+      RegisterLootSpawner();
+      RegisterLootService();
       RegisterWindowsService();
     }
 
@@ -66,6 +71,12 @@ namespace GameStates.States
 
     private void RegisterEnemiesFactory() => 
       services.RegisterSingle<IEnemiesFactory>(new EnemiesFactory(services.Single<IAssetProvider>(), services.Single<IStaticDataService>()));
+
+    private void RegisterLootSpawner() => 
+      services.RegisterSingle<ILootSpawner>(new LootSpawner(services.Single<IAssetProvider>()));
+
+    private void RegisterLootService() => 
+      services.RegisterSingle<ILootService>(new LootService(services.Single<ILootSpawner>(), services.Single<IRandomService>(),services.Single<IStaticDataService>(), services.Single<IEnemySpawner>()));
 
     private void RegisterGameFactory()
     {

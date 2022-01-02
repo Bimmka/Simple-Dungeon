@@ -7,6 +7,7 @@ using Enemies.Spawn;
 using GameStates.States.Interfaces;
 using SceneLoading;
 using Services.Factories.GameFactories;
+using Services.Loot;
 using Services.Progress;
 using Services.StaticData;
 using Services.UI.Factory;
@@ -25,8 +26,9 @@ namespace GameStates.States
     private readonly IUIFactory uiFactory;
     private readonly IStaticDataService staticData;
     private readonly IWaveServices waveServices;
+    private readonly ILootService lootService;
 
-    public LoadGameLevelState(ISceneLoader sceneLoader, IGameStateMachine gameStateMachine, IGameFactory gameFactory, IUIFactory uiFactory, IStaticDataService staticData, IWaveServices waveServices)
+    public LoadGameLevelState(ISceneLoader sceneLoader, IGameStateMachine gameStateMachine, IGameFactory gameFactory, IUIFactory uiFactory, IStaticDataService staticData, IWaveServices waveServices, ILootService lootService)
     {
       this.sceneLoader = sceneLoader;
       this.gameStateMachine = gameStateMachine;
@@ -34,6 +36,7 @@ namespace GameStates.States
       this.uiFactory = uiFactory;
       this.staticData = staticData;
       this.waveServices = waveServices;
+      this.lootService = lootService;
     }
 
 
@@ -57,6 +60,7 @@ namespace GameStates.States
       InitWaves(levelData.LevelWaves);
       GameObject hero = gameFactory.CreateHero();
       InitHud(hero);
+      InitLootService(levelData.LevelKey);
       CameraFollow(hero);
     }
 
@@ -77,7 +81,10 @@ namespace GameStates.States
 
     private void InitUIRoot() => 
       uiFactory.CreateUIRoot();
-    
+
+    private void InitLootService(string sceneName) => 
+      lootService.SetSceneName(sceneName);
+
     private void CameraFollow(GameObject hero) =>
       Camera.main.GetComponent<CameraFollow>().Follow(hero);
   }

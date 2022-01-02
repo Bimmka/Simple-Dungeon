@@ -7,6 +7,7 @@ using Services.UI.Factory;
 using StaticData.Enemies;
 using StaticData.Hero;
 using StaticData.Level;
+using StaticData.Loot;
 using StaticData.UI;
 using UnityEngine;
 
@@ -17,6 +18,7 @@ namespace Services.StaticData
     private Dictionary<WindowId, WindowInstantiateData> windows;
     private Dictionary<EnemyTypeId, EnemyStaticData> enemies;
     private Dictionary<string, LevelStaticData> levels;
+    private Dictionary<string, EnemyLoot[]> loots;
     private HeroSpawnStaticData heroData;
     public void Load()
     {
@@ -28,6 +30,10 @@ namespace Services.StaticData
       levels = Resources
         .LoadAll<LevelStaticData>(AssetsPath.LevelsDataPath)
         .ToDictionary(x => x.LevelKey, x => x);
+      
+      loots = Resources
+        .LoadAll<LevelLootStaticData>(AssetsPath.LootsDataPath)
+        .ToDictionary(x => x.LevelKey, x => x.Loots);
     }
     
     public WindowInstantiateData ForWindow(WindowId windowId) =>
@@ -47,5 +53,16 @@ namespace Services.StaticData
       levels.TryGetValue(sceneKey, out LevelStaticData staticData)
         ? staticData 
         : null;
+
+    public EnemyLoot ForLoot(string levelKey, EnemyTypeId typeId)
+    {
+      loots.TryGetValue(levelKey, out EnemyLoot[] enemyLoots);
+      for (int i = 0; i < enemyLoots.Length; i++)
+      {
+        if (enemyLoots[i].TypeIds.Contains(typeId))
+          return enemyLoots[i];
+      }
+      return new EnemyLoot();
+    }
   }
 }

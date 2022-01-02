@@ -1,7 +1,7 @@
 ﻿using Services.UI.Factory;
 using UnityEngine;
 
-namespace UI.Buttons
+namespace Services.UI.Buttons
 {
   public class SwitchWindowButton : OpenWindowButton
   {

@@ -1358,6 +1358,7 @@ GameObject:
   - component: {fileID: -2693136154511395499}
   - component: {fileID: 5659749764264390557}
   - component: {fileID: 8861303588428747833}
+  - component: {fileID: 1938066207622182473}
   m_Layer: 6
   m_Name: Hero
   m_TagString: Untagged
@@ -1452,8 +1453,6 @@ MonoBehaviour:
   rotate: {fileID: 3149872168373664166}
   attack: {fileID: 6521555783495855305}
   stamina: {fileID: 4040344819590722244}
-  attackData: {fileID: 11400000, guid: d70af834e6d99d04494daa44380ebc73, type: 2}
-  impactsData: {fileID: 11400000, guid: 432ff5cf51c4ad3438eda5133d08f2c5, type: 2}
 --- !u!114 &8124249772606008009
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1528,6 +1527,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.6251359, y: 1.9457324, z: 0.47550654}
   m_Center: {x: 0.01636672, y: 1.2927564, z: -0.0072215796}
+--- !u!114 &1938066207622182473
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4684724166972553566}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21298bc02a7e4f9c9211de30f780c3ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4718620376972774224
 GameObject:
   m_ObjectHideFlags: 0
@@ -2832,7 +2843,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b0a0e361fcd1df4fa228b9c1a7fdeed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
 --- !u!1 &8115903729158045159
 GameObject:
   m_ObjectHideFlags: 0
