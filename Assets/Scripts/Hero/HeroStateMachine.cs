@@ -31,7 +31,8 @@ namespace Hero
         
         public bool IsBlockingPressed { get; private set; }
         public bool IsBlockingUp => stateMachine.State == IdleShieldState;
-        
+        public bool IsRolling => stateMachine.State == RollState;
+
         public Vector2 MoveAxis { get; private set; }
         public float RotateAngle { get; private set; }
 

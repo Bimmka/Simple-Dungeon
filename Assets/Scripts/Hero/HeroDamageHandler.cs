@@ -28,7 +28,7 @@ namespace Hero
             hero.ImpactInShield();
 
         private bool IsDamageAbsorbed(Vector3 attackPosition) => 
-            hero.IsBlockingUp && IsAttackForward(attackPosition);
+            (hero.IsBlockingUp && IsAttackForward(attackPosition)) || hero.IsRolling;
 
         private bool IsAttackForward(Vector3 attackPosition)
         {
