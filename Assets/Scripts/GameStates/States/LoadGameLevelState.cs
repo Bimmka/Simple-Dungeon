@@ -7,6 +7,7 @@ using Enemies.Spawn;
 using GameStates.States.Interfaces;
 using SceneLoading;
 using Services.Factories.GameFactories;
+using Services.Factories.Loot;
 using Services.Loot;
 using Services.Progress;
 using Services.StaticData;
@@ -27,8 +28,9 @@ namespace GameStates.States
     private readonly IStaticDataService staticData;
     private readonly IWaveServices waveServices;
     private readonly ILootService lootService;
+    private readonly ILootSpawner lootSpawner;
 
-    public LoadGameLevelState(ISceneLoader sceneLoader, IGameStateMachine gameStateMachine, IGameFactory gameFactory, IUIFactory uiFactory, IStaticDataService staticData, IWaveServices waveServices, ILootService lootService)
+    public LoadGameLevelState(ISceneLoader sceneLoader, IGameStateMachine gameStateMachine, IGameFactory gameFactory, IUIFactory uiFactory, IStaticDataService staticData, IWaveServices waveServices, ILootService lootService, ILootSpawner lootSpawner)
     {
       this.sceneLoader = sceneLoader;
       this.gameStateMachine = gameStateMachine;
@@ -37,6 +39,7 @@ namespace GameStates.States
       this.staticData = staticData;
       this.waveServices = waveServices;
       this.lootService = lootService;
+      this.lootSpawner = lootSpawner;
     }
 
 
@@ -60,6 +63,7 @@ namespace GameStates.States
       InitWaves(levelData.LevelWaves);
       GameObject hero = gameFactory.CreateHero();
       InitHud(hero);
+      CleanupLootSpawner();
       InitLootService(levelData.LevelKey);
       CameraFollow(hero);
     }
@@ -72,6 +76,9 @@ namespace GameStates.States
 
     private void InitSpawners(List<EnemySpawnerStaticData> spawners, SpawnPoint pointPrefab) => 
       gameFactory.CreateEnemySpawnPoints(spawners, pointPrefab);
+
+    private void CleanupLootSpawner() => 
+      lootSpawner.Cleanup();
 
     private void InitWaves(LevelWaveStaticData waves) => 
       waveServices.SetLevelWaves(waves);
