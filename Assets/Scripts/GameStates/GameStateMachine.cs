@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Bootstrapp;
 using GameStates.States;
 using GameStates.States.Interfaces;
+using Loots;
 using SceneLoading;
 using Services;
 using Services.Factories.GameFactories;
@@ -21,11 +22,12 @@ namespace GameStates
     private readonly Dictionary<Type, IExitableState> _states;
     private IExitableState _activeState;
 
-    public GameStateMachine(ISceneLoader sceneLoader, ref AllServices services, ICoroutineRunner coroutineRunner)
+    public GameStateMachine(ISceneLoader sceneLoader, ref AllServices services, ICoroutineRunner coroutineRunner,
+      LootContainer lootContainer)
     {
       _states = new Dictionary<Type, IExitableState>
       {
-        [typeof(BootstrapState)] = new BootstrapState(this, sceneLoader,ref services, coroutineRunner),
+        [typeof(BootstrapState)] = new BootstrapState(this, sceneLoader,ref services, coroutineRunner, lootContainer),
         [typeof(LoadProgressState)] = new LoadProgressState(this, sceneLoader, services.Single<IPersistentProgressService>(), services.Single<ISaveLoadService>()),
         [typeof(GameLoopState)] = new GameLoopState(this, services.Single<IWaveServices>()),
         [typeof(LoadGameLevelState)] = new LoadGameLevelState(sceneLoader, this, services.Single<IGameFactory>(), services.Single<IUIFactory>(), services.Single<IStaticDataService>(), services.Single<IWaveServices>(), services.Single<ILootService>(), services.Single<ILootSpawner>())

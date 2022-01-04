@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using ConstantsValue;
 using Loots;
 using Services.Assets;
+using StaticData.Loot.Items;
 using UnityEngine;
 
 namespace Services.Factories.Loot
@@ -12,11 +13,13 @@ namespace Services.Factories.Loot
     private readonly IAssetProvider assetProvider;
 
     private readonly Queue<Money> monies;
+    private readonly Queue<DroppedLoot> droppedLoots;
 
     public LootSpawner(IAssetProvider assetProvider)
     {
       this.assetProvider = assetProvider;
       monies = new Queue<Money>(30);
+      droppedLoots = new Queue<DroppedLoot>(30);
     }
 
     public void Cleanup()
@@ -26,6 +29,13 @@ namespace Services.Factories.Loot
       {
         money = monies.Dequeue();
         money.PickedUp -= OnMoneyPickedUp;
+      }
+
+      DroppedLoot loot;
+      while (droppedLoots.Count > 0)
+      {
+        loot = droppedLoots.Dequeue();
+        loot.PickedUp -= OnLootPickedUp;
       }
     }
 
@@ -40,12 +50,12 @@ namespace Services.Factories.Loot
       }
     }
 
-    private void CreateMonies(int count)
+    public void SpawnLoot(ItemStaticData droppedLoot, Vector3 position)
     {
-      for (int i = 0; i < count; i++)
-      {
-        monies.Enqueue(CreateMoney());
-      }
+      DroppedLoot loot = droppedLoots.Count > 0 ? droppedLoots.Dequeue() : CreateLoot();
+      loot.SetPosition(position);
+      loot.SetItem(droppedLoot);
+      loot.Show();
     }
 
     private Money CreateMoney()
@@ -56,10 +66,24 @@ namespace Services.Factories.Loot
       return money;
     }
 
+    private DroppedLoot CreateLoot()
+    {
+      DroppedLoot loot = assetProvider.Instantiate<DroppedLoot>(AssetsPath.DroppedLootPrefabPath);
+      loot.Hide();
+      loot.PickedUp += OnLootPickedUp;
+      return loot;
+    }
+
     private void OnMoneyPickedUp(Money money)
     {
       money.Hide();
       monies.Enqueue(money);
+    }
+
+    private void OnLootPickedUp(DroppedLoot loot)
+    {
+      loot.Hide();
+      droppedLoots.Enqueue(loot);
     }
   }
 }

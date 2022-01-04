@@ -58,13 +58,17 @@ namespace GameStates.States
     private void InitGameWorld()
     {
       InitUIRoot();
+      
       LevelStaticData levelData = GetLevelData();
       InitSpawners(levelData.EnemySpawners, levelData.SpawnPointPrefab);
       InitWaves(levelData.LevelWaves);
+      InitLootService(levelData.LevelKey);
+      
       GameObject hero = gameFactory.CreateHero();
       GameObject hud = CreateHud(hero);
+
       CleanupLootSpawner();
-      InitLootService(levelData.LevelKey);
+
       Camera camera = Camera.main;
       CameraFollow(hero, camera);
       SetCameraToHud(hud, camera);

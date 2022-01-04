@@ -15,4 +15,12 @@ MonoBehaviour:
   LevelKey: Game
   Loots:
   - TypeIds: 00000000
+    RareTypeDrops:
+    - RareType: 1
+      Chance: 0.5
+    - RareType: 2
+      Chance: 0.35
+    - RareType: 3
+      Chance: 0.15
     MoneyCountRange: {x: 0, y: 10}
+    LootCountRange: {x: 0, y: 5}

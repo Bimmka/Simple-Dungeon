@@ -14,6 +14,11 @@
 
     public int Next(int max) => 
       Next(0, max);
-    
+
+    public float NextFloat() => 
+      (float) NextDouble();
+
+    public double NextDouble() => 
+      random.NextDouble();
   }
 }

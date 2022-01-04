@@ -8,6 +8,8 @@ namespace StaticData.Loot
   public struct EnemyLoot
   {
     public EnemyTypeId[] TypeIds;
+    public RareTypeDrop[] RareTypeDrops;
     public Vector2Int MoneyCountRange;
+    public Vector2Int LootCountRange;
   }
 }

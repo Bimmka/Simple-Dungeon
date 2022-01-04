@@ -11,5 +11,6 @@
     public static string LootsDataPath = "StaticData/Loots";
 
     public static string MoneyPrefabPath = "Loot/Money";
+    public static string DroppedLootPrefabPath = "Loot/DroppedLoot";
   }
 }

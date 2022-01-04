@@ -2,6 +2,7 @@
 using Enemies.Spawn;
 using GameStates.States.Interfaces;
 using Input;
+using Loots;
 using SceneLoading;
 using Services;
 using Services.Assets;
@@ -26,12 +27,12 @@ namespace GameStates.States
     private readonly IGameStateMachine gameStateMachine;
     private readonly AllServices services;
 
-    public BootstrapState(IGameStateMachine gameStateMachine, ISceneLoader sceneLoader, ref AllServices services, ICoroutineRunner coroutineRunner)
+    public BootstrapState(IGameStateMachine gameStateMachine, ISceneLoader sceneLoader, ref AllServices services, ICoroutineRunner coroutineRunner, LootContainer lootContainer)
     {
       this.gameStateMachine = gameStateMachine;
       this.sceneLoader = sceneLoader;
       this.services = services;
-      RegisterServices(coroutineRunner);
+      RegisterServices(coroutineRunner, lootContainer);
     }
 
     public void Enter()
@@ -44,7 +45,7 @@ namespace GameStates.States
       
     }
 
-    private void RegisterServices(ICoroutineRunner coroutineRunner)
+    private void RegisterServices(ICoroutineRunner coroutineRunner, LootContainer lootContainer)
     {
       RegisterStateMachine();
       RegisterInputService();
@@ -60,7 +61,7 @@ namespace GameStates.States
       RegisterGameFactory();
       RegisterWaveService(coroutineRunner);
       RegisterLootSpawner();
-      RegisterLootService();
+      RegisterLootService(lootContainer);
     }
 
     private void RegisterWaveService(ICoroutineRunner coroutineRunner) => 
@@ -75,8 +76,8 @@ namespace GameStates.States
     private void RegisterLootSpawner() => 
       services.RegisterSingle<ILootSpawner>(new LootSpawner(services.Single<IAssetProvider>()));
 
-    private void RegisterLootService() => 
-      services.RegisterSingle<ILootService>(new LootService(services.Single<ILootSpawner>(), services.Single<IRandomService>(),services.Single<IStaticDataService>(), services.Single<IEnemySpawner>()));
+    private void RegisterLootService(LootContainer lootContainer) => 
+      services.RegisterSingle<ILootService>(new LootService(services.Single<ILootSpawner>(), services.Single<IRandomService>(),services.Single<IStaticDataService>(), services.Single<IEnemySpawner>(), lootContainer));
 
     private void RegisterGameFactory()
     {

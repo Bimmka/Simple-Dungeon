@@ -4,5 +4,7 @@
   {
     int Next(int min, int max);
     int Next(int max);
+    float NextFloat();
+    double NextDouble();
   }
 }

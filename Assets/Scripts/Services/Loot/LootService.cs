@@ -1,9 +1,11 @@
 ﻿using Enemies.Entity;
 using Enemies.Spawn;
+using Loots;
 using Services.Factories.Loot;
 using Services.Random;
 using Services.StaticData;
 using StaticData.Loot;
+using StaticData.Loot.Items;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -15,15 +17,17 @@ namespace Services.Loot
     private readonly IRandomService randomService;
     private readonly IStaticDataService staticDataService;
     private readonly IEnemySpawner enemySpawner;
+    private readonly LootContainer lootContainer;
 
     private string levelName; 
 
-    public LootService(ILootSpawner lootSpawner, IRandomService randomService, IStaticDataService staticDataService, IEnemySpawner enemySpawner)
+    public LootService(ILootSpawner lootSpawner, IRandomService randomService, IStaticDataService staticDataService, IEnemySpawner enemySpawner, LootContainer lootContainer)
     {
       this.lootSpawner = lootSpawner;
       this.randomService = randomService;
       this.staticDataService = staticDataService;
       this.enemySpawner = enemySpawner;
+      this.lootContainer = lootContainer;
       this.enemySpawner.Spawned += SubscribeForEnemy;
     }
 
@@ -46,6 +50,38 @@ namespace Services.Loot
     {
       EnemyLoot loot = staticDataService.ForLoot(levelName, enemyTypeId);
       lootSpawner.SpawnMoney(randomService.Next(loot.MoneyCountRange.x, loot.MoneyCountRange.y), position);
+      
+      SpawnLoot(loot, position);
+    }
+
+    private void SpawnLoot(EnemyLoot loot, Vector3 position)
+    {
+      int lootCount = randomService.Next(loot.LootCountRange.x, loot.LootCountRange.y);
+      for (int i = 0; i < lootCount; i++)
+      {
+        lootSpawner.SpawnLoot(DroppedLoot(loot), position);  
+      }
+    }
+
+    private ItemStaticData DroppedLoot(EnemyLoot enemyLoot)
+    {
+      float randomValue = randomService.NextFloat();
+      for (int i = 0; i < enemyLoot.RareTypeDrops.Length; i++)
+      {
+        if (randomValue < enemyLoot.RareTypeDrops[i].Chance)
+          return RandomLoot(lootContainer.RareTypeItems(enemyLoot.RareTypeDrops[i].RareType));
+        randomValue -= enemyLoot.RareTypeDrops[i].Chance;
+      }
+
+      return null;
+    }
+
+    private ItemStaticData RandomLoot(ItemStaticData[] items)
+    {
+      if (items == null || items.Length == 0)
+        return null;
+
+      return items[randomService.Next(0, items.Length)];
     }
   }
 }
