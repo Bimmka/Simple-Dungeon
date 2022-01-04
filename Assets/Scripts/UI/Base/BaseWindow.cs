@@ -8,13 +8,6 @@ namespace UI.Base
   public class BaseWindow : MonoBehaviour
   {
     public event Action<BaseWindow> Destroyed;
-    
-    protected IGameStateMachine gameStateMachine;
-
-    public void Construct(IGameStateMachine gameStateMachine)
-    {
-      this.gameStateMachine = gameStateMachine;
-    }
 
     private void Awake() => 
       OnAwake();

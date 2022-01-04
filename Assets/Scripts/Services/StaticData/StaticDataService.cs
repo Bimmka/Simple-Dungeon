@@ -23,6 +23,7 @@ namespace Services.StaticData
     public void Load()
     {
       heroData = Resources.Load<HeroSpawnStaticData>(AssetsPath.HeroDataPath);
+
       enemies = Resources
         .LoadAll<EnemyStaticData>(AssetsPath.EnemiesDataPath)
         .ToDictionary(x => x.Id, x => x);
@@ -34,6 +35,11 @@ namespace Services.StaticData
       loots = Resources
         .LoadAll<LevelLootStaticData>(AssetsPath.LootsDataPath)
         .ToDictionary(x => x.LevelKey, x => x.Loots);
+
+      windows = Resources
+        .Load<WindowsStaticData>(AssetsPath.WindowsDataPath)
+        .InstantiateData
+        .ToDictionary(x => x.ID, x => x);
     }
     
     public WindowInstantiateData ForWindow(WindowId windowId) =>

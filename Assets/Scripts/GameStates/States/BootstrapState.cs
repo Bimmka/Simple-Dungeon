@@ -56,11 +56,11 @@ namespace GameStates.States
       RegisterUIFactory();
       RegisterEnemiesFactory();
       RegisterEnemiesSpawner();
+      RegisterWindowsService();
       RegisterGameFactory();
       RegisterWaveService(coroutineRunner);
       RegisterLootSpawner();
       RegisterLootService();
-      RegisterWindowsService();
     }
 
     private void RegisterWaveService(ICoroutineRunner coroutineRunner) => 
@@ -85,7 +85,8 @@ namespace GameStates.States
         services.Single<IStaticDataService>(),
         services.Single<IInputService>(),
         services.Single<IEnemiesFactory>(), 
-        services.Single<IEnemySpawner>()));
+        services.Single<IEnemySpawner>(),
+        services.Single<IWindowsService>()));
     }
 
     private void RegisterStateMachine() => 

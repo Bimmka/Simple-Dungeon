@@ -62,10 +62,12 @@ namespace GameStates.States
       InitSpawners(levelData.EnemySpawners, levelData.SpawnPointPrefab);
       InitWaves(levelData.LevelWaves);
       GameObject hero = gameFactory.CreateHero();
-      InitHud(hero);
+      GameObject hud = CreateHud(hero);
       CleanupLootSpawner();
       InitLootService(levelData.LevelKey);
-      CameraFollow(hero);
+      Camera camera = Camera.main;
+      CameraFollow(hero, camera);
+      SetCameraToHud(hud, camera);
     }
 
     private LevelStaticData GetLevelData()
@@ -83,7 +85,7 @@ namespace GameStates.States
     private void InitWaves(LevelWaveStaticData waves) => 
       waveServices.SetLevelWaves(waves);
 
-    private void InitHud(GameObject hero) => 
+    private GameObject CreateHud(GameObject hero) => 
       gameFactory.CreateHud(hero);
 
     private void InitUIRoot() => 
@@ -92,7 +94,10 @@ namespace GameStates.States
     private void InitLootService(string sceneName) => 
       lootService.SetSceneName(sceneName);
 
-    private void CameraFollow(GameObject hero) =>
-      Camera.main.GetComponent<CameraFollow>().Follow(hero);
+    private void CameraFollow(GameObject hero, Camera camera) => 
+      camera.GetComponent<CameraFollow>().Follow(hero);
+
+    private void SetCameraToHud(GameObject hud, Camera camera) => 
+      hud.GetComponent<Canvas>().worldCamera = camera;
   }
 }

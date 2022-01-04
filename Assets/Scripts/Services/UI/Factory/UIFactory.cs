@@ -44,19 +44,11 @@ namespace Services.UI.Factory
       switch (id)
       {
         default:
-          CreateWindowWithGameMachine(config, id);
+          CreateWindow(config, id);
           break;
       }
     }
 
-    
-    private void CreateWindowWithGameMachine(WindowInstantiateData config, WindowId id)
-    {
-      BaseWindow window = InstantiateWindow(config);
-      window.Construct(gameStateMachine);
-      NotifyAboutCreateWindow(id, window);
-    }
-    
     private void CreateWindow(WindowInstantiateData config, WindowId id)
     {
       BaseWindow window = InstantiateWindow(config);
@@ -67,7 +59,7 @@ namespace Services.UI.Factory
       Spawned?.Invoke(id, window);
 
     private BaseWindow InstantiateWindow(WindowInstantiateData config) => 
-      Object.Instantiate(config.Window, uiRoot);
+      assets.Instantiate(config.Window, uiRoot);
 
     private WindowInstantiateData LoadWindowInstantiateData(WindowId id) => 
       staticData.ForWindow(id);

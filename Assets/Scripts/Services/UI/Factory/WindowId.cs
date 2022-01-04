@@ -3,12 +3,7 @@
   public enum WindowId
   {
     None, 
-    Registration,
-    PVPBoosterChoose,
-    MainWindow,
-    PVPQueue,
-    PVPStatistic,
-    LeagueMain,
-    LeagueLeaderboard
+    Inventory,
+    Menu
   }
 }
