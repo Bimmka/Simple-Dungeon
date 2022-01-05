@@ -6,8 +6,8 @@ using Services.Progress;
 using Services.StaticData;
 using StaticData.UI;
 using UI.Base;
+using UI.Windows.Inventories;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace Services.UI.Factory
 {
@@ -43,10 +43,20 @@ namespace Services.UI.Factory
       WindowInstantiateData config = LoadWindowInstantiateData(id);
       switch (id)
       {
+        case WindowId.Inventory:
+          CreateInventoryWindow(config, id);
+          break;
         default:
           CreateWindow(config, id);
           break;
       }
+    }
+
+    private void CreateInventoryWindow(WindowInstantiateData config, WindowId id)
+    {
+      BaseWindow window = InstantiateWindow(config);
+      ((InventoryWindow)window).Construct(progressService.Player);
+      NotifyAboutCreateWindow(id, window);
     }
 
     private void CreateWindow(WindowInstantiateData config, WindowId id)

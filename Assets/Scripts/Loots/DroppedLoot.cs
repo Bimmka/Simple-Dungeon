@@ -1,4 +1,5 @@
 ﻿using System;
+using Hero;
 using StaticData.Loot.Items;
 using UnityEngine;
 
@@ -28,6 +29,15 @@ namespace Loots
       SpawnView(itemData.Prefab);
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+      if (other.TryGetComponent(out HeroInventory inventory))
+      {
+        if (inventory.IsCanAddItem(currentItem))
+          PickUp(inventory);
+      }
+    }
+
     private void SpawnView(GameObject prefab)
     {
       if (spawnedView != null)
@@ -36,8 +46,9 @@ namespace Loots
       spawnedView = Instantiate(prefab, transform);
     }
 
-    private void PickUp()
+    private void PickUp(HeroInventory heroInventory)
     {
+      heroInventory.AddItem(currentItem);
       PickedUp?.Invoke(this);
     }
   }

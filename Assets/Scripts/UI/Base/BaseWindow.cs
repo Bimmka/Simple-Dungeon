@@ -35,10 +35,10 @@ namespace UI.Base
     private void CloseWindow() => 
       gameObject.SetActive(false);
 
-    public void Open() => 
+    public virtual void Open() => 
       gameObject.SetActive(true);
 
-    public void Close() => 
+    public virtual void Close() => 
       CloseWindow();
   }
 }

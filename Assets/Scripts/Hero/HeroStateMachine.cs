@@ -1,5 +1,6 @@
 using Systems.Healths;
 using Animations;
+using Services.PlayerData;
 using StateMachines.Player;
 using StaticData.Hero.Components;
 using UnityEngine;
@@ -36,12 +37,12 @@ namespace Hero
         public Vector2 MoveAxis { get; private set; }
         public float RotateAngle { get; private set; }
 
-        public void Construct(HeroAttackStaticData attackData, HeroImpactsStaticData impactData, IHealth health)
+        public void Construct(HeroAttackStaticData attackData, HeroImpactsStaticData impactData, IHealth health, PlayerCharacteristics characteristics)
         {
             this.attackData = attackData;
             this.health = health;
             impactsData = impactData;
-            attack.Construct(attackData);
+            attack.Construct(attackData, characteristics);
             Initialize();
         }
 

@@ -19,10 +19,15 @@ namespace Services.StaticData
     private Dictionary<EnemyTypeId, EnemyStaticData> enemies;
     private Dictionary<string, LevelStaticData> levels;
     private Dictionary<string, EnemyLoot[]> loots;
-    private HeroSpawnStaticData heroData;
+    
+    private HeroSpawnStaticData heroSpawnData;
+    private HeroBaseStaticData heroCharacteristics;
+    
     public void Load()
     {
-      heroData = Resources.Load<HeroSpawnStaticData>(AssetsPath.HeroDataPath);
+      heroSpawnData = Resources.Load<HeroSpawnStaticData>(AssetsPath.HeroSpawnDataPath);
+
+      heroCharacteristics = Resources.Load<HeroBaseStaticData>(AssetsPath.HeroCharacteristicsDataPath);
 
       enemies = Resources
         .LoadAll<EnemyStaticData>(AssetsPath.EnemiesDataPath)
@@ -48,7 +53,10 @@ namespace Services.StaticData
         : new WindowInstantiateData();
 
     public HeroSpawnStaticData ForHero() => 
-      heroData;
+      heroSpawnData;
+
+    public HeroBaseStaticData ForHeroCharacteristics() => 
+      heroCharacteristics;
 
     public EnemyStaticData ForMonster(EnemyTypeId typeId) =>
     enemies.TryGetValue(typeId, out EnemyStaticData staticData)

@@ -1,4 +1,5 @@
 ﻿using Interfaces;
+using Services.PlayerData;
 using StaticData.Hero.Components;
 using UnityEngine;
 
@@ -9,20 +10,22 @@ namespace Hero
     [SerializeField] private Transform attackPoint;
 
     private HeroAttackStaticData attackData;
+    private PlayerCharacteristics characteristics;
 
     private Collider[] hits;
 
-    public void Construct(HeroAttackStaticData data)
+    public void Construct(HeroAttackStaticData data, PlayerCharacteristics characteristics)
     {
       attackData = data;
       hits = new Collider[attackData.MaxAttackedEntitiesCount];
+      this.characteristics = characteristics;
     }
 
     public void Attack()
     {
       for (int i = 0; i < Hit(); i++)
       {
-        hits[i].GetComponentInChildren<IDamageableEntity>().TakeDamage(attackData.Damage, transform.position);
+        hits[i].GetComponentInChildren<IDamageableEntity>().TakeDamage(characteristics.Damage(), transform.position);
       }
     }
 

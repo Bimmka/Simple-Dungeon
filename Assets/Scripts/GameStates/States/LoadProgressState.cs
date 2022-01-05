@@ -1,7 +1,6 @@
 ﻿using GameStates.States.Interfaces;
 using SceneLoading;
 using Services.Progress;
-using Services.SaveLoad;
 
 namespace GameStates.States
 {
@@ -10,14 +9,12 @@ namespace GameStates.States
     private readonly IGameStateMachine gameStateMachine;
     private readonly ISceneLoader sceneLoader;
     private readonly IPersistentProgressService progressService;
-    private readonly ISaveLoadService saveLoadProgress;
- 
-    public LoadProgressState(IGameStateMachine gameStateMachine, ISceneLoader sceneLoader, IPersistentProgressService progressService, ISaveLoadService saveLoadProgress)
+
+    public LoadProgressState(IGameStateMachine gameStateMachine, ISceneLoader sceneLoader, IPersistentProgressService progressService)
     {
       this.gameStateMachine = gameStateMachine;
       this.sceneLoader = sceneLoader;
       this.progressService = progressService;
-      this.saveLoadProgress = saveLoadProgress;
     }
 
     public void Enter()

@@ -13,7 +13,6 @@ using Services.Input;
 using Services.Loot;
 using Services.Progress;
 using Services.Random;
-using Services.SaveLoad;
 using Services.StaticData;
 using Services.UI.Factory;
 using Services.UI.Windows;
@@ -50,9 +49,8 @@ namespace GameStates.States
       RegisterStateMachine();
       RegisterInputService();
       RegisterRandom();
-      RegisterProgress();
-      RegisterSaveLoad();
       RegisterStaticDataService();
+      RegisterProgress();
       RegisterAssets();
       RegisterUIFactory();
       RegisterEnemiesFactory();
@@ -81,13 +79,14 @@ namespace GameStates.States
 
     private void RegisterGameFactory()
     {
-      services.RegisterSingle<IGameFactory>(new GameFactory(
+      services.RegisterSingle<IGameFactory>(
+        new GameFactory(
         services.Single<IAssetProvider>(), 
         services.Single<IStaticDataService>(),
         services.Single<IInputService>(),
-        services.Single<IEnemiesFactory>(), 
         services.Single<IEnemySpawner>(),
-        services.Single<IWindowsService>()));
+        services.Single<IWindowsService>(), 
+        services.Single<IPersistentProgressService>()));
     }
 
     private void RegisterStateMachine() => 
@@ -113,11 +112,8 @@ namespace GameStates.States
       services.RegisterSingle(staticData);
     }
 
-    private void RegisterSaveLoad() => 
-      services.RegisterSingle(new SaveLoadService(services.Single<IPersistentProgressService>()));
-
     private void RegisterProgress() => 
-      services.RegisterSingle(new PersistentProgressService());
+      services.RegisterSingle(new PersistentProgressService(services.Single<IStaticDataService>().ForHeroCharacteristics()));
 
     private void RegisterRandom() => 
       services.RegisterSingle(new RandomService());

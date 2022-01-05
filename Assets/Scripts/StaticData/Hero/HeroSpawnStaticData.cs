@@ -8,7 +8,5 @@ namespace StaticData.Hero
   {
     public GameObject HeroPrefab;
     public Vector3 SpawnPoint;
-    public HeroAttackStaticData AttackData;
-    public HeroImpactsStaticData ImpactsData;
   }
 }

@@ -1359,6 +1359,7 @@ GameObject:
   - component: {fileID: 5659749764264390557}
   - component: {fileID: 8861303588428747833}
   - component: {fileID: 1938066207622182473}
+  - component: {fileID: 2908685701717028378}
   m_Layer: 6
   m_Name: Hero
   m_TagString: Untagged
@@ -1537,6 +1538,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 21298bc02a7e4f9c9211de30f780c3ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2908685701717028378
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4684724166972553566}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 168dc367951c4ca284bcbf84a09c70e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &4718620376972774224
@@ -1894,7 +1907,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0d1ed30030a40c888b4737693db3a54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  staminaData: {fileID: 11400000, guid: 60778c11b5ad900418407434aaa8f921, type: 2}
 --- !u!1 &5391751586834448498
 GameObject:
   m_ObjectHideFlags: 0

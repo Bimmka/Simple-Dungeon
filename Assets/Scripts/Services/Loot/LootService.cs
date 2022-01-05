@@ -59,7 +59,9 @@ namespace Services.Loot
       int lootCount = randomService.Next(loot.LootCountRange.x, loot.LootCountRange.y);
       for (int i = 0; i < lootCount; i++)
       {
-        lootSpawner.SpawnLoot(DroppedLoot(loot), position);  
+        ItemStaticData lootData = DroppedLoot(loot);
+        if (lootData != null)
+          lootSpawner.SpawnLoot(lootData, position);  
       }
     }
 

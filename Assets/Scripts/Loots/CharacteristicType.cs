@@ -4,6 +4,7 @@
   {
     None = 0,
     Strength = 1,
-    Health = 2
+    Health = 2,
+    Stamina = 3
   }
 }

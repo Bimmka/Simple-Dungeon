@@ -1,32 +1,34 @@
 ﻿using System;
+using Services.PlayerData;
 using UnityEngine;
 
 namespace Hero
 {
   public class HeroMoney : MonoBehaviour
   {
-    private int moneyCount;
+    private PlayerMoney money;
     public event Action<int> Changed;
 
-    private void Start() => 
-      Display();
-
-    public void AddMoney(int addedMoney)
+    public void Construct(PlayerMoney money)
     {
-      moneyCount += addedMoney;
+      this.money = money;
+      this.money.Changed += Display;
       Display();
     }
 
-    public void ReduceMoney(int decedMoney)
-    {
-      moneyCount -= decedMoney;
-      Display();
-    }
+    private void OnDestroy() => 
+      money.Changed -= Display;
+
+    public void AddMoney(int addedMoney) => 
+      money.AddMoney(addedMoney);
+
+    public void ReduceMoney(int decedMoney) => 
+      money.ReduceMoney(decedMoney);
 
     public bool IsEnoughMoney(int neededCount) => 
-      moneyCount >= neededCount;
+      money.Count >= neededCount;
 
     private void Display() => 
-      Changed?.Invoke(moneyCount);
+      Changed?.Invoke(money.Count);
   }
 }

@@ -14,6 +14,7 @@ namespace Services.StaticData
     void Load();
     WindowInstantiateData ForWindow(WindowId id);
     HeroSpawnStaticData ForHero();
+    HeroBaseStaticData ForHeroCharacteristics();
     EnemyStaticData ForMonster(EnemyTypeId typeId);
     LevelStaticData ForLevel(string sceneKey);
     EnemyLoot ForLoot(string levelKey, EnemyTypeId typeId);

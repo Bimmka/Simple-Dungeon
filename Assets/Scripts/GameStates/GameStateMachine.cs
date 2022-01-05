@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Bootstrapp;
 using GameStates.States;
 using GameStates.States.Interfaces;
 using Loots;
@@ -10,7 +9,6 @@ using Services.Factories.GameFactories;
 using Services.Factories.Loot;
 using Services.Loot;
 using Services.Progress;
-using Services.SaveLoad;
 using Services.StaticData;
 using Services.UI.Factory;
 using Services.Waves;
@@ -28,7 +26,7 @@ namespace GameStates
       _states = new Dictionary<Type, IExitableState>
       {
         [typeof(BootstrapState)] = new BootstrapState(this, sceneLoader,ref services, coroutineRunner, lootContainer),
-        [typeof(LoadProgressState)] = new LoadProgressState(this, sceneLoader, services.Single<IPersistentProgressService>(), services.Single<ISaveLoadService>()),
+        [typeof(LoadProgressState)] = new LoadProgressState(this, sceneLoader, services.Single<IPersistentProgressService>()),
         [typeof(GameLoopState)] = new GameLoopState(this, services.Single<IWaveServices>()),
         [typeof(LoadGameLevelState)] = new LoadGameLevelState(sceneLoader, this, services.Single<IGameFactory>(), services.Single<IUIFactory>(), services.Single<IStaticDataService>(), services.Single<IWaveServices>(), services.Single<ILootService>(), services.Single<ILootSpawner>())
       };

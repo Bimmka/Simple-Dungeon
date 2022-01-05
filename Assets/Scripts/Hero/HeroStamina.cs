@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using Systems.Healths;
+using Services.PlayerData;
 using StaticData.Hero.Components;
 using UnityEngine;
 
@@ -8,18 +9,21 @@ namespace Hero
 {
   public class HeroStamina : MonoBehaviour, IStamina
   {
-    [SerializeField] private HeroStaminaStaticData staminaData;
-
     private float currentStamina;
     private Coroutine recoveryCoroutine;
+    
+    private HeroStaminaStaticData staminaData;
+    private PlayerCharacteristics characteristics;
 
-    public event Action<float, float> Changed; 
+    public event Action<float, float> Changed;
 
-    private void Awake()
+    public void Construct(HeroStaminaStaticData staminaData, PlayerCharacteristics characteristics)
     {
+      this.staminaData = staminaData;
+      this.characteristics = characteristics;
       SetDefaultValue();
     }
-
+    
     public bool IsCanAttack() => 
       currentStamina - staminaData.AttackCost >= 0;
 
@@ -43,14 +47,14 @@ namespace Hero
     }
 
     private void SetDefaultValue() => 
-      currentStamina = staminaData.MaxStamina;
+      currentStamina = characteristics.Stamina();
 
     private void Display() => 
-      Changed?.Invoke(currentStamina, staminaData.MaxStamina);
+      Changed?.Invoke(currentStamina, characteristics.Stamina());
 
     private IEnumerator RecoveryValue()
     {
-      while (currentStamina < staminaData.MaxStamina)
+      while (currentStamina < characteristics.Stamina())
       {
         yield return new WaitForSeconds(staminaData.RecoveryRate);
         currentStamina += staminaData.RecoveryCount;
