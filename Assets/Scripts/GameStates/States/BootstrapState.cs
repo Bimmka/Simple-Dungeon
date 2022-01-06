@@ -6,6 +6,7 @@ using Loots;
 using SceneLoading;
 using Services;
 using Services.Assets;
+using Services.Bonuses;
 using Services.Factories.Enemy;
 using Services.Factories.GameFactories;
 using Services.Factories.Loot;
@@ -13,6 +14,7 @@ using Services.Input;
 using Services.Loot;
 using Services.Progress;
 using Services.Random;
+using Services.Shop;
 using Services.StaticData;
 using Services.UI.Factory;
 using Services.UI.Windows;
@@ -52,10 +54,14 @@ namespace GameStates.States
       RegisterStaticDataService();
       RegisterProgress();
       RegisterAssets();
+      RegisterShopService();
       RegisterUIFactory();
       RegisterEnemiesFactory();
       RegisterEnemiesSpawner();
       RegisterWindowsService();
+      RegisterBonusSpawner();
+      RegisterBonusService();
+      RegisterBonusFactory();
       RegisterGameFactory();
       RegisterWaveService(coroutineRunner);
       RegisterLootSpawner();
@@ -86,7 +92,8 @@ namespace GameStates.States
         services.Single<IInputService>(),
         services.Single<IEnemySpawner>(),
         services.Single<IWindowsService>(), 
-        services.Single<IPersistentProgressService>()));
+        services.Single<IPersistentProgressService>(),
+        services.Single<IBonusSpawner>()));
     }
 
     private void RegisterStateMachine() => 
@@ -120,9 +127,31 @@ namespace GameStates.States
 
     private void RegisterUIFactory() =>
       services.RegisterSingle(new UIFactory(services.Single<IGameStateMachine>(),services.Single<IAssetProvider>(),
-        services.Single<IStaticDataService>(), services.Single<IPersistentProgressService>()));
+        services.Single<IStaticDataService>(), services.Single<IPersistentProgressService>(), services.Single<IShopService>()));
 
     private void RegisterWindowsService() => 
       services.RegisterSingle(new WindowsService(services.Single<IUIFactory>()));
+
+    private void RegisterShopService()
+    {
+      IPersistentProgressService progressService = services.Single<IPersistentProgressService>();
+      services.RegisterSingle(new ShopService(progressService.Player.Monies, progressService.Player.Inventory, 
+        services.Single<IRandomService>(), services.Single<IStaticDataService>().ForShop()));  
+    }
+
+    private void RegisterBonusFactory()
+    {
+      
+    }
+
+    private void RegisterBonusService()
+    {
+      services.RegisterSingle(new BonusFactory(services.Single<IAssetProvider>(), services.Single<IStaticDataService>()));
+    }
+
+    private void RegisterBonusSpawner()
+    {
+      services.RegisterSingle(new BonusSpawner());
+    }
   }
 }

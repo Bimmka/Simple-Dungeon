@@ -1,6 +1,5 @@
 ﻿using Services.PlayerData;
 using StaticData.Hero;
-using StaticData.Hero.Components;
 
 namespace Services.Progress
 {
@@ -14,7 +13,9 @@ namespace Services.Progress
       this.baseStaticData = baseStaticData;
     }
 
-    public void SetPlayerToDefault() => 
-      Player = new Player(baseStaticData);
+    public void SetPlayerToDefault()
+    {
+      Player.SetDefaultValue(baseStaticData);
+    }
   }
 }

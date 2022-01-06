@@ -15,8 +15,8 @@ namespace StaticData.Loot.Items
     public LootType Type;
     public StackableType StackableType = StackableType.Stackable;
     public Characteristic[] Characteristics;
-    public float SellCost = 50;
-    public float BuyCost = 100;
+    public int SellCost = 50;
+    public int BuyCost = 100;
     public GameObject Prefab;
   }
 }

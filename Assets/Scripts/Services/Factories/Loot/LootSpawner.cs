@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using ConstantsValue;
+using Interfaces;
 using Loots;
 using Services.Assets;
 using StaticData.Loot.Items;

@@ -1,12 +1,13 @@
 ﻿using System;
 using Hero;
+using Interfaces;
 using StaticData.Loot.Items;
 using UnityEngine;
 
 namespace Loots
 {
   [RequireComponent(typeof(BoxCollider))]
-  public class DroppedLoot : MonoBehaviour
+  public class DroppedLoot : MonoBehaviour, IPickedupObject<DroppedLoot>
   {
     private ItemStaticData currentItem;
 

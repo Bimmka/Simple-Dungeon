@@ -10,9 +10,9 @@ namespace Services.PlayerData
     public readonly PlayerCharacteristics Characteristics;
     public PlayerMoney Monies;
     
-    public HeroStaminaStaticData StaminaStaticData { get; }
-    public HeroAttackStaticData AttackData { get;}
-    public HeroImpactsStaticData ImpactsData { get;}
+    public HeroStaminaStaticData StaminaStaticData { get; private set; }
+    public HeroAttackStaticData AttackData { get; private set; }
+    public HeroImpactsStaticData ImpactsData { get; private set; }
 
     public Player(HeroBaseStaticData heroData)
     {
@@ -24,6 +24,17 @@ namespace Services.PlayerData
       AttackData = heroData.AttackData;
       ImpactsData = heroData.ImpactsData;
     }
-    
+
+    public void SetDefaultValue(HeroBaseStaticData heroData)
+    {
+      Characteristics.SetDefaultValue(heroData.Characteristics);
+      Equipment.ReinitSlots(heroData.EquipmentSlots);
+      Inventory.ReinitSlots(heroData.InventorySlotCount);
+      Monies.RemoveMoney();
+
+      StaminaStaticData = heroData.StaminaStaticData;
+      AttackData = heroData.AttackData;
+      ImpactsData = heroData.ImpactsData;
+    }
   }
 }

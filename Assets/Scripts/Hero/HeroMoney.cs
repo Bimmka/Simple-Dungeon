@@ -25,9 +25,6 @@ namespace Hero
     public void ReduceMoney(int decedMoney) => 
       money.ReduceMoney(decedMoney);
 
-    public bool IsEnoughMoney(int neededCount) => 
-      money.Count >= neededCount;
-
     private void Display() => 
       Changed?.Invoke(money.Count);
   }

@@ -4,6 +4,7 @@ using ConstantsValue;
 using Enemies.Spawn;
 using Hero;
 using Services.Assets;
+using Services.Bonuses;
 using Services.Input;
 using Services.Progress;
 using Services.StaticData;
@@ -12,6 +13,7 @@ using Services.UI.Windows;
 using StaticData.Hero;
 using StaticData.Level;
 using UI.Displaying;
+using UI.Windows.Inventories;
 using UnityEngine;
 
 namespace Services.Factories.GameFactories
@@ -21,19 +23,21 @@ namespace Services.Factories.GameFactories
     private readonly IAssetProvider assets;
     private readonly IStaticDataService staticData;
     private readonly IInputService inputService;
-    private readonly IEnemySpawner spawner;
+    private readonly IEnemySpawner enemySpawner;
     private readonly IWindowsService windowsService;
     private readonly IPersistentProgressService progressService;
+    private readonly IBonusSpawner bonusSpawner;
     private GameObject heroGameObject;
     
-    public GameFactory(IAssetProvider assets, IStaticDataService staticData, IInputService inputService, IEnemySpawner spawner, IWindowsService windowsService, IPersistentProgressService progressService)
+    public GameFactory(IAssetProvider assets, IStaticDataService staticData, IInputService inputService, IEnemySpawner enemySpawner, IWindowsService windowsService, IPersistentProgressService progressService, IBonusSpawner bonusSpawner)
     {
       this.assets = assets;
       this.staticData = staticData;
       this.inputService = inputService;
-      this.spawner = spawner;
       this.windowsService = windowsService;
       this.progressService = progressService;
+      this.bonusSpawner = bonusSpawner;
+      this.enemySpawner = enemySpawner;
     }
     
     public GameObject CreateHero()
@@ -65,7 +69,7 @@ namespace Services.Factories.GameFactories
       GameObject hud = assets.Instantiate<GameObject>(AssetsPath.Hud);
       hud.GetComponentInChildren<HPDisplayer>().Construct(hero.GetComponentInChildren<IHealth>());
       hud.GetComponentInChildren<StaminaDisplayer>().Construct(hero.GetComponentInChildren<IStamina>());
-      hud.GetComponentInChildren<MoneyDisplayer>().Construct(hero.GetComponent<HeroMoney>());
+      hud.GetComponentInChildren<HeroMoneyDisplayer>().Construct(progressService.Player.Monies);
       InitButtons(hud);
       return hud;
     }
@@ -79,15 +83,23 @@ namespace Services.Factories.GameFactories
       }
     }
 
-    public void CreateEnemySpawnPoints(List<EnemySpawnerStaticData> spawnPoints, SpawnPoint pointPrefab)
+    public void CreateEnemySpawnPoints(List<SpawnPointStaticData> spawnPoints, SpawnPoint pointPrefab)
     {
       for (int i = 0; i < spawnPoints.Count; i++)
       {
-        spawner.AddPoint(CreateEnemySpawnPoint(spawnPoints[i], pointPrefab));
+        enemySpawner.AddPoint(CreateEnemySpawnPoint(spawnPoints[i], pointPrefab));
       }
     }
 
-    private SpawnPoint CreateEnemySpawnPoint(EnemySpawnerStaticData data, SpawnPoint prefab)
+    public void CreateBonusSpawnPoints(List<SpawnPointStaticData> spawnPoints, SpawnPoint pointPrefab)
+    {
+      for (int i = 0; i < spawnPoints.Count; i++)
+      {
+        bonusSpawner.AddPoint(CreateEnemySpawnPoint(spawnPoints[i], pointPrefab));
+      }
+    }
+
+    private SpawnPoint CreateEnemySpawnPoint(SpawnPointStaticData data, SpawnPoint prefab)
     {
       SpawnPoint spawner = assets.Instantiate(prefab, data.Position).GetComponent<SpawnPoint>();
       spawner.Construct(data.Id);

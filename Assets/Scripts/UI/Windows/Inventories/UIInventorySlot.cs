@@ -9,8 +9,18 @@ namespace UI.Windows.Inventories
   {
     [SerializeField] private TextMeshProUGUI countText;
 
-    public void UpdateCountText(int count) => 
-      countText.text = count.ToString();
+    public void SetItem(ItemStaticData item, int count)
+    {
+      SaveItemSlot(item);
+
+      if (item == null)
+        SetDefaultView();
+      else
+      {
+        SetItemView(item);
+        UpdateCountText(count);
+      }
+    }
 
     protected override void SetItemView(ItemStaticData item)
     {
@@ -24,20 +34,10 @@ namespace UI.Windows.Inventories
       RemoveCountText();
     }
 
+    private void UpdateCountText(int count) => 
+      countText.text = count.ToString();
+
     private void RemoveCountText() => 
       countText.text = "";
-
-    public void SetItem(ItemStaticData item, int count)
-    {
-      SaveItemSlot(item);
-
-      if (item == null)
-        SetDefaultView();
-      else
-      {
-        SetItemView(item);
-        UpdateCountText(count);
-      }
-    }
   }
 }

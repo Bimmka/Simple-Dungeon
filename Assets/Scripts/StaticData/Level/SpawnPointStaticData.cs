@@ -5,12 +5,12 @@ using UnityEngine;
 namespace StaticData.Level
 {
   [Serializable]
-  public class EnemySpawnerStaticData
+  public struct SpawnPointStaticData
   {
     public string Id;
     public Vector3 Position;
 
-    public EnemySpawnerStaticData(string id, Vector3 position)
+    public SpawnPointStaticData(string id, Vector3 position)
     {
       Id = id;
       Position = position;

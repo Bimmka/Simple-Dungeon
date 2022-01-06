@@ -5,21 +5,22 @@ namespace Services.PlayerData
 {
   public class PlayerCharacteristics
   {
-    private readonly Characteristic[] Characteristics;
+    private Characteristic[] characteristics;
 
     public event Action Changed;
 
-    public PlayerCharacteristics(Characteristic[] characteristics)
-    {
-      Characteristics = characteristics;
-    }
+    public PlayerCharacteristics(Characteristic[] characteristics) => 
+      SetDefaultValue(characteristics);
+
+    public void SetDefaultValue(Characteristic[] heroCharateristics) => 
+      characteristics = heroCharateristics;
 
     public int Stamina()
     {
-      for (int i = 0; i < Characteristics.Length; i++)
+      for (int i = 0; i < characteristics.Length; i++)
       {
-        if (Characteristics[i].Type == CharacteristicType.Stamina)
-          return Characteristics[i].Value;
+        if (characteristics[i].Type == CharacteristicType.Stamina)
+          return characteristics[i].Value;
       }
 
       return 0;
@@ -27,10 +28,10 @@ namespace Services.PlayerData
 
     public int Damage()
     {
-      for (int i = 0; i < Characteristics.Length; i++)
+      for (int i = 0; i < characteristics.Length; i++)
       {
-        if (Characteristics[i].Type == CharacteristicType.Strength)
-          return Characteristics[i].Value;
+        if (characteristics[i].Type == CharacteristicType.Strength)
+          return characteristics[i].Value;
       }
 
       return 0;
@@ -38,10 +39,10 @@ namespace Services.PlayerData
 
     public int Health()
     {
-      for (int i = 0; i < Characteristics.Length; i++)
+      for (int i = 0; i < characteristics.Length; i++)
       {
-        if (Characteristics[i].Type == CharacteristicType.Health)
-          return Characteristics[i].Value;
+        if (characteristics[i].Type == CharacteristicType.Health)
+          return characteristics[i].Value;
       }
 
       return 0;
@@ -49,11 +50,11 @@ namespace Services.PlayerData
 
     public void IncCharacteristic(CharacteristicType type, int value)
     {
-      for (int i = 0; i < Characteristics.Length; i++)
+      for (int i = 0; i < characteristics.Length; i++)
       {
-        if (Characteristics[i].Type == type)
+        if (characteristics[i].Type == type)
         {
-          Characteristics[i].ChangeValue(value);
+          characteristics[i].ChangeValue(value);
           NotifyAboutChange();
           break;
         }
@@ -62,11 +63,11 @@ namespace Services.PlayerData
 
     public void ReduceCharacteristic(CharacteristicType type, int value)
     {
-      for (int i = 0; i < Characteristics.Length; i++)
+      for (int i = 0; i < characteristics.Length; i++)
       {
-        if (Characteristics[i].Type == type)
+        if (characteristics[i].Type == type)
         {
-          Characteristics[i].ChangeValue(-value);
+          characteristics[i].ChangeValue(-value);
           NotifyAboutChange();
           break;
         }

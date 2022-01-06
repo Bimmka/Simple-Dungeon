@@ -1,11 +1,12 @@
 ﻿using System;
 using Hero;
+using Interfaces;
 using UnityEngine;
 
 namespace Loots
 {
   [RequireComponent(typeof(BoxCollider))]
-  public class Money : MonoBehaviour
+  public class Money : MonoBehaviour, IPickedupObject<Money>
   {
     public event Action<Money> PickedUp;
 

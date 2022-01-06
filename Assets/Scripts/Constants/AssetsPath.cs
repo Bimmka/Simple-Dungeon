@@ -11,6 +11,8 @@
     public static string EnemiesDataPath = "StaticData/Enemies";
     public static string LevelsDataPath = "StaticData/Levels";
     public static string LootsDataPath = "StaticData/Loots";
+    public static string ShopDataPath = "StaticData/Shop/ShopStaticData";
+    public static string BonusDataPath = "StaticData/Bonuses";
 
     public static string MoneyPrefabPath = "Loot/Money";
     public static string DroppedLootPrefabPath = "Loot/DroppedLoot";

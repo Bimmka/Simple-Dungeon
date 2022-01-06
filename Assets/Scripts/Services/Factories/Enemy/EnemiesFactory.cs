@@ -15,7 +15,7 @@ namespace Services.Factories.Enemy
     private readonly IAssetProvider assets;
     private readonly IStaticDataService staticData;
 
-    private List<SlainedEnemy> enemiesPool;
+    private readonly List<SlainedEnemy> enemiesPool;
     
    
     public EnemiesFactory(IAssetProvider assets, IStaticDataService staticData)

@@ -10,6 +10,7 @@ using Services.Factories.GameFactories;
 using Services.Factories.Loot;
 using Services.Loot;
 using Services.Progress;
+using Services.Shop;
 using Services.StaticData;
 using Services.UI.Factory;
 using Services.Waves;
@@ -29,8 +30,17 @@ namespace GameStates.States
     private readonly IWaveServices waveServices;
     private readonly ILootService lootService;
     private readonly ILootSpawner lootSpawner;
+    private readonly IShopService shopService;
 
-    public LoadGameLevelState(ISceneLoader sceneLoader, IGameStateMachine gameStateMachine, IGameFactory gameFactory, IUIFactory uiFactory, IStaticDataService staticData, IWaveServices waveServices, ILootService lootService, ILootSpawner lootSpawner)
+    public LoadGameLevelState(ISceneLoader sceneLoader, 
+      IGameStateMachine gameStateMachine, 
+      IGameFactory gameFactory, 
+      IUIFactory uiFactory, 
+      IStaticDataService staticData,
+      IWaveServices waveServices,
+      ILootService lootService,
+      ILootSpawner lootSpawner,
+      IShopService shopService)
     {
       this.sceneLoader = sceneLoader;
       this.gameStateMachine = gameStateMachine;
@@ -40,6 +50,7 @@ namespace GameStates.States
       this.waveServices = waveServices;
       this.lootService = lootService;
       this.lootSpawner = lootSpawner;
+      this.shopService = shopService;
     }
 
 
@@ -60,7 +71,7 @@ namespace GameStates.States
       InitUIRoot();
       
       LevelStaticData levelData = GetLevelData();
-      InitSpawners(levelData.EnemySpawners, levelData.SpawnPointPrefab);
+      InitEnemySpawners(levelData.EnemySpawners, levelData.SpawnPointPrefab);
       InitWaves(levelData.LevelWaves);
       InitLootService(levelData.LevelKey);
       
@@ -72,6 +83,8 @@ namespace GameStates.States
       Camera camera = Camera.main;
       CameraFollow(hero, camera);
       SetCameraToHud(hud, camera);
+      
+      shopService.InitSlots();
     }
 
     private LevelStaticData GetLevelData()
@@ -80,8 +93,11 @@ namespace GameStates.States
       return staticData.ForLevel(sceneKey);
     }
 
-    private void InitSpawners(List<EnemySpawnerStaticData> spawners, SpawnPoint pointPrefab) => 
-      gameFactory.CreateEnemySpawnPoints(spawners, pointPrefab);
+    private void InitEnemySpawners(List<SpawnPointStaticData> enemySpawners, SpawnPoint pointPrefab) => 
+      gameFactory.CreateEnemySpawnPoints(enemySpawners, pointPrefab);
+
+    private void InitBonusSpawner(List<SpawnPointStaticData> bonusSpawners, SpawnPoint pointPrefab) => 
+      gameFactory.CreateBonusSpawnPoints(bonusSpawners, pointPrefab);
 
     private void CleanupLootSpawner() => 
       lootSpawner.Cleanup();

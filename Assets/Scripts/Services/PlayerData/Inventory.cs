@@ -7,19 +7,18 @@ namespace Services.PlayerData
 {
   public class Inventory
   {
-    private readonly InventorySlot[] slots;
+    private InventorySlot[] slots;
 
     public IEnumerable<InventorySlot> Slots => slots;
     
     public event Action Changed;
 
-    public Inventory(int slotCount)
+    public Inventory(int slotCount) => 
+      CreateSlots(slotCount);
+
+    public void ReinitSlots(int slotCount)
     {
-      slots = new InventorySlot[slotCount];
-      for (int i = 0; i < slotCount; i++)
-      {
-        slots[i] = new InventorySlot(i);
-      }
+      CreateSlots(slotCount);
     }
 
     public bool IsCanAddItem(ItemStaticData item)
@@ -85,7 +84,16 @@ namespace Services.PlayerData
 
     private bool IsSlotEmpty(InventorySlot slot) => 
       slot.Item == null;
-    
+
+    private void CreateSlots(int slotCount)
+    {
+      slots = new InventorySlot[slotCount];
+      for (int i = 0; i < slotCount; i++)
+      {
+        slots[i] = new InventorySlot(i);
+      }
+    }
+
     private void NotifyAboutChange() => 
       Changed?.Invoke();
   }

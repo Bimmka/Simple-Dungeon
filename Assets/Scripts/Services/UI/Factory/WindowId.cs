@@ -4,6 +4,7 @@
   {
     None, 
     Inventory,
-    Menu
+    Menu,
+    Shop
   }
 }

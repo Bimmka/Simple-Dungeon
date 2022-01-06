@@ -14,6 +14,7 @@ namespace UI.Windows.Inventories
     {
       this.money = money;
       this.money.Changed += DisplayMoneyCount;
+      DisplayMoneyCount();
     }
 
     public void Cleanup() => 

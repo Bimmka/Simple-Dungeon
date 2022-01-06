@@ -1,13 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Bonuses;
 using ConstantsValue;
 using Enemies;
 using Enemies.Spawn;
 using Services.UI.Factory;
+using StaticData.Bonuses;
 using StaticData.Enemies;
 using StaticData.Hero;
 using StaticData.Level;
 using StaticData.Loot;
+using StaticData.Shop;
 using StaticData.UI;
 using UnityEngine;
 
@@ -19,15 +22,20 @@ namespace Services.StaticData
     private Dictionary<EnemyTypeId, EnemyStaticData> enemies;
     private Dictionary<string, LevelStaticData> levels;
     private Dictionary<string, EnemyLoot[]> loots;
+    private Dictionary<BonusTypeId, BonusStaticData> bonuses;
     
     private HeroSpawnStaticData heroSpawnData;
     private HeroBaseStaticData heroCharacteristics;
+
+    private ShopStaticData shopData;
     
     public void Load()
     {
       heroSpawnData = Resources.Load<HeroSpawnStaticData>(AssetsPath.HeroSpawnDataPath);
 
       heroCharacteristics = Resources.Load<HeroBaseStaticData>(AssetsPath.HeroCharacteristicsDataPath);
+
+      shopData = Resources.Load<ShopStaticData>(AssetsPath.ShopDataPath);
 
       enemies = Resources
         .LoadAll<EnemyStaticData>(AssetsPath.EnemiesDataPath)
@@ -45,6 +53,10 @@ namespace Services.StaticData
         .Load<WindowsStaticData>(AssetsPath.WindowsDataPath)
         .InstantiateData
         .ToDictionary(x => x.ID, x => x);
+      
+      bonuses = Resources
+        .LoadAll<BonusStaticData>(AssetsPath.BonusDataPath)
+        .ToDictionary(x => x.Type, x => x);
     }
     
     public WindowInstantiateData ForWindow(WindowId windowId) =>
@@ -78,5 +90,13 @@ namespace Services.StaticData
       }
       return new EnemyLoot();
     }
+
+    public ShopStaticData ForShop() => 
+      shopData;
+
+    public BonusStaticData ForBonus(BonusTypeId typeId) =>
+      bonuses.TryGetValue(typeId, out BonusStaticData staticData)
+        ? staticData 
+        : null;
   }
 }

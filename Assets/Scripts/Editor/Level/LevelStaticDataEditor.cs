@@ -19,8 +19,8 @@ namespace Editor.Level
 
       if (GUILayout.Button("Collect"))
       {
-        levelData.EnemySpawners = FindObjectsOfType<SpawnMarker>()
-          .Select(x => new EnemySpawnerStaticData(x.GetComponent<UniqueId>().Id, x.transform.position))
+        levelData.EnemySpawners = FindObjectsOfType<EnemySpawnMarker>()
+          .Select(x => new SpawnPointStaticData(x.GetComponent<UniqueId>().Id, x.transform.position))
           .ToList();
 
         levelData.LevelKey = SceneManager.GetActiveScene().name;

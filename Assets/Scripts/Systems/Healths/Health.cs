@@ -26,6 +26,14 @@ namespace Systems.Healths
         Dead?.Invoke();
     }
 
+    public void AddHealth(int value)
+    {
+      if (currentHealth <= 0)
+        return;
+      currentHealth += value;
+      Display();
+    }
+
     private void Display() => 
       Changed?.Invoke(currentHealth, maxHealth);
   }

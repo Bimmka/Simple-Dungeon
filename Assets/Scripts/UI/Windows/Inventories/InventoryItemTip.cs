@@ -12,7 +12,7 @@ namespace UI.Windows.Inventories
     [SerializeField] private TextMeshProUGUI strengthText;
     [SerializeField] private TextMeshProUGUI staminaText;
 
-    public void RemoveTip()
+    public virtual void RemoveTip()
     {
       SetText(itemNameText, "");
       SetText(healthText, "");
@@ -45,7 +45,7 @@ namespace UI.Windows.Inventories
     }
 
 
-    private void SetText(TextMeshProUGUI tmpText, string text) => 
+    protected void SetText(TextMeshProUGUI tmpText, string text) => 
       tmpText.text = text;
   }
 }

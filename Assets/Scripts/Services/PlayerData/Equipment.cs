@@ -21,6 +21,9 @@ namespace Services.PlayerData
       CreateSlots(slots);
     }
 
+    public void ReinitSlots(LootType[] slots) => 
+      CreateSlots(slots);
+
     public bool IsCanEquipItem(ItemStaticData item)
     {
       for (int i = 0; i < equipmentSlots.Length; i++)
@@ -89,6 +92,7 @@ namespace Services.PlayerData
         equipmentSlots[i] = new EquipmentSlot(slots[i]);
       }
     }
+
     private void NotifyAboutChange() => 
       Changed?.Invoke();
   }

@@ -9,10 +9,10 @@ namespace StaticData.Level
   public class LevelStaticData : ScriptableObject
   {
     public string LevelKey;
-    public List<EnemySpawnerStaticData> EnemySpawners;
+    public List<SpawnPointStaticData> EnemySpawners;
+    public List<SpawnPointStaticData> BonusSpawners;
     public LevelWaveStaticData LevelWaves;
 
     public SpawnPoint SpawnPointPrefab;
-    public EnemySpawner EnemySpawner;
   }
 }

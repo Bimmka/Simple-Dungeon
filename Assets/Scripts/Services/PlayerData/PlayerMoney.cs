@@ -20,6 +20,12 @@ namespace Services.PlayerData
       NotifyAboutChange();
     }
 
+    public void RemoveMoney() => 
+      Count = 0;
+    
+    public bool IsEnoughMoney(int neededCount) => 
+      Count >= neededCount;
+
     private void NotifyAboutChange() => 
       Changed?.Invoke();
   }

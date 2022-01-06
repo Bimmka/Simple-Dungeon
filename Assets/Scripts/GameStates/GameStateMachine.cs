@@ -9,6 +9,7 @@ using Services.Factories.GameFactories;
 using Services.Factories.Loot;
 using Services.Loot;
 using Services.Progress;
+using Services.Shop;
 using Services.StaticData;
 using Services.UI.Factory;
 using Services.Waves;
@@ -28,7 +29,16 @@ namespace GameStates
         [typeof(BootstrapState)] = new BootstrapState(this, sceneLoader,ref services, coroutineRunner, lootContainer),
         [typeof(LoadProgressState)] = new LoadProgressState(this, sceneLoader, services.Single<IPersistentProgressService>()),
         [typeof(GameLoopState)] = new GameLoopState(this, services.Single<IWaveServices>()),
-        [typeof(LoadGameLevelState)] = new LoadGameLevelState(sceneLoader, this, services.Single<IGameFactory>(), services.Single<IUIFactory>(), services.Single<IStaticDataService>(), services.Single<IWaveServices>(), services.Single<ILootService>(), services.Single<ILootSpawner>())
+        [typeof(LoadGameLevelState)] = new LoadGameLevelState(
+          sceneLoader, 
+          this, 
+          services.Single<IGameFactory>(), 
+          services.Single<IUIFactory>(), 
+          services.Single<IStaticDataService>(),
+          services.Single<IWaveServices>(), 
+          services.Single<ILootService>(), 
+          services.Single<ILootSpawner>(),
+          services.Single<IShopService>())
       };
     }
     
