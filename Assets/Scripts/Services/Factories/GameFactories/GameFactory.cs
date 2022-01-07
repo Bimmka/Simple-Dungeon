@@ -5,6 +5,7 @@ using Enemies.Spawn;
 using Hero;
 using Services.Assets;
 using Services.Bonuses;
+using Services.Hero;
 using Services.Input;
 using Services.Progress;
 using Services.StaticData;
@@ -27,9 +28,17 @@ namespace Services.Factories.GameFactories
     private readonly IWindowsService windowsService;
     private readonly IPersistentProgressService progressService;
     private readonly IBonusSpawner bonusSpawner;
+    private readonly IHeroDeathService deathService;
     private GameObject heroGameObject;
-    
-    public GameFactory(IAssetProvider assets, IStaticDataService staticData, IInputService inputService, IEnemySpawner enemySpawner, IWindowsService windowsService, IPersistentProgressService progressService, IBonusSpawner bonusSpawner)
+
+    public GameFactory(IAssetProvider assets,
+      IStaticDataService staticData,
+      IInputService inputService,
+      IEnemySpawner enemySpawner,
+      IWindowsService windowsService,
+      IPersistentProgressService progressService,
+      IBonusSpawner bonusSpawner,
+      IHeroDeathService deathService)
     {
       this.assets = assets;
       this.staticData = staticData;
@@ -38,6 +47,7 @@ namespace Services.Factories.GameFactories
       this.progressService = progressService;
       this.bonusSpawner = bonusSpawner;
       this.enemySpawner = enemySpawner;
+      this.deathService = deathService;
     }
     
     public GameObject CreateHero()
@@ -52,8 +62,7 @@ namespace Services.Factories.GameFactories
       heroGameObject.GetComponent<HeroInput>().Construct(inputService);
       heroGameObject.GetComponent<HeroStateMachine>().Construct(
         progressService.Player.AttackData, 
-        progressService.Player.ImpactsData, 
-        health, 
+        progressService.Player.ImpactsData,
         progressService.Player.Characteristics);
       
       heroGameObject.GetComponentInChildren<HeroStamina>().Construct(progressService.Player.StaminaStaticData, progressService.Player.Characteristics);
@@ -61,6 +70,8 @@ namespace Services.Factories.GameFactories
       heroGameObject.GetComponent<HeroMoney>().Construct(progressService.Player.Monies);
       
       heroGameObject.GetComponent<HeroInventory>().Construct(progressService.Player.Inventory);
+      
+      heroGameObject.GetComponent<HeroDeath>().Construct(deathService, health);
       return heroGameObject;
     }
 
@@ -70,6 +81,7 @@ namespace Services.Factories.GameFactories
       hud.GetComponentInChildren<HPDisplayer>().Construct(hero.GetComponentInChildren<IHealth>());
       hud.GetComponentInChildren<StaminaDisplayer>().Construct(hero.GetComponentInChildren<IStamina>());
       hud.GetComponentInChildren<HeroMoneyDisplayer>().Construct(progressService.Player.Monies);
+      hud.GetComponentInChildren<HeroScoreDisplayer>().Construct(progressService.Player.Score);
       InitButtons(hud);
       return hud;
     }

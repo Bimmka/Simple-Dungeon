@@ -7,6 +7,7 @@ using StaticData.Enemies;
 using StaticData.Hero;
 using StaticData.Level;
 using StaticData.Loot;
+using StaticData.Score;
 using StaticData.Shop;
 using StaticData.UI;
 
@@ -23,5 +24,6 @@ namespace Services.StaticData
     EnemyLoot ForLoot(string levelKey, EnemyTypeId typeId);
     ShopStaticData ForShop();
     BonusStaticData ForBonus(BonusTypeId typeId);
+    ScoreStaticData ForScore();
   }
 }

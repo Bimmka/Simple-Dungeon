@@ -12,6 +12,7 @@ using Services.Progress;
 using Services.Shop;
 using Services.StaticData;
 using Services.UI.Factory;
+using Services.UI.Windows;
 using Services.Waves;
 
 namespace GameStates
@@ -38,7 +39,8 @@ namespace GameStates
           services.Single<IWaveServices>(), 
           services.Single<ILootService>(), 
           services.Single<ILootSpawner>(),
-          services.Single<IShopService>())
+          services.Single<IShopService>()),
+        [typeof(MainMenuState)] = new MainMenuState(services.Single<IUIFactory>(), services.Single<IWindowsService>(), sceneLoader)
       };
     }
     

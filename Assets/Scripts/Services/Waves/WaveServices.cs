@@ -32,7 +32,7 @@ namespace Services.Waves
     public void Start()
     {
       currentWaveIndex = 0;
-      coroutineRunner.StartCoroutine(StartWave());
+      coroutineRunner.StartCoroutine(StartWave(waves.FirstWaveDelay));
     }
     
     public void SetLevelWaves(LevelWaveStaticData wavesData) => 
@@ -51,14 +51,14 @@ namespace Services.Waves
 
     private void CompleteWave()
     {
-      coroutineRunner.StartCoroutine(StartWave());
+      coroutineRunner.StartCoroutine(StartWave(waves.Waves[currentWaveIndex].WaveWaitTime));
       SpawnBonuses();
       IncWaveIndex();
     }
 
-    private IEnumerator StartWave()
+    private IEnumerator StartWave(float delay)
     {
-      yield return new WaitForSeconds(waves.Waves[currentWaveIndex].WaveWaitTime);
+      yield return new WaitForSeconds(delay);
       
       enemiesSpawner.Spawn(waves.Waves[currentWaveIndex].Enemies);
       currentEnemiesCount = 0;

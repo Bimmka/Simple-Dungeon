@@ -8,7 +8,8 @@ namespace Services.PlayerData
     public readonly Equipment Equipment;
     public readonly Inventory Inventory;
     public readonly PlayerCharacteristics Characteristics;
-    public PlayerMoney Monies;
+    public readonly PlayerMoney Monies;
+    public readonly PlayerScore Score;
     
     public HeroStaminaStaticData StaminaStaticData { get; private set; }
     public HeroAttackStaticData AttackData { get; private set; }
@@ -20,6 +21,7 @@ namespace Services.PlayerData
       Equipment = new Equipment(Characteristics, heroData.EquipmentSlots);
       Inventory = new Inventory(heroData.InventorySlotCount);
       Monies = new PlayerMoney();
+      Score = new PlayerScore();
       StaminaStaticData = heroData.StaminaStaticData;
       AttackData = heroData.AttackData;
       ImpactsData = heroData.ImpactsData;
@@ -31,7 +33,8 @@ namespace Services.PlayerData
       Equipment.ReinitSlots(heroData.EquipmentSlots);
       Inventory.ReinitSlots(heroData.InventorySlotCount);
       Monies.RemoveMoney();
-
+      Score.ResetScore();
+      
       StaminaStaticData = heroData.StaminaStaticData;
       AttackData = heroData.AttackData;
       ImpactsData = heroData.ImpactsData;

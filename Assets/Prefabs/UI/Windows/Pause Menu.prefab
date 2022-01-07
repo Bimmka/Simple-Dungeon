@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 9200032792122619019}
   - component: {fileID: 9200032792122619017}
   - component: {fileID: 9200032792122619018}
-  - component: {fileID: 4272434721305477144}
+  - component: {fileID: 7959470963451548986}
   m_Layer: 5
   m_Name: Pause Menu
   m_TagString: Untagged
@@ -200,7 +200,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &4272434721305477144
+--- !u!114 &7959470963451548986
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

@@ -19,7 +19,7 @@ MonoBehaviour:
     - Id: 0
       Count: 1
       HpCoeff: 0.5
-      DamageCoeff: 1
+      DamageCoeff: 10
     Bonuses:
     - TypeId: 0
       Value: 50
@@ -33,7 +33,7 @@ MonoBehaviour:
     - Id: 0
       Count: 3
       HpCoeff: 0.5
-      DamageCoeff: 0
+      DamageCoeff: 5
     Bonuses:
     - TypeId: 0
       Value: 100

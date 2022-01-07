@@ -17,9 +17,7 @@ namespace Hero
         
         private HeroAttackStaticData attackData;
         private HeroImpactsStaticData impactsData;
-
-        private IHealth health;
-
+        
         public PlayerAttackState AttackState { get; private set; }
         public PlayerHurtState ImpactState { get; private set; }
         public PlayerIdleShieldState IdleShieldState { get; private set; }
@@ -37,10 +35,9 @@ namespace Hero
         public Vector2 MoveAxis { get; private set; }
         public float RotateAngle { get; private set; }
 
-        public void Construct(HeroAttackStaticData attackData, HeroImpactsStaticData impactData, IHealth health, PlayerCharacteristics characteristics)
+        public void Construct(HeroAttackStaticData attackData, HeroImpactsStaticData impactData, PlayerCharacteristics characteristics)
         {
             this.attackData = attackData;
-            this.health = health;
             impactsData = impactData;
             attack.Construct(attackData, characteristics);
             Initialize();
@@ -50,14 +47,12 @@ namespace Hero
         {
             base.Subscribe();
             battleAnimator.Triggered += AnimationTriggered;
-            health.Dead += Dead;
         }
 
         protected override void Cleanup()
         {
             base.Cleanup();
             battleAnimator.Triggered -= AnimationTriggered;
-            health.Dead -= Dead;
             AttackState.Cleanup();
         }
 
@@ -109,7 +104,7 @@ namespace Hero
         public void SetRotate(float rotateAngle) => 
             RotateAngle = rotateAngle;
 
-        private void Dead()
+        public void Dead()
         {
             stateMachine.ChangeState(DeathState);
         }

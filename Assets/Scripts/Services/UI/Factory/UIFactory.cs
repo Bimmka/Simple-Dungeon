@@ -4,12 +4,14 @@ using GameStates;
 using Services.Assets;
 using Services.PlayerData;
 using Services.Progress;
+using Services.Score;
 using Services.Shop;
 using Services.StaticData;
 using StaticData.UI;
 using UI.Base;
 using UI.Windows;
 using UI.Windows.Inventories;
+using UI.Windows.Menus;
 using UnityEngine;
 
 namespace Services.UI.Factory
@@ -21,6 +23,7 @@ namespace Services.UI.Factory
     private readonly IStaticDataService staticData;
     private readonly IPersistentProgressService progressService;
     private readonly IShopService shopService;
+    private readonly IScoreService scoreService;
 
     private Transform uiRoot;
 
@@ -28,13 +31,14 @@ namespace Services.UI.Factory
 
     public event Action<WindowId,BaseWindow> Spawned;
 
-    public UIFactory(IGameStateMachine gameStateMachine, IAssetProvider assets, IStaticDataService staticData, IPersistentProgressService progressService, IShopService shopService)
+    public UIFactory(IGameStateMachine gameStateMachine, IAssetProvider assets, IStaticDataService staticData, IPersistentProgressService progressService, IShopService shopService, IScoreService scoreService)
     {
       this.gameStateMachine = gameStateMachine;
       this.assets = assets;
       this.staticData = staticData;
       this.progressService = progressService;
       this.shopService = shopService;
+      this.scoreService = scoreService;
     }
 
     public void CreateUIRoot()
@@ -54,6 +58,15 @@ namespace Services.UI.Factory
         case WindowId.Shop:
           CreateShopWindow(config, id, progressService.Player.Monies);
           break;
+        case WindowId.PauseMenu:
+          CreatePauseMenuWindow(config, id);
+          break;
+        case WindowId.MainMenu:
+          CreateMainMenuWindow(config, id);
+          break;
+         case WindowId.DeathMenu:
+           CreateDeathMenuWindow(config, id);
+           break;
         default:
           CreateWindow(config, id);
           break;
@@ -71,6 +84,27 @@ namespace Services.UI.Factory
     {
       BaseWindow window = InstantiateWindow(config);
       ((ShopWindow)window).Construct(shopService, monies );
+      NotifyAboutCreateWindow(id, window);
+    }
+
+    private void CreatePauseMenuWindow(WindowInstantiateData config, WindowId id)
+    {
+      BaseWindow window = InstantiateWindow(config);
+      ((PauseMenuWindow)window).Construct(gameStateMachine);
+      NotifyAboutCreateWindow(id, window);
+    }
+
+    private void CreateMainMenuWindow(WindowInstantiateData config, WindowId id)
+    {
+      BaseWindow window = InstantiateWindow(config);
+      ((MainMenuWindow)window).Construct(gameStateMachine);
+      NotifyAboutCreateWindow(id, window);
+    }
+
+    private void CreateDeathMenuWindow(WindowInstantiateData config, WindowId id)
+    {
+      BaseWindow window = InstantiateWindow(config);
+      ((DeathMenuWindow)window).Construct(gameStateMachine, scoreService);
       NotifyAboutCreateWindow(id, window);
     }
 

@@ -20,7 +20,7 @@ using UnityEngine.SceneManagement;
 
 namespace GameStates.States
 {
-  public class LoadGameLevelState : IState
+  public class LoadGameLevelState : IPayloadedState<string>
   {
     private readonly ISceneLoader sceneLoader;
     private readonly IGameStateMachine gameStateMachine;
@@ -53,9 +53,10 @@ namespace GameStates.States
       this.shopService = shopService;
     }
 
-
-    public void Enter() => 
-      sceneLoader.Load(Constants.GameScene, OnLoaded);
+    public void Enter(string payload)
+    {
+      sceneLoader.Load(payload, OnLoaded);
+    }
 
     public void Exit() { }
 
@@ -63,7 +64,6 @@ namespace GameStates.States
     {
       InitGameWorld();
       gameStateMachine.Enter<GameLoopState>();
-      
     }
 
     private void InitGameWorld()

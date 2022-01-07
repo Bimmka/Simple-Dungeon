@@ -20,7 +20,7 @@ namespace GameStates.States
     public void Enter()
     {
       LoadData();
-      gameStateMachine.Enter<LoadGameLevelState>();
+      gameStateMachine.Enter<MainMenuState>();
     }
 
     public void Exit()

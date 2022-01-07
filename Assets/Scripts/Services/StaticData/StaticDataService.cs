@@ -10,6 +10,7 @@ using StaticData.Enemies;
 using StaticData.Hero;
 using StaticData.Level;
 using StaticData.Loot;
+using StaticData.Score;
 using StaticData.Shop;
 using StaticData.UI;
 using UnityEngine;
@@ -28,6 +29,8 @@ namespace Services.StaticData
     private HeroBaseStaticData heroCharacteristics;
 
     private ShopStaticData shopData;
+
+    private ScoreStaticData scoreData;
     
     public void Load()
     {
@@ -36,6 +39,8 @@ namespace Services.StaticData
       heroCharacteristics = Resources.Load<HeroBaseStaticData>(AssetsPath.HeroCharacteristicsDataPath);
 
       shopData = Resources.Load<ShopStaticData>(AssetsPath.ShopDataPath);
+      
+      scoreData = Resources.Load<ScoreStaticData>(AssetsPath.ScoreDataPath);
 
       enemies = Resources
         .LoadAll<EnemyStaticData>(AssetsPath.EnemiesDataPath)
@@ -98,5 +103,8 @@ namespace Services.StaticData
       bonuses.TryGetValue(typeId, out BonusStaticData staticData)
         ? staticData 
         : null;
+
+    public ScoreStaticData ForScore() => 
+      scoreData;
   }
 }

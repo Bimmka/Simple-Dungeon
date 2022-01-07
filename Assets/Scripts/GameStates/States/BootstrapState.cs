@@ -7,13 +7,16 @@ using SceneLoading;
 using Services;
 using Services.Assets;
 using Services.Bonuses;
+using Services.Database;
 using Services.Factories.Enemy;
 using Services.Factories.GameFactories;
 using Services.Factories.Loot;
+using Services.Hero;
 using Services.Input;
 using Services.Loot;
 using Services.Progress;
 using Services.Random;
+using Services.Score;
 using Services.Shop;
 using Services.StaticData;
 using Services.UI.Factory;
@@ -55,23 +58,27 @@ namespace GameStates.States
       RegisterProgress();
       RegisterAssets();
       RegisterShopService();
-      RegisterUIFactory();
+      RegisterDatabaseService();
       RegisterEnemiesFactory();
       RegisterEnemiesSpawner();
+      RegisterScoreService();
+      RegisterUIFactory();
       RegisterWindowsService();
+      RegisterHeroDeathService();
       RegisterBonusFactory();
       RegisterBonusSpawner();
       RegisterGameFactory();
       RegisterWaveService(coroutineRunner);
       RegisterLootSpawner();
       RegisterLootService(lootContainer);
+      
     }
 
     private void RegisterWaveService(ICoroutineRunner coroutineRunner) => 
       services.RegisterSingle<IWaveServices>(new WaveServices(services.Single<IEnemySpawner>(), coroutineRunner, services.Single<IBonusSpawner>()));
 
     private void RegisterEnemiesSpawner() => 
-      services.RegisterSingle<IEnemySpawner>(new EnemySpawner(services.Single<IEnemiesFactory>()));
+      services.RegisterSingle<IEnemySpawner>(new EnemySpawner(services.Single<IEnemiesFactory>(), services.Single<IRandomService>()));
 
     private void RegisterEnemiesFactory() => 
       services.RegisterSingle<IEnemiesFactory>(new EnemiesFactory(services.Single<IAssetProvider>(), services.Single<IStaticDataService>()));
@@ -92,7 +99,8 @@ namespace GameStates.States
         services.Single<IEnemySpawner>(),
         services.Single<IWindowsService>(), 
         services.Single<IPersistentProgressService>(),
-        services.Single<IBonusSpawner>()));
+        services.Single<IBonusSpawner>(),
+        services.Single<IHeroDeathService>()));
     }
 
     private void RegisterStateMachine() => 
@@ -125,11 +133,19 @@ namespace GameStates.States
       services.RegisterSingle(new RandomService());
 
     private void RegisterUIFactory() =>
-      services.RegisterSingle(new UIFactory(services.Single<IGameStateMachine>(),services.Single<IAssetProvider>(),
-        services.Single<IStaticDataService>(), services.Single<IPersistentProgressService>(), services.Single<IShopService>()));
+      services.RegisterSingle(new UIFactory(
+        services.Single<IGameStateMachine>(),
+        services.Single<IAssetProvider>(),
+        services.Single<IStaticDataService>(), 
+        services.Single<IPersistentProgressService>(), 
+        services.Single<IShopService>(), 
+        services.Single<IScoreService>()));
 
     private void RegisterWindowsService() => 
       services.RegisterSingle(new WindowsService(services.Single<IUIFactory>()));
+
+    private void RegisterHeroDeathService() => 
+      services.RegisterSingle(new HeroDeathService(services.Single<IWindowsService>()));
 
     private void RegisterShopService()
     {
@@ -143,5 +159,16 @@ namespace GameStates.States
 
     private void RegisterBonusFactory() => 
       services.RegisterSingle(new BonusFactory(services.Single<IAssetProvider>(), services.Single<IStaticDataService>()));
+
+    private void RegisterScoreService()
+    {
+      services.RegisterSingle(new ScoreService(services.Single<IEnemySpawner>(), 
+        services.Single<IStaticDataService>().ForScore(), 
+        services.Single<IPersistentProgressService>().Player.Score, 
+        services.Single<IDatabaseService>()));
+    }
+
+    private void RegisterDatabaseService() => 
+      services.RegisterSingle(new DatabaseService());
   }
 }

@@ -13,6 +13,4 @@ MonoBehaviour:
   m_Name: SpawnData
   m_EditorClassIdentifier: 
   HeroPrefab: {fileID: 4684724166972553566, guid: 1fcfa855187e0394592237b88d456e5c, type: 3}
-  SpawnPoint: {x: 0, y: 0, z: 0}
-  AttackData: {fileID: 11400000, guid: d70af834e6d99d04494daa44380ebc73, type: 2}
-  ImpactsData: {fileID: 11400000, guid: 432ff5cf51c4ad3438eda5133d08f2c5, type: 2}
+  SpawnPoint: {x: 14.05, y: 0.398, z: 12.94}

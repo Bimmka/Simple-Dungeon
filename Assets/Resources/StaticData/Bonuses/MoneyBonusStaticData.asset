@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bc1f65ec54e4e5085251696fa07cc85, type: 3}
   m_Name: MoneyBonusStaticData
   m_EditorClassIdentifier: 
-  Type: 0
+  Type: 1
   Prefab: {fileID: 4818554206495238218, guid: 8c41be975c2f9244681c453368c9a116, type: 3}
