@@ -59,9 +59,8 @@ namespace GameStates.States
       RegisterEnemiesFactory();
       RegisterEnemiesSpawner();
       RegisterWindowsService();
-      RegisterBonusSpawner();
-      RegisterBonusService();
       RegisterBonusFactory();
+      RegisterBonusSpawner();
       RegisterGameFactory();
       RegisterWaveService(coroutineRunner);
       RegisterLootSpawner();
@@ -69,7 +68,7 @@ namespace GameStates.States
     }
 
     private void RegisterWaveService(ICoroutineRunner coroutineRunner) => 
-      services.RegisterSingle<IWaveServices>(new WaveServices(services.Single<IEnemySpawner>(), coroutineRunner));
+      services.RegisterSingle<IWaveServices>(new WaveServices(services.Single<IEnemySpawner>(), coroutineRunner, services.Single<IBonusSpawner>()));
 
     private void RegisterEnemiesSpawner() => 
       services.RegisterSingle<IEnemySpawner>(new EnemySpawner(services.Single<IEnemiesFactory>()));
@@ -139,19 +138,10 @@ namespace GameStates.States
         services.Single<IRandomService>(), services.Single<IStaticDataService>().ForShop()));  
     }
 
-    private void RegisterBonusFactory()
-    {
-      
-    }
+    private void RegisterBonusSpawner() => 
+      services.RegisterSingle(new BonusSpawner(services.Single<IBonusFactory>(), services.Single<IRandomService>()));
 
-    private void RegisterBonusService()
-    {
+    private void RegisterBonusFactory() => 
       services.RegisterSingle(new BonusFactory(services.Single<IAssetProvider>(), services.Single<IStaticDataService>()));
-    }
-
-    private void RegisterBonusSpawner()
-    {
-      services.RegisterSingle(new BonusSpawner());
-    }
   }
 }

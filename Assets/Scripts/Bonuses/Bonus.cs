@@ -1,18 +1,13 @@
 ﻿using System;
 using Interfaces;
-using StaticData.Bonuses;
 using UnityEngine;
 
 namespace Bonuses
 {
   [RequireComponent(typeof(BoxCollider))]
-  public class Bonus : MonoBehaviour, IPickedupObject<Bonus>
+  public abstract class Bonus : MonoBehaviour, IPickedupObject<Bonus>
   {
-    private BonusUseStrategy useStrategy;
     private int value;
-
-    private GameObject view;
-    
     public BonusTypeId Type { get; private set; }
 
     public event Action<Bonus> PickedUp;
@@ -26,16 +21,23 @@ namespace Bonuses
     public void SetPosition(Vector3 position) => 
       transform.position = position;
 
+    public void SetValue(int value) => 
+      this.value = value;
+    
+    protected abstract void Pickup(Collider other, int value);
+
+    protected abstract bool IsCanBePickedUp(Collider other);
+
     private void OnTriggerEnter(Collider other)
     {
-      if (useStrategy.IsCanBePickedUp(other))
+      if (IsCanBePickedUp(other))
       {
-        useStrategy.Pickup(other, value);
+        Pickup(other, value);
         NotifyAboutPickedup();
       }
     }
 
-    protected void NotifyAboutPickedup() => 
+    private void NotifyAboutPickedup() => 
       PickedUp?.Invoke(this);
   }
 }

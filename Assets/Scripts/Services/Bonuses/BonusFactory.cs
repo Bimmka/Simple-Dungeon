@@ -37,31 +37,33 @@ namespace Services.Bonuses
       bonusesPool.Clear();
     }
     
-    public Bonus SpawnBonus(BonusTypeId typeId, Transform parent)
+    public Bonus SpawnBonus(BonusTypeId typeId, int value, Transform parent)
     {
       if (IsContainsInPool(typeId))
-        return RecreateBonus(typeId, parent);
+        return RecreateBonus(typeId, value, parent);
 
-      return CreateBonus(typeId, parent);
+      return CreateBonus(typeId, value, parent);
     }
 
-    private Bonus RecreateBonus(BonusTypeId typeId, Transform parent)
+    private Bonus RecreateBonus(BonusTypeId typeId, int value, Transform parent)
     {
       PickedupBonus pickedupBonus = PooledBonus(typeId);
       
       Bonus bonus = pickedupBonus.Bonus;
+      
+      bonus.SetValue(value);
       
       bonus.SetPosition(parent.position);
       
       return bonus;
     }
 
-    private Bonus CreateBonus(BonusTypeId typeId, Transform parent)
+    private Bonus CreateBonus(BonusTypeId typeId, int value, Transform parent)
     {
       BonusStaticData bonusData = staticData.ForBonus(typeId);
       Bonus bonus = assets.Instantiate(bonusData.Prefab, parent.position, Quaternion.identity, parent);
       bonus.PickedUp += OnBonusPickedup;
-
+      bonus.SetValue(value);
       return bonus;
     }
 
@@ -71,6 +73,8 @@ namespace Services.Bonuses
         bonusesPool[bonus.Type].Enqueue(new PickedupBonus(bonus.Type, bonus));
       else
         bonusesPool.Add(bonus.Type, new Queue<PickedupBonus>(new[]{new PickedupBonus(bonus.Type, bonus) }));
+      
+      bonus.Hide();
     }
 
     private bool IsContainsInPool(BonusTypeId typeId) => 

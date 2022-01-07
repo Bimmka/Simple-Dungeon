@@ -2,6 +2,7 @@
 using Bootstrapp;
 using Enemies.Entity;
 using Enemies.Spawn;
+using Services.Bonuses;
 using StaticData.Level;
 using UnityEngine;
 
@@ -11,15 +12,17 @@ namespace Services.Waves
   {
     private readonly IEnemySpawner enemiesSpawner;
     private readonly ICoroutineRunner coroutineRunner;
+    private readonly IBonusSpawner bonusSpawner;
     private LevelWaveStaticData waves;
 
     private int currentEnemiesCount;
     private int currentWaveIndex;
 
-    public WaveServices(IEnemySpawner spawner, ICoroutineRunner coroutineRunner)
+    public WaveServices(IEnemySpawner spawner, ICoroutineRunner coroutineRunner, IBonusSpawner bonusSpawner)
     {
       enemiesSpawner = spawner;
       this.coroutineRunner = coroutineRunner;
+      this.bonusSpawner = bonusSpawner;
       enemiesSpawner.Spawned += OnEnemySpawned;
     }
 
@@ -49,8 +52,8 @@ namespace Services.Waves
     private void CompleteWave()
     {
       coroutineRunner.StartCoroutine(StartWave());
-      currentWaveIndex++;
-      currentWaveIndex = Mathf.Clamp(currentWaveIndex, 0, waves.Waves.Length);
+      SpawnBonuses();
+      IncWaveIndex();
     }
 
     private IEnumerator StartWave()
@@ -63,6 +66,21 @@ namespace Services.Waves
       {
         currentEnemiesCount += waves.Waves[currentWaveIndex].Enemies[i].Count;
       }
+    }
+
+    private void SpawnBonuses()
+    {
+      WaveBonus[] bonuses = waves.Waves[currentWaveIndex].Bonuses;
+      for (int i = 0; i <bonuses.Length ; i++)
+      {
+        bonusSpawner.SpawnBonus(bonuses[i]);
+      }
+    }
+
+    private void IncWaveIndex()
+    {
+      currentWaveIndex++;
+      currentWaveIndex = Mathf.Clamp(currentWaveIndex, 0, waves.Waves.Length);
     }
   }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Bonuses
 {
   [RequireComponent(typeof(UniqueId))]
-  public class BonusMarkerSpawn : MonoBehaviour
+  public class BonusSpawnMarker : MonoBehaviour
   {
     
   }

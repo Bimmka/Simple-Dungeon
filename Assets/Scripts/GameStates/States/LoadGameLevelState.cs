@@ -72,6 +72,7 @@ namespace GameStates.States
       
       LevelStaticData levelData = GetLevelData();
       InitEnemySpawners(levelData.EnemySpawners, levelData.SpawnPointPrefab);
+      InitBonusSpawner(levelData.BonusSpawners, levelData.SpawnPointPrefab);
       InitWaves(levelData.LevelWaves);
       InitLootService(levelData.LevelKey);
       

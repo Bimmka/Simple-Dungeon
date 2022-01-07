@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87fd0fb7f8434660a10f2db2435efa68, type: 3}
   m_Name: LevelWaveStaticData
   m_EditorClassIdentifier: 
+  FirstWaveDelay: 10
   Waves:
   - WaveIndex: 1
     Enemies:
@@ -19,6 +20,13 @@ MonoBehaviour:
       Count: 1
       HpCoeff: 0.5
       DamageCoeff: 1
+    Bonuses:
+    - TypeId: 0
+      Value: 50
+      Count: 1
+    - TypeId: 1
+      Value: 100
+      Count: 1
     WaveWaitTime: 5
   - WaveIndex: 2
     Enemies:
@@ -26,6 +34,10 @@ MonoBehaviour:
       Count: 3
       HpCoeff: 0.5
       DamageCoeff: 0
+    Bonuses:
+    - TypeId: 0
+      Value: 100
+      Count: 1
     WaveWaitTime: 10
   - WaveIndex: 3
     Enemies:
@@ -33,4 +45,8 @@ MonoBehaviour:
       Count: 10
       HpCoeff: 0.5
       DamageCoeff: 1
+    Bonuses:
+    - TypeId: 1
+      Value: 3000
+      Count: 1
     WaveWaitTime: 20

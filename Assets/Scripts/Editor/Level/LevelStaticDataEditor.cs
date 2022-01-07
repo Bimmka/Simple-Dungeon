@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using Enemies;
+using Bonuses;
 using Enemies.Spawn;
 using StaticData.Level;
 using UnityEditor;
@@ -20,6 +20,10 @@ namespace Editor.Level
       if (GUILayout.Button("Collect"))
       {
         levelData.EnemySpawners = FindObjectsOfType<EnemySpawnMarker>()
+          .Select(x => new SpawnPointStaticData(x.GetComponent<UniqueId>().Id, x.transform.position))
+          .ToList();
+        
+        levelData.BonusSpawners = FindObjectsOfType<BonusSpawnMarker>()
           .Select(x => new SpawnPointStaticData(x.GetComponent<UniqueId>().Id, x.transform.position))
           .ToList();
 

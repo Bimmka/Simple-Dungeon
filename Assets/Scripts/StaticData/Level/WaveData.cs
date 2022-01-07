@@ -7,6 +7,7 @@ namespace StaticData.Level
   {
     public int WaveIndex;
     public WaveEnemy[] Enemies;
+    public WaveBonus[] Bonuses;
     public float WaveWaitTime;
   }
 }

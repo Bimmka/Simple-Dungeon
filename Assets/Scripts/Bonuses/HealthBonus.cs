@@ -4,12 +4,12 @@ using UnityEngine;
 
 namespace Bonuses
 {
-  public class BonusHealthUseStrategy : BonusUseStrategy
+  public class HealthBonus : Bonus
   {
-    public override void Pickup(Collider other, int value) => 
+    protected override void Pickup(Collider other, int value) => 
       other.GetComponentInChildren<IHealth>().AddHealth(value);
 
-    public override bool IsCanBePickedUp(Collider other) => 
+    protected override bool IsCanBePickedUp(Collider other) => 
       other.TryGetComponent(out HeroStateMachine hero);
   }
 }
