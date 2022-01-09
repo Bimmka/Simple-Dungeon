@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Services.Database
 {
   public interface IDatabaseService : IService
   {
     void AddToLeaderboard(string nickname, int score);
-    List<LeaderboardPlayer> TopPlayers();
+    Task<IEnumerable<LeaderboardPlayer>> UpdateTopPlayers();
+    IEnumerable<LeaderboardPlayer> Leaderboard { get; }
+    bool IsNeedToUpdateLeaderboard();
   }
 }

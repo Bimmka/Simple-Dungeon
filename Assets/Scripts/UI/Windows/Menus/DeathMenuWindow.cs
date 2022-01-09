@@ -24,9 +24,9 @@ namespace UI.Windows.Menus
       this.scoreService = scoreService;
     }
 
-    public override void Open()
+    public override async void Open()
     {
-      if (scoreService.IsPLayerInTop())
+      if (await scoreService.IsPLayerInTop())
         ChangeSaveScoreElementsActive(true);
       base.Open();
     }

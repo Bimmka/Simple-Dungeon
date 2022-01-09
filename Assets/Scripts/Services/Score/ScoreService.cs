@@ -1,4 +1,8 @@
-﻿using Enemies.Entity;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using ConstantsValue;
+using Enemies.Entity;
 using Enemies.Spawn;
 using Services.Database;
 using Services.PlayerData;
@@ -28,11 +32,28 @@ namespace Services.Score
       enemySpawner.Spawned -= OnEnemySpawned;
     }
 
-    public bool IsPLayerInTop() => 
-      playerScore.Score > 5;
+    public async Task<bool> IsPLayerInTop()
+    {
+      IEnumerable<LeaderboardPlayer> players;
+      if (databaseService.IsNeedToUpdateLeaderboard())
+        players = await databaseService.UpdateTopPlayers();
+      else
+        players = databaseService.Leaderboard;
+
+      if (players.Count() < Constants.TopLength)
+        return true;
+      
+      foreach (LeaderboardPlayer player in players)
+      {
+        if (player.Score < playerScore.Score)
+          return true;
+      }
+      
+      return false;
+    }
 
     public void SavePlayerInLeaderboard(string nickname) => 
-      databaseService.AddToLeaderboard(nickname, playerScore.Score);
+       databaseService.AddToLeaderboard(nickname, playerScore.Score);
 
     private void OnEnemySpawned(GameObject enemy)
     {
