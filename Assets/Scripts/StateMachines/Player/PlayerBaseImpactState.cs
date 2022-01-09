@@ -6,14 +6,12 @@ namespace StateMachines.Player
 {
   public class PlayerBaseImpactState : PlayerBaseMachineState
   {
-    private readonly HeroStateMachine hero;
     private readonly float knockbackCooldown;
     private float lastImpactTime;
 
     protected PlayerBaseImpactState(StateMachine stateMachine, string animationName, BattleAnimator animator,
-      HeroStateMachine hero, float cooldown) : base(stateMachine, animationName, animator)
+      HeroStateMachine hero, float cooldown) : base(stateMachine, animationName, animator, hero)
     {
-      this.hero = hero;
       knockbackCooldown = cooldown;
       UpdateImpactTime();
     }
@@ -33,14 +31,14 @@ namespace StateMachines.Player
 
       if (hero.IsBlockingPressed)
       {
-        if (IsMoveHorizontal())
+        if (IsStayHorizontal() == false)
           ChangeState(hero.ShieldMoveState);
         else
           ChangeState(hero.IdleShieldState);
       }
       else
       {
-        if (IsVerticalStay())
+        if (IsStayVertical())
           ChangeState(hero.IdleState);
         else
           ChangeState(hero.MoveState);
@@ -52,11 +50,5 @@ namespace StateMachines.Player
 
     private void UpdateImpactTime() => 
       lastImpactTime = Time.time;
-
-    private bool IsMoveHorizontal() => 
-      hero.MoveAxis.x != 0;
-
-    private bool IsVerticalStay() => 
-      Mathf.Approximately(hero.MoveAxis.y,0);
   }
 }

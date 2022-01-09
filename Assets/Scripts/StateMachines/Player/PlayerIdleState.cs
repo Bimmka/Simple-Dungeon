@@ -7,14 +7,12 @@ namespace StateMachines.Player
   public class PlayerIdleState : PlayerBaseMachineState
   {
     private readonly int floatValueHash;
-    private readonly HeroStateMachine hero;
     private readonly HeroRotate heroRotate;
 
     public PlayerIdleState(StateMachine stateMachine, string animationName, string floatValueName,
-      BattleAnimator animator, HeroStateMachine hero, HeroRotate heroRotate) : base(stateMachine, animationName, animator)
+      BattleAnimator animator, HeroStateMachine hero, HeroRotate heroRotate) : base(stateMachine, animationName, animator, hero)
     {
       floatValueHash = Animator.StringToHash(floatValueName);
-      this.hero = hero;
       this.heroRotate = heroRotate;
     }
 
@@ -23,13 +21,13 @@ namespace StateMachines.Player
       base.LogicUpdate();
       if (hero.IsBlockingPressed)
       {
-        if (hero.MoveAxis != Vector2.zero)
+        if (IsStayHorizontal() == false)
           ChangeState(hero.ShieldMoveState);
         else
           ChangeState(hero.IdleShieldState);
       }
       else
-        if (hero.MoveAxis != Vector2.zero)
+        if (IsStayVertical() == false)
           ChangeState(hero.MoveState);
         else
         {
@@ -41,7 +39,6 @@ namespace StateMachines.Player
           else
             SetFloat(floatValueHash, 0);
         }
-     
     }
 
     public override bool IsCanBeInterapted() => 

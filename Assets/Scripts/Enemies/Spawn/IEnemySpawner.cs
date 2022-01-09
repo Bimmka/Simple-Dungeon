@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Enemies.Spawn
 {
-  public interface IEnemySpawner : IService
+  public interface IEnemySpawner : ICleanupService
   {
     event Action<GameObject> Spawned;
     void AddPoint(SpawnPoint spawnPoint);

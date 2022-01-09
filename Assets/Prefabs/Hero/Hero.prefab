@@ -1527,8 +1527,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.6251359, y: 1.9457324, z: 0.47550654}
-  m_Center: {x: 0.01636672, y: 1.2927564, z: -0.0072215796}
+  m_Size: {x: 0.6251359, y: 2.3101547, z: 0.47550654}
+  m_Center: {x: 0.01636672, y: 1.1105453, z: -0.0072215796}
 --- !u!114 &1938066207622182473
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1567,6 +1567,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hero: {fileID: 7163124626810390331}
   heroCollider: {fileID: 8861303588428747833}
+  input: {fileID: 8779422808152574895}
 --- !u!1 &4718620376972774224
 GameObject:
   m_ObjectHideFlags: 0

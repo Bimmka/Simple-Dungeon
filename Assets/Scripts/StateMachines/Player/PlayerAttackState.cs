@@ -7,7 +7,6 @@ namespace StateMachines.Player
 {
   public class PlayerAttackState : PlayerBaseMachineState
   {
-    private readonly HeroStateMachine hero;
     private readonly HeroAttack heroAttack;
     private readonly HeroStamina heroStamina;
     private readonly float attackCooldown;
@@ -17,9 +16,8 @@ namespace StateMachines.Player
     private bool isAttackEnded;
 
     public PlayerAttackState(StateMachine stateMachine, string animationName, BattleAnimator animator,
-      HeroStateMachine hero, HeroAttack heroAttack, HeroAttackStaticData attackData, HeroStamina heroStamina) : base(stateMachine, animationName, animator)
+      HeroStateMachine hero, HeroAttack heroAttack, HeroAttackStaticData attackData, HeroStamina heroStamina) : base(stateMachine, animationName, animator, hero)
     {
-      this.hero = hero;
       this.heroAttack = heroAttack;
       this.heroStamina = heroStamina;
       this.animator.Attacked += Attack;
@@ -44,14 +42,14 @@ namespace StateMachines.Player
       isAttackEnded = true;
       if (hero.IsBlockingPressed)
       {
-        if (hero.MoveAxis != Vector2.zero)
+        if (IsStayHorizontal() == false)
           ChangeState(hero.ShieldMoveState);
         else
           ChangeState(hero.IdleShieldState);
       }
       else
       {
-        if (hero.MoveAxis == Vector2.zero)
+        if (IsStayVertical())
           ChangeState(hero.IdleState);
         else
           ChangeState(hero.MoveState);

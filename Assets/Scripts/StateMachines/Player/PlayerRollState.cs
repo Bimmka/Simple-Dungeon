@@ -6,14 +6,12 @@ namespace StateMachines.Player
 {
   public class PlayerRollState : PlayerBaseMachineState
   {
-    private readonly HeroStateMachine hero;
     private readonly HeroMove heroMove;
     private readonly HeroStamina heroStamina;
 
     public PlayerRollState(StateMachine stateMachine, string animationName, BattleAnimator animator,
-      HeroStateMachine hero, HeroMove heroMove, HeroStamina heroStamina) : base(stateMachine, animationName, animator)
+      HeroStateMachine hero, HeroMove heroMove, HeroStamina heroStamina) : base(stateMachine, animationName, animator, hero)
     {
-      this.hero = hero;
       this.heroMove = heroMove;
       this.heroStamina = heroStamina;
     }
@@ -31,21 +29,21 @@ namespace StateMachines.Player
     }
 
     public override bool IsCanBeInterapted() => 
-      true;
+      false;
 
     public override void TriggerAnimation()
     {
       base.TriggerAnimation();
       if (hero.IsBlockingPressed)
       {
-        if (hero.MoveAxis != Vector2.zero)
+        if (IsStayHorizontal() == false)
           ChangeState(hero.ShieldMoveState);
         else
           ChangeState(hero.IdleShieldState);
       }
       else
       {
-        if (hero.MoveAxis == Vector2.zero)
+        if (IsStayVertical())
           ChangeState(hero.IdleState);
         else
           ChangeState(hero.MoveState);

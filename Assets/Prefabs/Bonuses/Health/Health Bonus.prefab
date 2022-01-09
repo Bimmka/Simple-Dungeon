@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4731806807446460302}
   - component: {fileID: 4731806807446460301}
   - component: {fileID: 4731806807446460300}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Health Bonus
   m_TagString: Untagged
   m_Icon: {fileID: 0}

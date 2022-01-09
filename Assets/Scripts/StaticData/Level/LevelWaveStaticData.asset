@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87fd0fb7f8434660a10f2db2435efa68, type: 3}
   m_Name: LevelWaveStaticData
   m_EditorClassIdentifier: 
-  FirstWaveDelay: 10
+  FirstWaveDelay: 0
   Waves:
   - WaveIndex: 1
     Enemies:

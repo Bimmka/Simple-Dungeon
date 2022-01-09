@@ -97,6 +97,7 @@ namespace Services.Factories.GameFactories
 
     public void CreateEnemySpawnPoints(List<SpawnPointStaticData> spawnPoints, SpawnPoint pointPrefab)
     {
+      enemySpawner.Cleanup();
       for (int i = 0; i < spawnPoints.Count; i++)
       {
         enemySpawner.AddPoint(CreateEnemySpawnPoint(spawnPoints[i], pointPrefab));
@@ -105,6 +106,7 @@ namespace Services.Factories.GameFactories
 
     public void CreateBonusSpawnPoints(List<SpawnPointStaticData> spawnPoints, SpawnPoint pointPrefab)
     {
+      bonusSpawner.Cleanup();
       for (int i = 0; i < spawnPoints.Count; i++)
       {
         bonusSpawner.AddPoint(CreateEnemySpawnPoint(spawnPoints[i], pointPrefab));
@@ -120,11 +122,5 @@ namespace Services.Factories.GameFactories
 
     private GameObject InstantiateObject(GameObject prefab, Vector3 at) => 
       assets.Instantiate(prefab, at);
-
-    private GameObject InstantiateObject(GameObject prefab) => 
-      assets.Instantiate(prefab);
-
-    private GameObject InstantiateObject(GameObject prefab, Transform parent) => 
-      assets.Instantiate(prefab, parent);
   }
 }

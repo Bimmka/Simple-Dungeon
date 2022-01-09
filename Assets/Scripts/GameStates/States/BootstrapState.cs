@@ -109,7 +109,6 @@ namespace GameStates.States
     private void RegisterInputService()
     {
       IInputService inputService = new InputService(new HeroControls());
-      inputService.Enable();
       services.RegisterSingle<IInputService>(inputService);
     }
 

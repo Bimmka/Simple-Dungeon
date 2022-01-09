@@ -8,6 +8,7 @@ namespace Hero
   {
     [SerializeField] private HeroStateMachine hero;
     [SerializeField] private Collider heroCollider;
+    [SerializeField] private HeroInput input;
     
     private IHeroDeathService deathService;
     private IHealth health;
@@ -21,6 +22,7 @@ namespace Hero
 
     private void Dead()
     {
+      input.Disable();
       hero.Dead();
       heroCollider.enabled = false;
       deathService.Dead();

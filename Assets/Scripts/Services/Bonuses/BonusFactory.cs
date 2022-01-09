@@ -30,7 +30,8 @@ namespace Services.Bonuses
         while (bonuses.Value.Count > 0)
         {
           bonus = bonuses.Value.Dequeue();
-          bonus.Bonus.GetComponent<Bonus>().PickedUp -= OnBonusPickedup;
+          if (bonus.Bonus != null)
+            bonus.Bonus.PickedUp -= OnBonusPickedup;
         }
       }
 

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Services.Factories.Enemy;
-using Services.Factories.GameFactories;
 using Services.Random;
 using StaticData.Level;
 using UnityEngine;
@@ -20,6 +19,12 @@ namespace Enemies.Spawn
     {
       this.enemiesFactory = enemiesFactory;
       this.randomService = randomService;
+    }
+
+    public void Cleanup()
+    {
+      spawnPoints.Clear();
+      enemiesFactory.Cleanup();
     }
 
     public void AddPoint(SpawnPoint spawnPoint) => 

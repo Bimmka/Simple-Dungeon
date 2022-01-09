@@ -67,7 +67,7 @@ namespace Hero
             ShieldImpactState = new PlayerShieldImpactState(stateMachine, "IsShieldImpact", battleAnimator, this, impactsData.ShieldImpactCooldown);
             MoveState = new PlayerMoveState(stateMachine, "IsIdle", "MoveX", battleAnimator, this, move, rotate);
             ShieldMoveState = new PlayerShieldMoveState(stateMachine, "IsBlocking", "MoveY", battleAnimator, this, move, rotate);
-            DeathState = new PlayerDeathState(stateMachine, "IsDead", battleAnimator);
+            DeathState = new PlayerDeathState(stateMachine, "IsDead", battleAnimator, this);
         }
 
         protected override void SetDefaultState() => 

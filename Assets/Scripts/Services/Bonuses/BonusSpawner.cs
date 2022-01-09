@@ -19,6 +19,13 @@ namespace Services.Bonuses
       this.bonusFactory = bonusFactory;
       this.randomService = randomService;
     }
+
+    public void Cleanup()
+    {
+      spawnPoints.Clear();
+      bonusFactory.Cleanup();
+    }
+      
     
     public void AddPoint(SpawnPoint spawnPoint) => 
       spawnPoints.Add(spawnPoint);
