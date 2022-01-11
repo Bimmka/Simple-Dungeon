@@ -9,6 +9,7 @@ namespace UI.Windows.Menus
 {
   public class MainMenuWindow : BaseWindow
   {
+    [SerializeField] private Button leaderboardButton;
     [SerializeField] private Button playButton;
     
     private IGameStateMachine gameStateMachine;
@@ -22,12 +23,14 @@ namespace UI.Windows.Menus
     {
       base.Subscribe();
       playButton.onClick.AddListener(StartGame);
+      leaderboardButton.onClick.AddListener(Close);
     }
 
     protected override void Cleanup()
     {
       base.Cleanup();
       playButton.onClick.RemoveListener(StartGame);
+      leaderboardButton.onClick.RemoveListener(Close);
     }
 
     private void StartGame() => 

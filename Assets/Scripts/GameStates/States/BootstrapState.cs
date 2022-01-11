@@ -138,7 +138,8 @@ namespace GameStates.States
         services.Single<IStaticDataService>(), 
         services.Single<IPersistentProgressService>(), 
         services.Single<IShopService>(), 
-        services.Single<IScoreService>()));
+        services.Single<IScoreService>(),
+        services.Single<IDatabaseService>()));
 
     private void RegisterWindowsService() => 
       services.RegisterSingle(new WindowsService(services.Single<IUIFactory>()));

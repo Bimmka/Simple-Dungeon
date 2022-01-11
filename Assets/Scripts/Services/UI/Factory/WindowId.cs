@@ -7,6 +7,7 @@
     PauseMenu = 2,
     Shop = 3,
     MainMenu = 4,
-    DeathMenu
+    DeathMenu,
+    Leaderboard
   }
 }

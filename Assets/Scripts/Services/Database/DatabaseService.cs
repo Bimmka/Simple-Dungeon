@@ -32,7 +32,7 @@ namespace Services.Database
     {
       IAsyncCursor<LeaderboardPlayer> collection = await databaseCollection.FindAsync(FilterDefinition<LeaderboardPlayer>.Empty);
       List<LeaderboardPlayer> listCollection = await collection.ToListAsync();
-      IEnumerable<LeaderboardPlayer> leaderboardPlayers = listCollection.OrderBy(x => x.Score).Take(Constants.TopLength);
+      IEnumerable<LeaderboardPlayer> leaderboardPlayers = listCollection.OrderByDescending(x => x.Score).Take(Constants.TopLength);
       Leaderboard = leaderboardPlayers;
       UpdateLastUpdateTime();
       return Leaderboard;

@@ -2,6 +2,7 @@
 using ConstantsValue;
 using GameStates;
 using Services.Assets;
+using Services.Database;
 using Services.PlayerData;
 using Services.Progress;
 using Services.Score;
@@ -11,6 +12,7 @@ using StaticData.UI;
 using UI.Base;
 using UI.Windows;
 using UI.Windows.Inventories;
+using UI.Windows.Leaderboard;
 using UI.Windows.Menus;
 using UnityEngine;
 
@@ -24,6 +26,7 @@ namespace Services.UI.Factory
     private readonly IPersistentProgressService progressService;
     private readonly IShopService shopService;
     private readonly IScoreService scoreService;
+    private readonly IDatabaseService databaseService;
 
     private Transform uiRoot;
 
@@ -31,7 +34,13 @@ namespace Services.UI.Factory
 
     public event Action<WindowId,BaseWindow> Spawned;
 
-    public UIFactory(IGameStateMachine gameStateMachine, IAssetProvider assets, IStaticDataService staticData, IPersistentProgressService progressService, IShopService shopService, IScoreService scoreService)
+    public UIFactory(IGameStateMachine gameStateMachine,
+      IAssetProvider assets,
+      IStaticDataService staticData, 
+      IPersistentProgressService progressService,
+      IShopService shopService, 
+      IScoreService scoreService,
+      IDatabaseService databaseService)
     {
       this.gameStateMachine = gameStateMachine;
       this.assets = assets;
@@ -39,6 +48,7 @@ namespace Services.UI.Factory
       this.progressService = progressService;
       this.shopService = shopService;
       this.scoreService = scoreService;
+      this.databaseService = databaseService;
     }
 
     public void CreateUIRoot()
@@ -66,6 +76,9 @@ namespace Services.UI.Factory
           break;
          case WindowId.DeathMenu:
            CreateDeathMenuWindow(config, id);
+           break;
+         case WindowId.Leaderboard:
+           CreateLeaderboardWindow(config, id);
            break;
         default:
           CreateWindow(config, id);
@@ -107,6 +120,13 @@ namespace Services.UI.Factory
       ((DeathMenuWindow)window).Construct(gameStateMachine, scoreService);
       NotifyAboutCreateWindow(id, window);
     }
+    
+    private void CreateLeaderboardWindow(WindowInstantiateData config, WindowId id)
+    {
+      BaseWindow window = InstantiateWindow(config);
+      ((LeaderboardWindow)window).Construct(databaseService);
+      NotifyAboutCreateWindow(id, window);
+    } 
 
     private void CreateWindow(WindowInstantiateData config, WindowId id)
     {
