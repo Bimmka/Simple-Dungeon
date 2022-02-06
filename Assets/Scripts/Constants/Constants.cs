@@ -9,6 +9,6 @@
     public static string MongoDatabaseName = "SimpleDungeonBase";
     public static string MongoCollectionName = "Leaderboard";
     public static int TopLength = 3;
-    public static int LeaderboardUpdateRange = 600;
+    public static int LeaderboardUpdateRange = 60;
   }
 }

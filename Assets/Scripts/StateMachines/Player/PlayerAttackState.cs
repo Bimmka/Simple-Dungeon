@@ -33,6 +33,12 @@ namespace StateMachines.Player
     public bool IsCanAttack() => 
       Time.time >= lastAttackTime + attackCooldown && heroStamina.IsCanAttack();
 
+    public override void Enter()
+    {
+      base.Enter();
+      isAttackEnded = false;
+    }
+
     public override bool IsCanBeInterapted() => 
       isAttackEnded;
 
@@ -59,7 +65,6 @@ namespace StateMachines.Player
     private void Attack()
     {
       heroAttack.Attack();
-      isAttackEnded = false;
       heroStamina.WasteToAttack();
     }
 
