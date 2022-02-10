@@ -1,7 +1,6 @@
-﻿using Bootstrapp;
-using Enemies.Spawn;
+﻿using Enemies.Spawn;
 using GameStates.States.Interfaces;
-using Input;
+using InputActions;
 using Loots;
 using SceneLoading;
 using Services;

@@ -164,6 +164,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 45ff5a9f5ffb13c48a6d5b706cdf0e53, type: 3}
   - {fileID: 21300000, guid: e37adb9ff21c8de4bb8e424486d17a16, type: 3}
   - {fileID: 21300000, guid: c7af4caf86986a24d89b41c984aa68d3, type: 3}
+  - {fileID: 21300000, guid: 7d67b5fff8fbbae4185e3580298b15e5, type: 3}
   - {fileID: 21300000, guid: 4d2269ff8a48b0b4fa471c16c9c8d397, type: 3}
   - {fileID: 21300000, guid: b377c9ff5c359754a98af36d766d87df, type: 3}
   m_PackedSpriteNamesToIndex:
@@ -280,6 +281,7 @@ SpriteAtlas:
   - Coin_Icon
   - gauntlets
   - Money_Bar
+  - knight
   - tile049
   - studded_helmet
   m_RenderDataMap: {}
