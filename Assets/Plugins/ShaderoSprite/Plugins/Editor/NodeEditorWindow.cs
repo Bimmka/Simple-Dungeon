@@ -82,8 +82,8 @@ namespace _ShaderoShaderEditorFramework.Standard
             EditorLoadingControl.justOpenedNewScene -= NormalReInit;
             EditorLoadingControl.justOpenedNewScene += NormalReInit;
 
-            SceneView.onSceneGUIDelegate -= OnSceneGUI;
-            SceneView.onSceneGUIDelegate += OnSceneGUI;
+            SceneView.duringSceneGui -= OnSceneGUI;
+            SceneView.duringSceneGui += OnSceneGUI;
 
             // Fix for .Net 4
             string path = Path.GetDirectoryName(AssetDatabase.GetAssetPath(MonoScript.FromScriptableObject(this)));
@@ -108,7 +108,7 @@ namespace _ShaderoShaderEditorFramework.Standard
             EditorLoadingControl.justLeftPlayMode -= NormalReInit;
             EditorLoadingControl.justOpenedNewScene -= NormalReInit;
 
-            SceneView.onSceneGUIDelegate -= OnSceneGUI;
+            SceneView.duringSceneGui -= OnSceneGUI;
 
             canvasCache.ClearCacheEvents();
         }
