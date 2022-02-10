@@ -71,9 +71,9 @@ namespace GameStates.States
       InitUIRoot();
       
       LevelStaticData levelData = GetLevelData();
-      InitEnemySpawners(levelData.EnemySpawners, levelData.SpawnPointPrefab);
+      //InitEnemySpawners(levelData.EnemySpawners, levelData.SpawnPointPrefab);
       InitBonusSpawner(levelData.BonusSpawners, levelData.SpawnPointPrefab);
-      InitWaves(levelData.LevelWaves);
+      //InitWaves(levelData.LevelWaves);
       InitLootService(levelData.LevelKey);
       
       GameObject hero = gameFactory.CreateHero();
