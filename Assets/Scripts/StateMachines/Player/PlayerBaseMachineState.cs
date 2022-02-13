@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace StateMachines.Player
 {
-  public abstract class PlayerBaseMachineState : BaseStateMachineState
+  public abstract class PlayerBaseMachineState : BaseStateMachineState, IPlayerMachineState
   {
     private readonly StateMachine stateMachine;
     

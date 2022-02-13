@@ -30,12 +30,12 @@ namespace StateMachines.Player
       if (hero.IsBlockingPressed == false)
       {
         if (IsStayVertical() == false)
-          ChangeState(hero.MoveState);
+          ChangeState(hero.State<PlayerMoveState>());
         else
-          ChangeState(hero.IdleState);
+          ChangeState(hero.State<PlayerIdleState>());
       }
       else if (IsStayHorizontal())
-        ChangeState(hero.IdleShieldState);
+        ChangeState(hero.State<PlayerIdleShieldState>());
       else
       {
         heroMove.Strafe(hero.transform.right * hero.MoveAxis.x);

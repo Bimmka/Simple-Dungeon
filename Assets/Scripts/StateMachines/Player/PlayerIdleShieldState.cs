@@ -22,7 +22,7 @@ namespace StateMachines.Player
       if (hero.IsBlockingPressed)
       {
         if (IsStayHorizontal() == false)
-          ChangeState(hero.ShieldMoveState);
+          ChangeState(hero.State<PlayerShieldMoveState>());
         else
         if (Mathf.Approximately(hero.RotateAngle, 0) == false)
         {
@@ -35,9 +35,9 @@ namespace StateMachines.Player
       else
       {
         if (IsStayVertical())
-          ChangeState(hero.IdleState);
+          ChangeState(hero.State<PlayerIdleState>());
         else
-          ChangeState(hero.MoveState);
+          ChangeState(hero.State<PlayerMoveState>());
       }
     }
 

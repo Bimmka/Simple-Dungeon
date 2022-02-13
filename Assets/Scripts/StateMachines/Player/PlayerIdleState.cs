@@ -22,13 +22,13 @@ namespace StateMachines.Player
       if (hero.IsBlockingPressed)
       {
         if (IsStayHorizontal() == false)
-          ChangeState(hero.ShieldMoveState);
+          ChangeState(hero.State<PlayerShieldMoveState>());
         else
-          ChangeState(hero.IdleShieldState);
+          ChangeState(hero.State<PlayerIdleState>());
       }
       else
         if (IsStayVertical() == false)
-          ChangeState(hero.MoveState);
+          ChangeState(hero.State<PlayerMoveState>());
         else
         {
           if (Mathf.Approximately(hero.RotateAngle, 0) == false)
