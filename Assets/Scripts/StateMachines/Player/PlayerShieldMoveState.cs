@@ -39,7 +39,7 @@ namespace StateMachines.Player
       else
       {
         heroMove.Strafe(hero.transform.right * hero.MoveAxis.x);
-        heroRotate.Rotate(hero.RotateAngle);
+        heroRotate.RotateTo(hero.MoveAxis);
       }        
     }
 

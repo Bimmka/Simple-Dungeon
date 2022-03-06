@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Net.NetworkInformation;
-using Systems.Healths;
 using Animations;
+using Services;
 using Services.PlayerData;
 using StateMachines.Player;
 using StaticData.Hero.Components;
@@ -10,7 +7,7 @@ using UnityEngine;
 
 namespace Hero
 {
-    public class HeroStateMachine : BaseEntityStateMachine
+    public class HeroStateMachine : BaseEntityStateMachine, ICoroutineRunner
     {
         [SerializeField] private BattleAnimator battleAnimator;
         [SerializeField] private HeroMove move;
@@ -23,9 +20,7 @@ namespace Hero
 
         private HeroMachineStatesFactory statesFactory;
         private HeroStatesContainer statesContainer;
-
         
-
         public bool IsBlockingPressed { get; private set; }
         public bool IsBlockingUp => stateMachine.State == State<PlayerIdleShieldState>();
         public bool IsRolling => stateMachine.State == State<PlayerRollState>();
@@ -57,7 +52,7 @@ namespace Hero
 
         protected override void CreateStates()
         {
-            statesFactory = new HeroMachineStatesFactory(stateMachine,this, battleAnimator, move, attack, rotate, attackData, stamina, impactsData);
+            statesFactory = new HeroMachineStatesFactory(stateMachine,this, battleAnimator, move, attack, rotate, attackData, stamina, impactsData, this);
             statesContainer = new HeroStatesContainer(statesFactory);
             statesContainer.CreateState();
         }
@@ -93,13 +88,8 @@ namespace Hero
                 stateMachine.ChangeState(State<PlayerBaseImpactState>());
         }
 
-        public void SetRotate(float rotateAngle) => 
-            RotateAngle = rotateAngle;
-
-        public void Dead()
-        {
+        public void Dead() => 
             stateMachine.ChangeState(State<PlayerDeathState>());
-        }
 
         public TState State<TState>() where TState : PlayerBaseMachineState => 
             statesContainer.GetState<TState>();

@@ -43,6 +43,8 @@ namespace StateMachines.Player
     
     public bool IsStayVertical() => 
       Mathf.Approximately(hero.MoveAxis.y, 0);
-    
+
+    public bool IsNotMove() => 
+      hero.MoveAxis == Vector2.zero;
   }
 }

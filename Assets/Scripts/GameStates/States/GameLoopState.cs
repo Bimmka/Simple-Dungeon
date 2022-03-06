@@ -14,7 +14,7 @@ namespace GameStates.States
 
     public void Enter()
     {
-      waveServices.Start();
+      //waveServices.Start();
     }
 
     public void Exit()

@@ -1,15 +1,28 @@
-﻿using UnityEngine;
+﻿using DG.Tweening;
+using UnityEngine;
 
 namespace Hero
 {
   public class HeroRotate : MonoBehaviour
   {
     [SerializeField] private float rotateSpeed;
+    public bool IsTurning { get; private set; }
 
-    public void Rotate(float angle)
+    public float RotateDuration => 0.5f;
+
+    public void RotateTo(Vector2 moveAxis) => 
+      transform.forward = Vector3.Lerp(transform.forward, new Vector3(moveAxis.x, 0, moveAxis.y), 0.3f);
+
+    public void Rotate() => 
+      transform.DORotate(transform.eulerAngles + Vector3.up * (rotateSpeed * Time.deltaTime), Time.deltaTime);
+
+    public void SetIsTurning() => 
+      IsTurning = true;
+
+    public void StopRotate()
     {
-      transform.eulerAngles = Vector3.Lerp(transform.eulerAngles, transform.eulerAngles + Vector3.up * angle,
-        rotateSpeed * Time.deltaTime);
+      DOTween.Kill(transform);
+      IsTurning = false;
     }
   }
 }

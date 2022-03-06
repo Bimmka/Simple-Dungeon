@@ -22,26 +22,29 @@ namespace StateMachines.Player
     public override void Enter()
     {
       base.Enter();
-      SetFloat(floatValueHash, hero.MoveAxis.y);
+      SetFloat(floatValueHash, 1f);
     }
 
     public override void LogicUpdate()
     {
-      base.LogicUpdate();
-      if (hero.IsBlockingPressed)
-      {
-        if (IsStayHorizontal() == false)
-          ChangeState(hero.State<PlayerShieldMoveState>());
-        else
-          ChangeState(hero.State<PlayerIdleShieldState>());
-      }
-      else if (IsStayVertical())
+      base.LogicUpdate(); 
+      Debug.DrawRay(hero.transform.position, hero.transform.forward, Color.red);
+      Debug.DrawRay(hero.transform.position, MoveAxis(), Color.green);
+      if (IsNotMove())
         ChangeState(hero.State<PlayerIdleState>());
-      else
+      else if (IsLowAngle(hero.MoveAxis) && heroRotate.IsTurning == false)
       {
-        heroMove.Move(hero.transform.forward * hero.MoveAxis.y);
-        heroRotate.Rotate(hero.RotateAngle);
-      }     
+        heroRotate.RotateTo(hero.MoveAxis);
+        heroMove.Move(MoveAxis());
+      }
+      else if (heroRotate.IsTurning == false) 
+        ChangeState(hero.State<PlayerRotatingState>());
+    }
+
+    private bool IsLowAngle(Vector2 moveAxis)
+    {
+      Debug.Log($"Signed Angle {Vector3.SignedAngle(hero.transform.forward, new Vector3(moveAxis.x, 0, moveAxis.y), Vector3.up)} Forward {hero.transform.forward} MoveAxis {moveAxis}");
+      return Mathf.Abs(Vector3.SignedAngle(hero.transform.forward, new Vector3(moveAxis.x, 0, moveAxis.y), Vector3.up)) < 60;
     }
 
     public override void Exit()
@@ -52,5 +55,8 @@ namespace StateMachines.Player
 
     public override bool IsCanBeInterapted() => 
       true;
+
+    private Vector3 MoveAxis() => 
+      new Vector3(hero.MoveAxis.x, 0 , hero.MoveAxis.y);
   }
 }
