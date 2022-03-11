@@ -1,28 +1,43 @@
-﻿using Animations;
+﻿using System;
+using System.Collections;
+using Animations;
 using Hero;
+using Services;
+using StaticData.Hero.Components;
 using UnityEngine;
 
 namespace StateMachines.Player
 {
   public class PlayerMoveState : PlayerBaseMachineState
   {
-    private readonly int floatValueHash;
-    private readonly HeroMove heroMove;
-    private readonly HeroRotate heroRotate;
+    private readonly int _floatValueHash;
+    private readonly HeroMove _heroMove;
+    private readonly HeroRotate _heroRotate;
+    private readonly ICoroutineRunner _coroutineRunner;
+    private readonly HeroMoveStaticData _moveStaticData;
+    private readonly float _smoothChangeStep = 50f;
+    private readonly float _smothChangeExitStep = 100f;
+
+    private Coroutine _changeCoroutine;
 
     public PlayerMoveState(StateMachine stateMachine, string animationName, string floatValueName,
       BattleAnimator animator,
-      HeroStateMachine hero, HeroMove heroMove, HeroRotate heroRotate) : base(stateMachine, animationName, animator, hero)
+      HeroStateMachine hero, HeroMove heroMove, HeroRotate heroRotate, ICoroutineRunner coroutineRunner, HeroMoveStaticData moveStaticData) : base(stateMachine, animationName, animator, hero)
     {
-      floatValueHash = Animator.StringToHash(floatValueName);
-      this.heroMove = heroMove;
-      this.heroRotate = heroRotate;
+      _floatValueHash = Animator.StringToHash(floatValueName);
+      _heroMove = heroMove;
+      _heroRotate = heroRotate;
+      _coroutineRunner = coroutineRunner;
+      _moveStaticData = moveStaticData;
     }
 
     public override void Enter()
     {
       base.Enter();
-      SetFloat(floatValueHash, 1f);
+      if (IsLowAngle(hero.MoveAxis) && _heroRotate.IsTurning == false)
+        SmoothChange(1f, _smoothChangeStep, IsBigger);
+      else if (_heroRotate.IsTurning == false) 
+        ChangeState(hero.State<PlayerRotatingState>());
     }
 
     public override void LogicUpdate()
@@ -32,25 +47,22 @@ namespace StateMachines.Player
       Debug.DrawRay(hero.transform.position, MoveAxis(), Color.green);
       if (IsNotMove())
         ChangeState(hero.State<PlayerIdleState>());
-      else if (IsLowAngle(hero.MoveAxis) && heroRotate.IsTurning == false)
+      else if (IsLowAngle(hero.MoveAxis) && _heroRotate.IsTurning == false)
       {
-        heroRotate.RotateTo(hero.MoveAxis);
-        heroMove.Move(MoveAxis());
+        _heroRotate.RotateTo(hero.MoveAxis);
+        _heroMove.Move(MoveAxis());
       }
-      else if (heroRotate.IsTurning == false) 
+      else if (_heroRotate.IsTurning == false) 
         ChangeState(hero.State<PlayerRotatingState>());
     }
 
-    private bool IsLowAngle(Vector2 moveAxis)
-    {
-      Debug.Log($"Signed Angle {Vector3.SignedAngle(hero.transform.forward, new Vector3(moveAxis.x, 0, moveAxis.y), Vector3.up)} Forward {hero.transform.forward} MoveAxis {moveAxis}");
-      return Mathf.Abs(Vector3.SignedAngle(hero.transform.forward, new Vector3(moveAxis.x, 0, moveAxis.y), Vector3.up)) < 60;
-    }
+    private bool IsLowAngle(Vector2 moveAxis) => 
+      Vector3.Angle(hero.transform.forward, new Vector3(moveAxis.x, 0, moveAxis.y)) < _moveStaticData.BigAngleValue;
 
     public override void Exit()
     {
       base.Exit();
-      SetFloat(floatValueHash, 0);
+      SmoothChange(0f, _smothChangeExitStep, IsSmaller);
     }
 
     public override bool IsCanBeInterapted() => 
@@ -58,5 +70,32 @@ namespace StateMachines.Player
 
     private Vector3 MoveAxis() => 
       new Vector3(hero.MoveAxis.x, 0 , hero.MoveAxis.y);
+
+    private void SmoothChange(float newValue, float step, Func<float, float, bool> checkCallback)
+    {
+      if (_changeCoroutine != null)
+        _coroutineRunner.StopCoroutine(_changeCoroutine);
+
+      _changeCoroutine = _coroutineRunner.StartCoroutine(Change(newValue, step, checkCallback));
+    }
+
+    private IEnumerator Change(float newValue, float step, Func<float, float, bool> checkCallback)
+    {
+      float currentValue = animator.GetFloat(_floatValueHash);
+      int direction = Math.Sign(newValue - currentValue);
+      while (checkCallback(currentValue, newValue) == false)
+      {
+        currentValue += direction * step * Time.deltaTime;
+        yield return null;
+        SetFloat(_floatValueHash, currentValue);
+      }
+
+      _changeCoroutine = null;
+    }
+
+    private bool IsSmaller(float value, float endValue) => 
+      value < endValue;
+    private bool IsBigger(float value, float endValue) => 
+      value > endValue;
   }
 }

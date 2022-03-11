@@ -1,6 +1,5 @@
 ﻿using Animations;
 using Hero;
-using UnityEngine;
 
 namespace StateMachines.Player
 {

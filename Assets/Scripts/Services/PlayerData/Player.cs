@@ -14,6 +14,7 @@ namespace Services.PlayerData
     public HeroStaminaStaticData StaminaStaticData { get; private set; }
     public HeroAttackStaticData AttackData { get; private set; }
     public HeroImpactsStaticData ImpactsData { get; private set; }
+    public HeroMoveStaticData MoveData { get; private set; }
 
     public Player(HeroBaseStaticData heroData)
     {
@@ -25,6 +26,7 @@ namespace Services.PlayerData
       StaminaStaticData = heroData.StaminaStaticData;
       AttackData = heroData.AttackData;
       ImpactsData = heroData.ImpactsData;
+      MoveData = heroData.MoveData;
     }
 
     public void SetDefaultValue(HeroBaseStaticData heroData)
@@ -38,6 +40,7 @@ namespace Services.PlayerData
       StaminaStaticData = heroData.StaminaStaticData;
       AttackData = heroData.AttackData;
       ImpactsData = heroData.ImpactsData;
+      MoveData = heroData.MoveData;
     }
   }
 }

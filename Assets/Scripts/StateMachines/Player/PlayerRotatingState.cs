@@ -9,17 +9,15 @@ namespace StateMachines.Player
   public class PlayerRotatingState : PlayerBaseMachineState
   {
     private readonly HeroRotate _rotate;
-    private readonly ICoroutineRunner _coroutineRunner;
     private readonly int moveXHash;
     private readonly int moveYHash;
 
     private Vector2 rotateDirection;
 
     public PlayerRotatingState(StateMachine stateMachine, string animationName, BattleAnimator animator,
-      HeroStateMachine hero, string moveXName, string moveYName, HeroRotate rotate, ICoroutineRunner coroutineRunner) : base(stateMachine, animationName, animator, hero)
+      HeroStateMachine hero, string moveXName, string moveYName, HeroRotate rotate) : base(stateMachine, animationName, animator, hero)
     {
       _rotate = rotate;
-      _coroutineRunner = coroutineRunner;
       moveXHash = Animator.StringToHash(moveXName);
       moveYHash = Animator.StringToHash(moveYName);
     }
@@ -33,28 +31,15 @@ namespace StateMachines.Player
       if (_rotate.IsTurning == false)
       {
         _rotate.SetIsTurning();
-        SetAnimatorHash();
+        SetTurn();
       }
     }
 
     public override void LogicUpdate()
     {
       base.LogicUpdate();
-      if (_rotate.IsTurning)
-      {
+      if (_rotate.IsTurning) 
         UpdateAnimatorHash();
-        _rotate.Rotate();
-      }
-    }
-
-    public override void TriggerAnimation()
-    {
-      base.TriggerAnimation();
-      _rotate.StopRotate();
-      if (IsNotMove())
-        ChangeState(hero.State<PlayerIdleState>());
-      else
-        ChangeState(hero.State<PlayerMoveState>());
     }
 
     public override void Exit()
@@ -78,25 +63,35 @@ namespace StateMachines.Player
       animator.SetFloat(moveXHash, rotateDirection.x);
     }
 
-    private void SetAnimatorHash()
+    private void SetTurn()
     {
       float angleBetweenDirection = Vector3.SignedAngle(hero.transform.forward, new Vector3(hero.MoveAxis.x, 0, hero.MoveAxis.y), Vector3.up);
       if (Math.Abs(Mathf.Abs(angleBetweenDirection) - 180) < 0.1f)
-        SetBehindTurn();
+        SetTurnAround();
       else
         SetHalfTurn(Math.Sign(angleBetweenDirection));
     }
 
-    private void SetBehindTurn()
+    private void SetTurnAround()
     {
       rotateDirection = Vector2.up;
       animator.SetFloat(moveYHash, 1);
+      _rotate.TurnAround(new Vector3(hero.MoveAxis.x, 0, hero.MoveAxis.y), OnTurnEnd);
     }
 
     private void SetHalfTurn(int sign)
     {
       rotateDirection = Vector2.right * sign;
       animator.SetFloat(moveXHash, sign);
+      _rotate.Turn(new Vector3(hero.MoveAxis.x, 0, hero.MoveAxis.y), OnTurnEnd);
+    }
+
+    private void OnTurnEnd()
+    {
+      if (IsNotMove())
+        ChangeState(hero.State<PlayerIdleState>());
+      else
+        ChangeState(hero.State<PlayerMoveState>());
     }
   }
 }

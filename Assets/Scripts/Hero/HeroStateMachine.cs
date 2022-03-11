@@ -20,7 +20,8 @@ namespace Hero
 
         private HeroMachineStatesFactory statesFactory;
         private HeroStatesContainer statesContainer;
-        
+        private HeroMoveStaticData moveData;
+
         public bool IsBlockingPressed { get; private set; }
         public bool IsBlockingUp => stateMachine.State == State<PlayerIdleShieldState>();
         public bool IsRolling => stateMachine.State == State<PlayerRollState>();
@@ -28,9 +29,10 @@ namespace Hero
         public Vector2 MoveAxis { get; private set; }
         public float RotateAngle { get; private set; }
 
-        public void Construct(HeroAttackStaticData attackData, HeroImpactsStaticData impactData, PlayerCharacteristics characteristics)
+        public void Construct(HeroAttackStaticData attackData, HeroImpactsStaticData impactData, PlayerCharacteristics characteristics, HeroMoveStaticData moveData)
         {
             this.attackData = attackData;
+            this.moveData = moveData;
             impactsData = impactData;
             attack.Construct(attackData, characteristics);
             Initialize();
@@ -52,7 +54,7 @@ namespace Hero
 
         protected override void CreateStates()
         {
-            statesFactory = new HeroMachineStatesFactory(stateMachine,this, battleAnimator, move, attack, rotate, attackData, stamina, impactsData, this);
+            statesFactory = new HeroMachineStatesFactory(stateMachine,this, battleAnimator, move, attack, rotate, attackData, stamina, impactsData, this, moveData);
             statesContainer = new HeroStatesContainer(statesFactory);
             statesContainer.CreateState();
         }

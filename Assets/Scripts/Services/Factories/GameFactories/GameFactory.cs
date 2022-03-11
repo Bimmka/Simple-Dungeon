@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Systems.Healths;
 using ConstantsValue;
+using Debugging;
 using Enemies.Spawn;
 using Hero;
 using Services.Assets;
@@ -63,7 +64,8 @@ namespace Services.Factories.GameFactories
       heroGameObject.GetComponent<HeroStateMachine>().Construct(
         progressService.Player.AttackData, 
         progressService.Player.ImpactsData,
-        progressService.Player.Characteristics);
+        progressService.Player.Characteristics,
+        progressService.Player.MoveData);
       
       heroGameObject.GetComponentInChildren<HeroStamina>().Construct(progressService.Player.StaminaStaticData, progressService.Player.Characteristics);
       
@@ -82,6 +84,12 @@ namespace Services.Factories.GameFactories
       hud.GetComponentInChildren<StaminaDisplayer>().Construct(hero.GetComponentInChildren<IStamina>());
       hud.GetComponentInChildren<HeroMoneyDisplayer>().Construct(progressService.Player.Monies);
       hud.GetComponentInChildren<HeroScoreDisplayer>().Construct(progressService.Player.Score);
+#if DEBUG_MOVE
+      if (hud.TryGetComponent(out DebugHeroComponentsValue debug))
+      {
+        debug.Construct(hero.GetComponent<HeroRotate>());
+      }
+#endif
       InitButtons(hud);
       return hud;
     }

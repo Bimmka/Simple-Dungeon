@@ -15,6 +15,9 @@ namespace Animations
     public void SetFloat(int animationHash, float value) => 
       animator.SetFloat(animationHash, value);
 
+    public float GetFloat(int hash) => 
+      animator.GetFloat(hash);
+
     public void AnimationTriggered() => 
       Triggered?.Invoke();
   }

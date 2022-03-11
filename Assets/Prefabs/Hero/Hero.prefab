@@ -1481,7 +1481,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0587ebb036f44b9b8f5ed764fcdbb550, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotateSpeed: 150
+  lowAngleMoveRotationSpeed: 0.35
+  turnClip: {fileID: -203655887218126122, guid: 041db10af01f9d44d88a87cad08f7655, type: 3}
+  turnAroundClip: {fileID: -203655887218126122, guid: 936d38b29500990458435f5397f56715, type: 3}
 --- !u!143 &-2693136154511395499
 CharacterController:
   m_ObjectHideFlags: 0

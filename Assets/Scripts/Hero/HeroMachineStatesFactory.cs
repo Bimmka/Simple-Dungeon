@@ -20,11 +20,13 @@ namespace Hero
     private readonly HeroStamina _stamina;
     private readonly HeroImpactsStaticData _impactData;
     private readonly ICoroutineRunner _coroutineRunner;
+    private readonly HeroMoveStaticData _moveStaticData;
+
 
     public HeroMachineStatesFactory(StateMachine stateMachine, HeroStateMachine hero, BattleAnimator animator,
       HeroMove move,
       HeroAttack attack, HeroRotate rotate, HeroAttackStaticData attackData, HeroStamina stamina,
-      HeroImpactsStaticData impactData, ICoroutineRunner coroutineRunner)
+      HeroImpactsStaticData impactData, ICoroutineRunner coroutineRunner, HeroMoveStaticData moveStaticData)
     {
       _stateMachine = stateMachine;
       _hero = hero;
@@ -36,6 +38,7 @@ namespace Hero
       _stamina = stamina;
       _impactData = impactData;
       _coroutineRunner = coroutineRunner;
+      _moveStaticData = moveStaticData;
     }
 
     public void CreateStates(ref Dictionary<Type, PlayerBaseMachineState> states)
@@ -47,10 +50,10 @@ namespace Hero
       states.Add(typeof(PlayerIdleState), new PlayerIdleState(_stateMachine, "IsIdle", _animator, _hero));
       states.Add(typeof(PlayerRollState), new PlayerRollState(_stateMachine, "IsRoll", _animator, _hero, _move, _stamina));
       states.Add(typeof(PlayerShieldImpactState), new PlayerShieldImpactState(_stateMachine, "IsShieldImpact", _animator, _hero, _impactData.ShieldImpactCooldown));
-      states.Add(typeof(PlayerMoveState), new PlayerMoveState(_stateMachine, "IsIdle", "MoveX", _animator, _hero, _move, _rotate));
+      states.Add(typeof(PlayerMoveState), new PlayerMoveState(_stateMachine, "IsIdle", "MoveX", _animator, _hero, _move, _rotate, _coroutineRunner, _moveStaticData));
       states.Add(typeof(PlayerShieldMoveState), new PlayerShieldMoveState(_stateMachine, "IsBlocking", "MoveY", _animator, _hero, _move, _rotate));
       states.Add(typeof(PlayerDeathState), new PlayerDeathState(_stateMachine, "IsDead", _animator, _hero));
-      states.Add(typeof(PlayerRotatingState), new PlayerRotatingState(_stateMachine, "IsRotating", _animator, _hero, "MoveX", "MoveY", _rotate, _coroutineRunner));
+      states.Add(typeof(PlayerRotatingState), new PlayerRotatingState(_stateMachine, "IsRotating", _animator, _hero, "MoveX", "MoveY", _rotate));
     }
   }
 }

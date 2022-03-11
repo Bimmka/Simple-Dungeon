@@ -13,5 +13,6 @@ namespace StaticData.Hero
     public HeroStaminaStaticData StaminaStaticData;
     public HeroAttackStaticData AttackData;
     public HeroImpactsStaticData ImpactsData;
+    public HeroMoveStaticData MoveData;
   }
 }
