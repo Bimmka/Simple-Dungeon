@@ -4,11 +4,12 @@ using Animations;
 using Hero;
 using Services;
 using StaticData.Hero.Components;
+using StaticData.Hero.States;
 using UnityEngine;
 
 namespace StateMachines.Player
 {
-  public class PlayerMoveState : PlayerBaseMachineState
+  public class PlayerWalkState : PlayerBaseMachineState
   {
     private readonly int _floatValueHash;
     private readonly HeroMove _heroMove;
@@ -19,12 +20,13 @@ namespace StateMachines.Player
     private readonly float _smothChangeExitStep = 100f;
 
     private Coroutine _changeCoroutine;
+    
     public override int Weight { get; }
 
 
-    public PlayerMoveState(StateMachine stateMachine, string animationName, string floatValueName,
+    public PlayerWalkState(StateMachine stateMachine, string triggerName, string floatValueName,
       BattleAnimator animator,
-      HeroStateMachine hero, HeroMove heroMove, HeroRotate heroRotate, ICoroutineRunner coroutineRunner, HeroMoveStaticData moveStaticData) : base(stateMachine, animationName, animator, hero)
+      HeroStateMachine hero, HeroMove heroMove, HeroRotate heroRotate, ICoroutineRunner coroutineRunner, HeroMoveStaticData moveStaticData, HeroStateData stateData) : base(stateMachine, triggerName, animator, hero, stateData)
     {
       _floatValueHash = Animator.StringToHash(floatValueName);
       _heroMove = heroMove;
@@ -37,7 +39,7 @@ namespace StateMachines.Player
     {
       base.Enter();
       if (IsLowAngle(hero.MoveAxis) && _heroRotate.IsTurning == false)
-        SmoothChange(ref _changeCoroutine, _coroutineRunner,_floatValueHash,1f, _smothChangeExitStep, IsBigger);
+        SmoothChange(ref _changeCoroutine, _coroutineRunner,_floatValueHash,1f, _smoothChangeStep, IsBigger);
       else if (_heroRotate.IsTurning == false) 
         ChangeState(hero.State<PlayerRotatingState>());
     }

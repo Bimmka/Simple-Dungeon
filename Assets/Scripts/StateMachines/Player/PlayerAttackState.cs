@@ -1,6 +1,7 @@
 ﻿using Animations;
 using Hero;
 using StaticData.Hero.Components;
+using StaticData.Hero.States;
 using UnityEngine;
 
 namespace StateMachines.Player
@@ -17,8 +18,8 @@ namespace StateMachines.Player
 
     public override int Weight { get; }
 
-    public PlayerAttackState(StateMachine stateMachine, string animationName, BattleAnimator animator,
-      HeroStateMachine hero, HeroAttack heroAttack, HeroAttackStaticData attackData, HeroStamina heroStamina) : base(stateMachine, animationName, animator, hero)
+    public PlayerAttackState(StateMachine stateMachine, string triggerName, BattleAnimator animator,
+      HeroStateMachine hero, HeroAttack heroAttack, HeroAttackStaticData attackData, HeroStamina heroStamina, HeroStateData stateData) : base(stateMachine, triggerName, animator, hero, stateData)
     {
       this.heroAttack = heroAttack;
       this.heroStamina = heroStamina;
@@ -60,7 +61,7 @@ namespace StateMachines.Player
         if (IsStayVertical())
           ChangeState(hero.State<PlayerIdleState>());
         else
-          ChangeState(hero.State<PlayerMoveState>());
+          ChangeState(hero.State<PlayerWalkState>());
       }
     }
 

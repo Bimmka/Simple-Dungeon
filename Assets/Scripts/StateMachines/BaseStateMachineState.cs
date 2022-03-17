@@ -2,7 +2,7 @@
 {
   public abstract class BaseStateMachineState
   {
-    protected int animationName;
+    protected int _triggerName;
 
     public abstract bool IsCanBeInterapted(int weight);
     

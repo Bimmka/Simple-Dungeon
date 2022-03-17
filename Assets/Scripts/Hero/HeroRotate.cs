@@ -8,9 +8,6 @@ namespace Hero
   {
     [Range(0,1)]
     [SerializeField] private float lowAngleMoveRotationSpeed = 0.1f;
-
-    [SerializeField] private float speed = 3f;
-
     private event Action savedCallback;
     public bool IsTurning { get; private set; }
 

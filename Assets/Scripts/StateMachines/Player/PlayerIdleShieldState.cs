@@ -1,5 +1,6 @@
 ﻿using Animations;
 using Hero;
+using StaticData.Hero.States;
 
 namespace StateMachines.Player
 {
@@ -7,8 +8,8 @@ namespace StateMachines.Player
   {
     public override int Weight { get; }
 
-    public PlayerIdleShieldState(StateMachine stateMachine, string animationName,
-      BattleAnimator animator, HeroStateMachine hero) : base(stateMachine, animationName, animator, hero)
+    public PlayerIdleShieldState(StateMachine stateMachine, string triggerName,
+      BattleAnimator animator, HeroStateMachine hero, HeroStateData stateData) : base(stateMachine, triggerName, animator, hero, stateData)
     {
     }
 
@@ -25,7 +26,7 @@ namespace StateMachines.Player
         if (IsStayVertical())
           ChangeState(hero.State<PlayerIdleState>());
         else
-          ChangeState(hero.State<PlayerMoveState>());
+          ChangeState(hero.State<PlayerWalkState>());
       }
     }
 

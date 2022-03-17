@@ -8,11 +8,11 @@ namespace Hero
     [SerializeField] private CharacterController characterController;
     [SerializeField] private HeroMoveStaticData moveData;
 
-    public void Move(Vector3 direction)
-    {
-      Debug.Log("Move");
+    public void Move(Vector3 direction) => 
       characterController.Move(direction * (moveData.MoveSpeed * Time.deltaTime));
-    }
+
+    public void Run(Vector3 direction) => 
+      characterController.Move(direction * (moveData.RunSpeed * Time.deltaTime));
 
     public void Strafe(Vector3 direction) => 
       characterController.Move(direction * (moveData.StrafeSpeed * Time.deltaTime));

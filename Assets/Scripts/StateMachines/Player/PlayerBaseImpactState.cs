@@ -1,5 +1,6 @@
 ﻿using Animations;
 using Hero;
+using StaticData.Hero.States;
 using UnityEngine;
 
 namespace StateMachines.Player
@@ -11,8 +12,8 @@ namespace StateMachines.Player
 
     public override int Weight { get; }
 
-    protected PlayerBaseImpactState(StateMachine stateMachine, string animationName, BattleAnimator animator,
-      HeroStateMachine hero, float cooldown) : base(stateMachine, animationName, animator, hero)
+    protected PlayerBaseImpactState(StateMachine stateMachine, string triggerName, BattleAnimator animator,
+      HeroStateMachine hero, float cooldown, HeroStateData stateData) : base(stateMachine, triggerName, animator, hero, stateData)
     {
       knockbackCooldown = cooldown;
       UpdateImpactTime();
@@ -43,7 +44,7 @@ namespace StateMachines.Player
         if (IsStayVertical())
           ChangeState(hero.State<PlayerIdleState>());
         else
-          ChangeState(hero.State<PlayerMoveState>());
+          ChangeState(hero.State<PlayerWalkState>());
       }
     }
 

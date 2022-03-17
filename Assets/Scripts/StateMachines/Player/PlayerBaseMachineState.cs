@@ -3,43 +3,49 @@ using System.Collections;
 using Animations;
 using Hero;
 using Services;
+using StaticData.Hero.States;
 using UnityEngine;
 
 namespace StateMachines.Player
 {
   public abstract class PlayerBaseMachineState : BaseStateMachineState, IPlayerMachineState
   {
-    private readonly StateMachine stateMachine;
+    private readonly StateMachine _stateMachine;
     
     protected readonly HeroStateMachine hero;
+    protected readonly HeroStateData stateData;
     protected readonly BattleAnimator animator;
 
-    public PlayerBaseMachineState(StateMachine stateMachine, string animationName, BattleAnimator animator, HeroStateMachine hero)
+    protected PlayerBaseMachineState(StateMachine stateMachine, string triggerName, BattleAnimator animator, HeroStateMachine hero, HeroStateData stateData)
     {
-      this.stateMachine = stateMachine;
-      this.animationName = Animator.StringToHash(animationName);
+      _stateMachine = stateMachine;
+      _triggerName = Animator.StringToHash(triggerName);
       this.animator = animator;
       this.hero = hero;
+      this.stateData = stateData;
     }
 
     public override void Enter()
     {
       base.Enter();
-      animator.SetBool(animationName,true);
+      animator.SetBool(_triggerName,true);
     }
 
     public override void Exit()
     {
       base.Exit();
-      animator.SetBool(animationName, false);
+      animator.SetBool(_triggerName, false);
     }
 
     protected void ChangeState(PlayerBaseMachineState state) => 
-      stateMachine.ChangeState(state);
+      _stateMachine.ChangeState(state);
 
     protected void SetFloat(int hash, float value) => 
       animator.SetFloat(hash, value);
-    
+
+    protected float ClipLength(PlayerActionsType actionsType) => 
+      hero.ClipLength(actionsType);
+
     protected void SmoothChange(ref Coroutine changeCoroutine, ICoroutineRunner coroutineRunner, int valueHash, float newValue, float step, Func<float, float, bool> checkCallback)
     {
       if (changeCoroutine != null)

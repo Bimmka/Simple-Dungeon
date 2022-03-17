@@ -3,6 +3,7 @@ using Services;
 using Services.PlayerData;
 using StateMachines.Player;
 using StaticData.Hero.Components;
+using StaticData.Hero.States;
 using UnityEngine;
 
 namespace Hero
@@ -15,6 +16,7 @@ namespace Hero
         [SerializeField] private HeroAttack _attack;
         [SerializeField] private HeroStamina _stamina;
         [SerializeField] private AnimatorClipsContainer _clipsContainer;
+        [SerializeField] private HeroStatesStaticData _statesData;
         
         private HeroAttackStaticData _attackData;
         private HeroImpactsStaticData _impactsData;
@@ -61,7 +63,7 @@ namespace Hero
 
         protected override void CreateStates()
         {
-            _statesFactory = new HeroMachineStatesFactory(stateMachine,this, _battleAnimator, _move, _attack, _rotate, _attackData, _stamina, _impactsData, this, _moveData, _clipsContainer);
+            _statesFactory = new HeroMachineStatesFactory(stateMachine,this, _battleAnimator, _move, _attack, _rotate, _attackData, _stamina, _impactsData, this, _moveData, _statesData);
             _statesContainer = new HeroStatesContainer(_statesFactory);
             _statesContainer.CreateState();
         }
@@ -99,6 +101,9 @@ namespace Hero
 
         public void Dead() => 
             stateMachine.ChangeState(State<PlayerDeathState>());
+
+        public float ClipLength(PlayerActionsType actionsType) => 
+            _clipsContainer.ClipLength(actionsType);
 
         public TState State<TState>() where TState : PlayerBaseMachineState => 
             _statesContainer.GetState<TState>();

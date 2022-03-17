@@ -6,6 +6,7 @@ namespace StaticData.Hero.Components
   public class HeroMoveStaticData : ScriptableObject
   {
     public float MoveSpeed = 3f;
+    public float RunSpeed = 5f;
     public float StrafeSpeed = 1.5f;
     public float RollSpeed = 2f;
     public float BigAngleValue = 65f;

@@ -1,5 +1,6 @@
 ﻿using Animations;
 using Hero;
+using StaticData.Hero.States;
 using UnityEngine;
 
 namespace StateMachines.Player
@@ -8,8 +9,8 @@ namespace StateMachines.Player
   {
     public override int Weight { get; }
 
-    public PlayerIdleState(StateMachine stateMachine, string animationName,
-      BattleAnimator animator, HeroStateMachine hero) : base(stateMachine, animationName, animator, hero)
+    public PlayerIdleState(StateMachine stateMachine, string triggerName,
+      BattleAnimator animator, HeroStateMachine hero, HeroStateData stateData) : base(stateMachine, triggerName, animator, hero, stateData)
     {
     }
 
@@ -17,7 +18,7 @@ namespace StateMachines.Player
     {
       base.LogicUpdate();
       if (IsNotMove() == false)
-          ChangeState(hero.State<PlayerMoveState>());
+          ChangeState(hero.State<PlayerWalkState>());
        
     }
 

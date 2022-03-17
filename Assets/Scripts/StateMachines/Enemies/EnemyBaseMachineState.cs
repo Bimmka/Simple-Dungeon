@@ -12,20 +12,20 @@ namespace StateMachines.Enemies
     public EnemyBaseMachineState(StateMachine stateMachine, string animationName, BattleAnimator animator)
     {
       this.stateMachine = stateMachine;
-      this.animationName = Animator.StringToHash(animationName);
+      this._triggerName = Animator.StringToHash(animationName);
       this.animator = animator;
     }
     
     public override void Enter()
     {
       base.Enter();
-      animator.SetBool(animationName,true);
+      animator.SetBool(_triggerName,true);
     }
 
     public override void Exit()
     {
       base.Exit();
-      animator.SetBool(animationName, false);
+      animator.SetBool(_triggerName, false);
     }
     
     public void ChangeState(EnemyBaseMachineState state) => 

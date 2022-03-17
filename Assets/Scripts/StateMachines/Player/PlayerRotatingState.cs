@@ -1,6 +1,7 @@
 ﻿using System;
 using Animations;
 using Hero;
+using StaticData.Hero.States;
 using UnityEngine;
 
 namespace StateMachines.Player
@@ -16,11 +17,10 @@ namespace StateMachines.Player
 
     public override int Weight { get; }
 
-    public PlayerRotatingState(StateMachine stateMachine, string animationName, BattleAnimator animator,
-      HeroStateMachine hero, string moveXName, string moveYName, HeroRotate rotate, AnimatorClipsContainer clipsContainer) : base(stateMachine, animationName, animator, hero)
+    public PlayerRotatingState(StateMachine stateMachine, string triggerName, BattleAnimator animator,
+      HeroStateMachine hero, string moveXName, string moveYName, HeroRotate rotate, HeroStateData stateData) : base(stateMachine, triggerName, animator, hero, stateData)
     {
       _rotate = rotate;
-      _clipsContainer = clipsContainer;
       _moveXHash = Animator.StringToHash(moveXName);
       _moveYHash = Animator.StringToHash(moveYName);
     }
@@ -99,7 +99,7 @@ namespace StateMachines.Player
       if (IsNotMove())
         ChangeState(hero.State<PlayerIdleState>());
       else
-        ChangeState(hero.State<PlayerMoveState>());
+        ChangeState(hero.State<PlayerWalkState>());
     }
   }
 }

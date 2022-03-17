@@ -1,5 +1,6 @@
 ﻿using Animations;
 using Hero;
+using StaticData.Hero.States;
 
 namespace StateMachines.Player
 {
@@ -7,7 +8,7 @@ namespace StateMachines.Player
   {
     public override int Weight { get; }
 
-    public PlayerDeathState(StateMachine stateMachine, string animationName, BattleAnimator animator, HeroStateMachine hero) : base(stateMachine, animationName, animator, hero)
+    public PlayerDeathState(StateMachine stateMachine, string triggerName, BattleAnimator animator, HeroStateMachine hero, HeroStateData stateData) : base(stateMachine, triggerName, animator, hero, stateData)
     {
       
     }
