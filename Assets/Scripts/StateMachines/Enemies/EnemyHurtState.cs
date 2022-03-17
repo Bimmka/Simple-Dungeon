@@ -8,15 +8,15 @@ namespace StateMachines.Enemies
   {
     private readonly EnemyStateMachine enemy;
 
+    public override int Weight { get; }
+
     public EnemyHurtState(StateMachine stateMachine, string animationName, BattleAnimator animator, EnemyStateMachine enemy) : base(stateMachine, animationName, animator)
     {
       this.enemy = enemy;
     }
 
-    public override bool IsCanBeInterapted()
-    {
-      return false;
-    }
+    public override bool IsCanBeInterapted(int weight) =>
+      false;
 
     public override void TriggerAnimation()
     {

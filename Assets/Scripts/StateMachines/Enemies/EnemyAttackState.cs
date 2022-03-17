@@ -15,6 +15,8 @@ namespace StateMachines.Enemies
     
     private float lastAttackTime;
 
+    public override int Weight { get; }
+
     public EnemyAttackState(StateMachine stateMachine, string animationName, BattleAnimator animator,
       EnemyStateMachine enemy, EnemyAttack enemyAttack, EnemyAttackStaticData attackData, float damageCoeff) : base(stateMachine, animationName, animator)
     {
@@ -32,7 +34,7 @@ namespace StateMachines.Enemies
     public void UpdateDamageCoeff(float coeff) => 
       damageCoeff = coeff;
 
-    public override bool IsCanBeInterapted() => 
+    public override bool IsCanBeInterapted(int weight) =>
       true;
 
     public override void Enter()

@@ -5,6 +5,7 @@ namespace StateMachines.Player
 {
   public class PlayerIdleShieldState : PlayerBaseMachineState
   {
+    public override int Weight { get; }
 
     public PlayerIdleShieldState(StateMachine stateMachine, string animationName,
       BattleAnimator animator, HeroStateMachine hero) : base(stateMachine, animationName, animator, hero)
@@ -28,8 +29,7 @@ namespace StateMachines.Player
       }
     }
 
-    public override bool IsCanBeInterapted() => 
+    public override bool IsCanBeInterapted(int weight) =>
       true;
-
   }
 }

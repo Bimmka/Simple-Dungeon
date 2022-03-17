@@ -1,7 +1,6 @@
 ﻿using System;
 using Animations;
 using Hero;
-using Services;
 using UnityEngine;
 
 namespace StateMachines.Player
@@ -9,20 +8,24 @@ namespace StateMachines.Player
   public class PlayerRotatingState : PlayerBaseMachineState
   {
     private readonly HeroRotate _rotate;
-    private readonly int moveXHash;
-    private readonly int moveYHash;
+    private readonly AnimatorClipsContainer _clipsContainer;
+    private readonly int _moveXHash;
+    private readonly int _moveYHash;
 
     private Vector2 rotateDirection;
 
+    public override int Weight { get; }
+
     public PlayerRotatingState(StateMachine stateMachine, string animationName, BattleAnimator animator,
-      HeroStateMachine hero, string moveXName, string moveYName, HeroRotate rotate) : base(stateMachine, animationName, animator, hero)
+      HeroStateMachine hero, string moveXName, string moveYName, HeroRotate rotate, AnimatorClipsContainer clipsContainer) : base(stateMachine, animationName, animator, hero)
     {
       _rotate = rotate;
-      moveXHash = Animator.StringToHash(moveXName);
-      moveYHash = Animator.StringToHash(moveYName);
+      _clipsContainer = clipsContainer;
+      _moveXHash = Animator.StringToHash(moveXName);
+      _moveYHash = Animator.StringToHash(moveYName);
     }
 
-    public override bool IsCanBeInterapted() => 
+    public override bool IsCanBeInterapted(int weight) => 
       true;
 
     public override void Enter()
@@ -47,8 +50,8 @@ namespace StateMachines.Player
       base.Exit();
       if (_rotate.IsTurning)
         _rotate.StopRotate();
-      animator.SetFloat(moveXHash, 0);
-      animator.SetFloat(moveYHash, 0);
+      animator.SetFloat(_moveXHash, 0);
+      animator.SetFloat(_moveYHash, 0);
     }
 
     private void UpdateAnimatorHash()
@@ -59,8 +62,8 @@ namespace StateMachines.Player
       if (rotateDirection.y != 0)
         rotateDirection.y = Mathf.Sign(rotateDirection.y) * (Mathf.Abs(rotateDirection.y) - Time.deltaTime);
       
-      animator.SetFloat(moveYHash, rotateDirection.y);
-      animator.SetFloat(moveXHash, rotateDirection.x);
+      animator.SetFloat(_moveYHash, rotateDirection.y);
+      animator.SetFloat(_moveXHash, rotateDirection.x);
     }
 
     private void SetTurn()
@@ -75,15 +78,20 @@ namespace StateMachines.Player
     private void SetTurnAround()
     {
       rotateDirection = Vector2.up;
-      animator.SetFloat(moveYHash, 1);
-      _rotate.TurnAround(new Vector3(hero.MoveAxis.x, 0, hero.MoveAxis.y), OnTurnEnd);
+      animator.SetFloat(_moveYHash, 1);
+      _rotate.TurnAround(new Vector3(hero.MoveAxis.x, 0, hero.MoveAxis.y), _clipsContainer.ClipLength(PlayerActionsType.TurnAround),OnTurnEnd);
     }
 
     private void SetHalfTurn(int sign)
     {
       rotateDirection = Vector2.right * sign;
-      animator.SetFloat(moveXHash, sign);
-      _rotate.Turn(new Vector3(hero.MoveAxis.x, 0, hero.MoveAxis.y), OnTurnEnd);
+      animator.SetFloat(_moveXHash, sign);
+      _rotate.Turn
+      (
+        new Vector3(hero.MoveAxis.x, 0, hero.MoveAxis.y),
+        sign == -1 ? _clipsContainer.ClipLength(PlayerActionsType.TurnLeft) : _clipsContainer.ClipLength(PlayerActionsType.TurnRight),
+        OnTurnEnd
+        );
     }
 
     private void OnTurnEnd()

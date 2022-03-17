@@ -10,6 +10,8 @@ namespace StateMachines.Player
     private readonly HeroMove heroMove;
     private readonly HeroRotate heroRotate;
 
+    public override int Weight { get; }
+
     public PlayerShieldMoveState(StateMachine stateMachine, string animationName, string floatValueName,
       BattleAnimator animator, HeroStateMachine hero, HeroMove heroMove, HeroRotate heroRotate) : base(stateMachine, animationName, animator, hero)
     {
@@ -49,7 +51,7 @@ namespace StateMachines.Player
       SetFloat(floatValueHash, 0);
     }
 
-    public override bool IsCanBeInterapted() => 
+    public override bool IsCanBeInterapted(int weight) =>
       true;
   }
 }

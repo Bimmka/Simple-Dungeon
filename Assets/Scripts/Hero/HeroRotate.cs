@@ -8,8 +8,8 @@ namespace Hero
   {
     [Range(0,1)]
     [SerializeField] private float lowAngleMoveRotationSpeed = 0.1f;
-    [SerializeField] private AnimationClip turnClip;
-    [SerializeField] private AnimationClip turnAroundClip;
+
+    [SerializeField] private float speed = 3f;
 
     private event Action savedCallback;
     public bool IsTurning { get; private set; }
@@ -17,15 +17,15 @@ namespace Hero
     public void RotateTo(Vector2 moveAxis) => 
       transform.forward = Vector3.Lerp(transform.forward, new Vector3(moveAxis.x, 0, moveAxis.y), lowAngleMoveRotationSpeed);
 
-    public void TurnAround(Vector3 endDirection, Action callback)
+    public void TurnAround(Vector3 endDirection, float duration, Action callback)
     {
-      Rotate(endDirection, turnAroundClip.length, OnTurnAround);
+      Rotate(endDirection, duration, OnTurnAround);
       savedCallback = callback;
     }
 
-    public void Turn(Vector3 endDirection, Action callback)
+    public void Turn(Vector3 endDirection, float duration, Action callback)
     {
-      Rotate(endDirection, turnClip.length, OnTurn);
+      Rotate(endDirection, duration, OnTurn);
       savedCallback = callback;
     }
 

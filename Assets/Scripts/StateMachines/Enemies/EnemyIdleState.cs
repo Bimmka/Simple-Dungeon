@@ -14,6 +14,8 @@ namespace StateMachines.Enemies
     private readonly EnemyStateMachine enemy;
     private readonly EnemyRotate enemyRotate;
 
+    public override int Weight { get; }
+
     public EnemyIdleState(StateMachine stateMachine, string animationName, BattleAnimator animator, EnemyMove enemyMove,
       EnemiesMoveStaticData moveData, EnemyStateMachine enemy, EnemyRotate enemyRotate) : base(stateMachine, animationName, animator)
     {
@@ -22,10 +24,9 @@ namespace StateMachines.Enemies
       this.enemy = enemy;
       this.enemyRotate = enemyRotate;
     }
-    public override bool IsCanBeInterapted()
-    {
-      return true;
-    }
+
+    public override bool IsCanBeInterapted(int weight) =>
+      true;
 
     public override void LogicUpdate()
     {

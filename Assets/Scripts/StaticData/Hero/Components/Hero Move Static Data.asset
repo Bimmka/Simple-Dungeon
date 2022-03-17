@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0984c26bf6004b4697aa302b1a121760, type: 3}
   m_Name: Hero Move Static Data
   m_EditorClassIdentifier: 
-  MoveSpeed: 2
+  MoveSpeed: 3.3
   StrafeSpeed: 1.5
   RollSpeed: 3
   BigAngleValue: 70

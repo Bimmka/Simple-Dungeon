@@ -36,5 +36,11 @@ namespace CodeBase.CameraLogic
 
       return followingPosition;
     }
+
+    private void OnGUI()
+    {
+      int size = 12;
+      GUI.Label(new Rect(Screen.width/2 - size/4, Screen.height/2 - size/4, size, size), "*");
+    }
   }
 }

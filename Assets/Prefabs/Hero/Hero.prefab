@@ -1361,6 +1361,7 @@ GameObject:
   - component: {fileID: 1938066207622182473}
   - component: {fileID: 2908685701717028378}
   - component: {fileID: -2191047226632687120}
+  - component: {fileID: 1356732161032312777}
   m_Layer: 6
   m_Name: Hero
   m_TagString: Untagged
@@ -1450,11 +1451,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08346a489c7bc43458ebcca41fe53c0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  battleAnimator: {fileID: 3402703085583754372}
-  move: {fileID: 8124249772606008009}
-  rotate: {fileID: 3149872168373664166}
-  attack: {fileID: 6521555783495855305}
-  stamina: {fileID: 4040344819590722244}
+  _battleAnimator: {fileID: 3402703085583754372}
+  _move: {fileID: 8124249772606008009}
+  _rotate: {fileID: 3149872168373664166}
+  _attack: {fileID: 6521555783495855305}
+  _stamina: {fileID: 4040344819590722244}
+  _clipsContainer: {fileID: 1356732161032312777}
 --- !u!114 &8124249772606008009
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1482,8 +1484,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lowAngleMoveRotationSpeed: 0.35
-  turnClip: {fileID: -203655887218126122, guid: 041db10af01f9d44d88a87cad08f7655, type: 3}
-  turnAroundClip: {fileID: -203655887218126122, guid: 936d38b29500990458435f5397f56715, type: 3}
+  speed: 1
 --- !u!143 &-2693136154511395499
 CharacterController:
   m_ObjectHideFlags: 0
@@ -1570,6 +1571,19 @@ MonoBehaviour:
   hero: {fileID: 7163124626810390331}
   heroCollider: {fileID: 8861303588428747833}
   input: {fileID: 8779422808152574895}
+--- !u!114 &1356732161032312777
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4684724166972553566}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ceeffd1e95414d4ca8024ee4879d809, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animator: {fileID: 1929033858}
 --- !u!1 &4718620376972774224
 GameObject:
   m_ObjectHideFlags: 0

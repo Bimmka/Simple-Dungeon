@@ -9,6 +9,8 @@ namespace StateMachines.Player
     private readonly HeroMove heroMove;
     private readonly HeroStamina heroStamina;
 
+    public override int Weight { get; }
+
     public PlayerRollState(StateMachine stateMachine, string animationName, BattleAnimator animator,
       HeroStateMachine hero, HeroMove heroMove, HeroStamina heroStamina) : base(stateMachine, animationName, animator, hero)
     {
@@ -28,7 +30,7 @@ namespace StateMachines.Player
       heroMove.Roll();
     }
 
-    public override bool IsCanBeInterapted() => 
+    public override bool IsCanBeInterapted(int weight) =>
       false;
 
     public override void TriggerAnimation()

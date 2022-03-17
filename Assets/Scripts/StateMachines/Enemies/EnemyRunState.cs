@@ -12,6 +12,8 @@ namespace StateMachines.Enemies
     private readonly EnemiesMoveStaticData moveData;
     private readonly EnemyStateMachine enemy;
 
+    public override int Weight { get; }
+
     public EnemyRunState(StateMachine stateMachine, string animationName, BattleAnimator animator, EnemyMove enemyMove,
       EnemiesMoveStaticData moveData, EnemyStateMachine enemy) : base(stateMachine, animationName, animator)
     {
@@ -20,10 +22,8 @@ namespace StateMachines.Enemies
       this.enemy = enemy;
     }
 
-    public override bool IsCanBeInterapted()
-    {
-      return true;
-    }
+    public override bool IsCanBeInterapted(int weight) =>
+      true;
 
     public override void Enter()
     {

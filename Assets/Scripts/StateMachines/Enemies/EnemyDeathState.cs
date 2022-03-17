@@ -7,6 +7,8 @@ namespace StateMachines.Enemies
   public class EnemyDeathState : EnemyBaseMachineState
   {
     private readonly EnemyDeath enemyDeath;
+    public override int Weight { get; }
+
 
     public EnemyDeathState(StateMachine stateMachine, string animationName, BattleAnimator animator,
       EnemyDeath enemyDeath) : base(stateMachine, animationName, animator)
@@ -14,10 +16,9 @@ namespace StateMachines.Enemies
       this.enemyDeath = enemyDeath;
     }
 
-    public override bool IsCanBeInterapted()
-    {
-      return false;
-    }
+    public override bool IsCanBeInterapted(int weight) =>
+      false;
+
 
     public override void Enter()
     {

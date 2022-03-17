@@ -9,7 +9,7 @@ namespace Hero
   {
     protected StateMachine stateMachine;
         
-    protected void Initialize()
+    protected virtual void Initialize()
     {
       CreateStateMachine();
       CreateStates();

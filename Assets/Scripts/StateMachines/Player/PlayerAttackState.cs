@@ -15,6 +15,8 @@ namespace StateMachines.Player
 
     private bool isAttackEnded;
 
+    public override int Weight { get; }
+
     public PlayerAttackState(StateMachine stateMachine, string animationName, BattleAnimator animator,
       HeroStateMachine hero, HeroAttack heroAttack, HeroAttackStaticData attackData, HeroStamina heroStamina) : base(stateMachine, animationName, animator, hero)
     {
@@ -39,7 +41,7 @@ namespace StateMachines.Player
       isAttackEnded = false;
     }
 
-    public override bool IsCanBeInterapted() => 
+    public override bool IsCanBeInterapted(int weight) =>
       isAttackEnded;
 
     public override void TriggerAnimation()

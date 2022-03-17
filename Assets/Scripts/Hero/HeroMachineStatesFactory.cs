@@ -21,12 +21,13 @@ namespace Hero
     private readonly HeroImpactsStaticData _impactData;
     private readonly ICoroutineRunner _coroutineRunner;
     private readonly HeroMoveStaticData _moveStaticData;
+    private readonly AnimatorClipsContainer _clipsContainer;
 
 
     public HeroMachineStatesFactory(StateMachine stateMachine, HeroStateMachine hero, BattleAnimator animator,
       HeroMove move,
       HeroAttack attack, HeroRotate rotate, HeroAttackStaticData attackData, HeroStamina stamina,
-      HeroImpactsStaticData impactData, ICoroutineRunner coroutineRunner, HeroMoveStaticData moveStaticData)
+      HeroImpactsStaticData impactData, ICoroutineRunner coroutineRunner, HeroMoveStaticData moveStaticData, AnimatorClipsContainer clipsContainer)
     {
       _stateMachine = stateMachine;
       _hero = hero;
@@ -39,6 +40,7 @@ namespace Hero
       _impactData = impactData;
       _coroutineRunner = coroutineRunner;
       _moveStaticData = moveStaticData;
+      _clipsContainer = clipsContainer;
     }
 
     public void CreateStates(ref Dictionary<Type, PlayerBaseMachineState> states)
@@ -53,7 +55,7 @@ namespace Hero
       states.Add(typeof(PlayerMoveState), new PlayerMoveState(_stateMachine, "IsIdle", "MoveX", _animator, _hero, _move, _rotate, _coroutineRunner, _moveStaticData));
       states.Add(typeof(PlayerShieldMoveState), new PlayerShieldMoveState(_stateMachine, "IsBlocking", "MoveY", _animator, _hero, _move, _rotate));
       states.Add(typeof(PlayerDeathState), new PlayerDeathState(_stateMachine, "IsDead", _animator, _hero));
-      states.Add(typeof(PlayerRotatingState), new PlayerRotatingState(_stateMachine, "IsRotating", _animator, _hero, "MoveX", "MoveY", _rotate));
+      states.Add(typeof(PlayerRotatingState), new PlayerRotatingState(_stateMachine, "IsRotating", _animator, _hero, "MoveX", "MoveY", _rotate, _clipsContainer));
     }
   }
 }

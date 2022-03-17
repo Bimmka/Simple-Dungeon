@@ -15,6 +15,8 @@ namespace StateMachines.Enemies
 
     private float currentCheckTime;
 
+    public override int Weight { get; }
+
     public EnemySearchState(StateMachine stateMachine, string animationName, BattleAnimator animator,
       EntitySearcher entitySearcher, EnemyMove enemyMove, EnemyStateMachine enemy) : base(stateMachine, animationName, animator)
     {
@@ -38,10 +40,8 @@ namespace StateMachines.Enemies
         UpdateTime();
     }
 
-    public override bool IsCanBeInterapted()
-    {
-      return true;
-    }
+    public override bool IsCanBeInterapted(int weight) =>
+      true;
 
     private void UpdateTime() => 
       currentCheckTime -= Time.deltaTime;

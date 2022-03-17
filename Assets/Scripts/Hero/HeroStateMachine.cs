@@ -9,18 +9,19 @@ namespace Hero
 {
     public class HeroStateMachine : BaseEntityStateMachine, ICoroutineRunner
     {
-        [SerializeField] private BattleAnimator battleAnimator;
-        [SerializeField] private HeroMove move;
-        [SerializeField] private HeroRotate rotate;
-        [SerializeField] private HeroAttack attack;
-        [SerializeField] private HeroStamina stamina;
+        [SerializeField] private BattleAnimator _battleAnimator;
+        [SerializeField] private HeroMove _move;
+        [SerializeField] private HeroRotate _rotate;
+        [SerializeField] private HeroAttack _attack;
+        [SerializeField] private HeroStamina _stamina;
+        [SerializeField] private AnimatorClipsContainer _clipsContainer;
         
-        private HeroAttackStaticData attackData;
-        private HeroImpactsStaticData impactsData;
+        private HeroAttackStaticData _attackData;
+        private HeroImpactsStaticData _impactsData;
 
-        private HeroMachineStatesFactory statesFactory;
-        private HeroStatesContainer statesContainer;
-        private HeroMoveStaticData moveData;
+        private HeroMachineStatesFactory _statesFactory;
+        private HeroStatesContainer _statesContainer;
+        private HeroMoveStaticData _moveData;
 
         public bool IsBlockingPressed { get; private set; }
         public bool IsBlockingUp => stateMachine.State == State<PlayerIdleShieldState>();
@@ -31,32 +32,38 @@ namespace Hero
 
         public void Construct(HeroAttackStaticData attackData, HeroImpactsStaticData impactData, PlayerCharacteristics characteristics, HeroMoveStaticData moveData)
         {
-            this.attackData = attackData;
-            this.moveData = moveData;
-            impactsData = impactData;
-            attack.Construct(attackData, characteristics);
+            _attackData = attackData;
+            _moveData = moveData;
+            _impactsData = impactData;
+            _attack.Construct(attackData, characteristics);
             Initialize();
+        }
+
+        protected override void Initialize()
+        {
+            _clipsContainer.CollectClips();
+            base.Initialize();
         }
 
         protected override void Subscribe()
         {
             base.Subscribe();
-            battleAnimator.Triggered += AnimationTriggered;
+            _battleAnimator.Triggered += AnimationTriggered;
         }
 
         protected override void Cleanup()
         {
             base.Cleanup();
-            battleAnimator.Triggered -= AnimationTriggered;
+            _battleAnimator.Triggered -= AnimationTriggered;
             State<PlayerAttackState>().Cleanup();
         }
 
 
         protected override void CreateStates()
         {
-            statesFactory = new HeroMachineStatesFactory(stateMachine,this, battleAnimator, move, attack, rotate, attackData, stamina, impactsData, this, moveData);
-            statesContainer = new HeroStatesContainer(statesFactory);
-            statesContainer.CreateState();
+            _statesFactory = new HeroMachineStatesFactory(stateMachine,this, _battleAnimator, _move, _attack, _rotate, _attackData, _stamina, _impactsData, this, _moveData, _clipsContainer);
+            _statesContainer = new HeroStatesContainer(_statesFactory);
+            _statesContainer.CreateState();
         }
 
         protected override void SetDefaultState() => 
@@ -65,7 +72,7 @@ namespace Hero
 
         public void SetAttackState()
         {
-            if (stateMachine.State.IsCanBeInterapted() && State<PlayerAttackState>().IsCanAttack())
+            if (stateMachine.State.IsCanBeInterapted(State<PlayerAttackState>().Weight) && State<PlayerAttackState>().IsCanAttack())
                 stateMachine.ChangeState(State<PlayerAttackState>());
         }
 
@@ -77,7 +84,7 @@ namespace Hero
 
         public void SetRollState()
         {
-            if (stateMachine.State.IsCanBeInterapted() && State<PlayerRollState>().IsCanRoll())
+            if (stateMachine.State.IsCanBeInterapted(State<PlayerRollState>().Weight) && State<PlayerRollState>().IsCanRoll())
                 stateMachine.ChangeState(State<PlayerRollState>());
         }
 
@@ -86,7 +93,7 @@ namespace Hero
 
         public void Impact()
         {
-            if (State<PlayerBaseImpactState>().IsKnockbackCooldown() && stateMachine.State.IsCanBeInterapted())
+            if (State<PlayerBaseImpactState>().IsKnockbackCooldown() && stateMachine.State.IsCanBeInterapted(State<PlayerBaseImpactState>().Weight))
                 stateMachine.ChangeState(State<PlayerBaseImpactState>());
         }
 
@@ -94,6 +101,6 @@ namespace Hero
             stateMachine.ChangeState(State<PlayerDeathState>());
 
         public TState State<TState>() where TState : PlayerBaseMachineState => 
-            statesContainer.GetState<TState>();
+            _statesContainer.GetState<TState>();
     }
 }

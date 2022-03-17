@@ -15,10 +15,12 @@ namespace StateMachines.Player
     private readonly HeroRotate _heroRotate;
     private readonly ICoroutineRunner _coroutineRunner;
     private readonly HeroMoveStaticData _moveStaticData;
-    private readonly float _smoothChangeStep = 50f;
+    private readonly float _smoothChangeStep = 5f;
     private readonly float _smothChangeExitStep = 100f;
 
     private Coroutine _changeCoroutine;
+    public override int Weight { get; }
+
 
     public PlayerMoveState(StateMachine stateMachine, string animationName, string floatValueName,
       BattleAnimator animator,
@@ -35,7 +37,7 @@ namespace StateMachines.Player
     {
       base.Enter();
       if (IsLowAngle(hero.MoveAxis) && _heroRotate.IsTurning == false)
-        SmoothChange(1f, _smoothChangeStep, IsBigger);
+        SmoothChange(ref _changeCoroutine, _coroutineRunner,_floatValueHash,1f, _smothChangeExitStep, IsBigger);
       else if (_heroRotate.IsTurning == false) 
         ChangeState(hero.State<PlayerRotatingState>());
     }
@@ -45,6 +47,7 @@ namespace StateMachines.Player
       base.LogicUpdate(); 
       Debug.DrawRay(hero.transform.position, hero.transform.forward, Color.red);
       Debug.DrawRay(hero.transform.position, MoveAxis(), Color.green);
+      
       if (IsNotMove())
         ChangeState(hero.State<PlayerIdleState>());
       else if (IsLowAngle(hero.MoveAxis) && _heroRotate.IsTurning == false)
@@ -62,40 +65,15 @@ namespace StateMachines.Player
     public override void Exit()
     {
       base.Exit();
-      SmoothChange(0f, _smothChangeExitStep, IsSmaller);
+      SmoothChange(ref _changeCoroutine, _coroutineRunner,_floatValueHash,0f, _smothChangeExitStep, IsSmaller);
     }
 
-    public override bool IsCanBeInterapted() => 
+    public override bool IsCanBeInterapted(int weight) =>
       true;
 
     private Vector3 MoveAxis() => 
       new Vector3(hero.MoveAxis.x, 0 , hero.MoveAxis.y);
 
-    private void SmoothChange(float newValue, float step, Func<float, float, bool> checkCallback)
-    {
-      if (_changeCoroutine != null)
-        _coroutineRunner.StopCoroutine(_changeCoroutine);
-
-      _changeCoroutine = _coroutineRunner.StartCoroutine(Change(newValue, step, checkCallback));
-    }
-
-    private IEnumerator Change(float newValue, float step, Func<float, float, bool> checkCallback)
-    {
-      float currentValue = animator.GetFloat(_floatValueHash);
-      int direction = Math.Sign(newValue - currentValue);
-      while (checkCallback(currentValue, newValue) == false)
-      {
-        currentValue += direction * step * Time.deltaTime;
-        yield return null;
-        SetFloat(_floatValueHash, currentValue);
-      }
-
-      _changeCoroutine = null;
-    }
-
-    private bool IsSmaller(float value, float endValue) => 
-      value < endValue;
-    private bool IsBigger(float value, float endValue) => 
-      value > endValue;
+   
   }
 }

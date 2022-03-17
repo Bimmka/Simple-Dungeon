@@ -132,9 +132,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32b1444a47674cd297ff148d59a64c69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _rotationAngleX: 53.47
-  _distance: 12.8
-  _offsetY: 3
+  _rotationAngleX: 56.42
+  _distance: 12.32
+  _offsetY: 1.9
 --- !u!114 &5184624451599965020
 MonoBehaviour:
   m_ObjectHideFlags: 0

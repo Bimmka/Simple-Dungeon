@@ -9,6 +9,8 @@ namespace StateMachines.Player
     private readonly float knockbackCooldown;
     private float lastImpactTime;
 
+    public override int Weight { get; }
+
     protected PlayerBaseImpactState(StateMachine stateMachine, string animationName, BattleAnimator animator,
       HeroStateMachine hero, float cooldown) : base(stateMachine, animationName, animator, hero)
     {
@@ -16,7 +18,7 @@ namespace StateMachines.Player
       UpdateImpactTime();
     }
 
-    public override bool IsCanBeInterapted() => 
+    public override bool IsCanBeInterapted(int weight) =>
       false;
 
     public override void Enter()

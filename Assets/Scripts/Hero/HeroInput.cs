@@ -26,13 +26,13 @@ namespace Hero
     {
       if (isDisabled)
         return;      
-      if (inputService.IsAttackButtonDown())
-        stateMachine.SetAttackState();
+     /* if (inputService.IsAttackButtonDown())
+        stateMachine.SetAttackState();*/
 
-      if (inputService.IsRollButtonDown())
-        stateMachine.SetRollState();
+     /* if (inputService.IsRollButtonDown())
+        stateMachine.SetRollState();*/
       
-      stateMachine.SetIsBlocking(inputService.IsBlockButtonPressed());
+     /* stateMachine.SetIsBlocking(inputService.IsBlockButtonPressed());*/
       stateMachine.SetMoveAxis(inputService.Axis);
     }
 
