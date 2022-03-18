@@ -9,11 +9,11 @@ namespace StateMachines.Player
   public class PlayerRotatingState : PlayerBaseMachineState
   {
     private readonly HeroRotate _rotate;
-    private readonly AnimatorClipsContainer _clipsContainer;
     private readonly int _moveXHash;
     private readonly int _moveYHash;
 
-    private Vector2 rotateDirection;
+    private Coroutine _turnCoroutine;
+    private Coroutine _turnAroundCoroutine;
 
     public override int Weight { get; }
 
@@ -25,7 +25,7 @@ namespace StateMachines.Player
       _moveYHash = Animator.StringToHash(moveYName);
     }
 
-    public override bool IsCanBeInterapted(int weight) => 
+    public override bool IsCanBeInterrupted(int weight) => 
       true;
 
     public override void Enter()
@@ -38,32 +38,13 @@ namespace StateMachines.Player
       }
     }
 
-    public override void LogicUpdate()
-    {
-      base.LogicUpdate();
-      if (_rotate.IsTurning) 
-        UpdateAnimatorHash();
-    }
-
     public override void Exit()
     {
       base.Exit();
       if (_rotate.IsTurning)
         _rotate.StopRotate();
-      animator.SetFloat(_moveXHash, 0);
-      animator.SetFloat(_moveYHash, 0);
-    }
-
-    private void UpdateAnimatorHash()
-    {
-      if (rotateDirection.x != 0)
-        rotateDirection.x = Mathf.Sign(rotateDirection.x) * (Mathf.Abs(rotateDirection.x) - Time.deltaTime);
-      
-      if (rotateDirection.y != 0)
-        rotateDirection.y = Mathf.Sign(rotateDirection.y) * (Mathf.Abs(rotateDirection.y) - Time.deltaTime);
-      
-      animator.SetFloat(_moveYHash, rotateDirection.y);
-      animator.SetFloat(_moveXHash, rotateDirection.x);
+      SmoothChange(ref _turnCoroutine, hero, _moveXHash,  stateData.ExitCurve);
+      SmoothChange(ref _turnAroundCoroutine, hero, _moveYHash,  stateData.ExitCurve);
     }
 
     private void SetTurn()
@@ -77,19 +58,22 @@ namespace StateMachines.Player
 
     private void SetTurnAround()
     {
-      rotateDirection = Vector2.up;
-      animator.SetFloat(_moveYHash, 1);
-      _rotate.TurnAround(new Vector3(hero.MoveAxis.x, 0, hero.MoveAxis.y), _clipsContainer.ClipLength(PlayerActionsType.TurnAround),OnTurnEnd);
+      SmoothChange(ref _turnAroundCoroutine, hero, _moveYHash, stateData.EnterCurve);
+      _rotate.TurnAround
+      (
+        new Vector3(hero.MoveAxis.x, 0, hero.MoveAxis.y), 
+        ClipLength(PlayerActionsType.TurnAround),
+        OnTurnEnd
+        );
     }
 
     private void SetHalfTurn(int sign)
     {
-      rotateDirection = Vector2.right * sign;
-      animator.SetFloat(_moveXHash, sign);
+      SmoothChange(ref _turnCoroutine, hero, _moveXHash, stateData.EnterCurve, sign);
       _rotate.Turn
       (
         new Vector3(hero.MoveAxis.x, 0, hero.MoveAxis.y),
-        sign == -1 ? _clipsContainer.ClipLength(PlayerActionsType.TurnLeft) : _clipsContainer.ClipLength(PlayerActionsType.TurnRight),
+        sign == -1 ? ClipLength(PlayerActionsType.TurnLeft) : ClipLength(PlayerActionsType.TurnRight),
         OnTurnEnd
         );
     }

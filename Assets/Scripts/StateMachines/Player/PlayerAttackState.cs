@@ -42,7 +42,7 @@ namespace StateMachines.Player
       isAttackEnded = false;
     }
 
-    public override bool IsCanBeInterapted(int weight) =>
+    public override bool IsCanBeInterrupted(int weight) =>
       isAttackEnded;
 
     public override void TriggerAnimation()

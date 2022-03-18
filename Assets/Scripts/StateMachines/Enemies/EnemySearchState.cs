@@ -40,7 +40,7 @@ namespace StateMachines.Enemies
         UpdateTime();
     }
 
-    public override bool IsCanBeInterapted(int weight) =>
+    public override bool IsCanBeInterrupted(int weight) =>
       true;
 
     private void UpdateTime() => 

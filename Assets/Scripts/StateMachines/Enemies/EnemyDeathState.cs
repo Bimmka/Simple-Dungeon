@@ -16,7 +16,7 @@ namespace StateMachines.Enemies
       this.enemyDeath = enemyDeath;
     }
 
-    public override bool IsCanBeInterapted(int weight) =>
+    public override bool IsCanBeInterrupted(int weight) =>
       false;
 
 

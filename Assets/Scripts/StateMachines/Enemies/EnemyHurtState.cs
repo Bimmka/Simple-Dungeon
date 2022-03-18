@@ -15,7 +15,7 @@ namespace StateMachines.Enemies
       this.enemy = enemy;
     }
 
-    public override bool IsCanBeInterapted(int weight) =>
+    public override bool IsCanBeInterrupted(int weight) =>
       false;
 
     public override void TriggerAnimation()

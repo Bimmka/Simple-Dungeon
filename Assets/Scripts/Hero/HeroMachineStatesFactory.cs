@@ -65,11 +65,11 @@ namespace Hero
         case HeroState.Walk:
           return (typeof(PlayerWalkState), new PlayerWalkState(_stateMachine, "IsIdle", "MoveX", _animator, _hero, _move, _rotate, _coroutineRunner, _moveStaticData, GetStateData(state)));
         case HeroState.Run:
-          return (typeof(PlayerWalkState), new PlayerRunState(_stateMachine, "IsIdle", "MoveX", _animator, _hero, GetStateData(state)));
+          return (typeof(PlayerRunState), new PlayerRunState(_stateMachine, "IsIdle", "MoveX", _animator, _hero, GetStateData(state)));
         case HeroState.Roll:
           return (typeof(PlayerRollState), new PlayerRollState(_stateMachine, "IsRoll", _animator, _hero, _move, _stamina, GetStateData(state)));
         case HeroState.Rotating:
-          return (typeof(PlayerRotatingState), new PlayerRotatingState(_stateMachine, "IsRotating", _animator, _hero, "MoveX", "MoveY", _rotate,GetStateData(state)));
+          return (typeof(PlayerRotatingState), new PlayerRotatingState(_stateMachine, "IsRotating", _animator, _hero, "RotateX", "RotateY", _rotate,GetStateData(state)));
         default:
           throw new ArgumentOutOfRangeException(nameof(state), state, null);
       }

@@ -4,7 +4,7 @@
   {
     protected int _triggerName;
 
-    public abstract bool IsCanBeInterapted(int weight);
+    public abstract bool IsCanBeInterrupted(int weight);
     
     public abstract int Weight { get; }
 
@@ -19,7 +19,7 @@
       Check();
     
     public virtual void Exit() { }
-    public virtual void Interapt() { }
+    public virtual void Interrupt() { }
 
     public virtual void TriggerAnimation() { }
   }

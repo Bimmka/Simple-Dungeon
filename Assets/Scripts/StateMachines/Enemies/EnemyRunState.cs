@@ -22,7 +22,7 @@ namespace StateMachines.Enemies
       this.enemy = enemy;
     }
 
-    public override bool IsCanBeInterapted(int weight) =>
+    public override bool IsCanBeInterrupted(int weight) =>
       true;
 
     public override void Enter()

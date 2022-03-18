@@ -5,11 +5,6 @@
     private BaseStateMachineState currentState;
 
     public BaseStateMachineState State => currentState;
-        
-    private void ExitState()
-    {
-      currentState.Exit();
-    }
 
     public void Initialize(BaseStateMachineState state)
     {
@@ -22,5 +17,17 @@
       ExitState();
       Initialize(newState);
     }
+
+    public void InterruptState(BaseStateMachineState newState)
+    {
+      InterruptState();
+      Initialize(newState);
+    }
+
+    private void ExitState() => 
+      currentState.Exit();
+
+    private void InterruptState() => 
+      State.Interrupt();
   }
 }

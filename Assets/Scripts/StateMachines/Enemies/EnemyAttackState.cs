@@ -34,7 +34,7 @@ namespace StateMachines.Enemies
     public void UpdateDamageCoeff(float coeff) => 
       damageCoeff = coeff;
 
-    public override bool IsCanBeInterapted(int weight) =>
+    public override bool IsCanBeInterrupted(int weight) =>
       true;
 
     public override void Enter()

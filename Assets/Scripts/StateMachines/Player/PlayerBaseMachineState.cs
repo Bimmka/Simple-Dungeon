@@ -10,6 +10,9 @@ namespace StateMachines.Player
 {
   public abstract class PlayerBaseMachineState : BaseStateMachineState, IPlayerMachineState
   {
+    private const float CoeffToFrameSkipp = 3f;
+    private event Func<float, float, bool> smoothChangeCheck;
+    
     private readonly StateMachine _stateMachine;
     
     protected readonly HeroStateMachine hero;
@@ -40,27 +43,22 @@ namespace StateMachines.Player
     protected void ChangeState(PlayerBaseMachineState state) => 
       _stateMachine.ChangeState(state);
 
+    protected void InterruptState(PlayerBaseMachineState state) => 
+      _stateMachine.InterruptState(state);
+
     protected void SetFloat(int hash, float value) => 
       animator.SetFloat(hash, value);
 
     protected float ClipLength(PlayerActionsType actionsType) => 
       hero.ClipLength(actionsType);
 
-    protected void SmoothChange(ref Coroutine changeCoroutine, ICoroutineRunner coroutineRunner, int valueHash, float newValue, float step, Func<float, float, bool> checkCallback)
+    protected void SmoothChange(ref Coroutine changeCoroutine, ICoroutineRunner coroutineRunner, int valueHash, AnimationCurve curve, int direction = 1, Action callback = null)
     {
       if (changeCoroutine != null)
         coroutineRunner.StopCoroutine(changeCoroutine);
 
-      changeCoroutine = coroutineRunner.StartCoroutine(Change(changeCoroutine, valueHash, newValue, step, checkCallback));
+      changeCoroutine = coroutineRunner.StartCoroutine(Change(changeCoroutine, valueHash, curve, direction, callback));
     }
-
-    protected bool IsSmaller(float value, float endValue) => 
-      value < endValue;
-
-    protected bool IsBigger(float value, float endValue) => 
-      value > endValue;
-
-
     protected bool IsStayHorizontal() => 
       Mathf.Approximately(hero.MoveAxis.x, 0);
 
@@ -70,19 +68,44 @@ namespace StateMachines.Player
     protected bool IsNotMove() => 
       hero.MoveAxis == Vector2.zero;
 
-    private IEnumerator Change(Coroutine changeCoroutine, int valueHash, float newValue, float step, Func<float, float, bool> checkCallback)
+    private IEnumerator Change(Coroutine changeCoroutine, int valueHash, AnimationCurve curve, int direction, Action callback)
     {
+      float curveValue;
       float currentValue = animator.GetFloat(valueHash);
-      int direction = Math.Sign(newValue - currentValue);
-      while (checkCallback(currentValue, newValue) == false)
+      float maxCurveValue = curve[curve.length-1].value;
+      float maxTime = curve[curve.length-1].time;
+      float currentTime = 0f;
+
+      if (currentValue > direction * maxCurveValue)
+        smoothChangeCheck = IsBigger;
+      else
+        smoothChangeCheck = IsSmaller;
+      
+      while (currentTime < maxTime && Mathf.Approximately(currentValue, maxCurveValue) == false)
       {
-        currentValue += direction * step * Time.deltaTime;
+        curveValue = curve.Evaluate(currentTime);
+        if (smoothChangeCheck.Invoke(currentValue, curveValue))
+        {
+          currentValue = direction * curveValue;
+          currentTime += Time.deltaTime;
+        }
+        else
+          currentTime += CoeffToFrameSkipp * Time.deltaTime;
+        
         yield return null;
         SetFloat(valueHash, currentValue);
       }
       
-      SetFloat(valueHash, newValue);
+      SetFloat(valueHash, direction * maxCurveValue);
       changeCoroutine = null;
+      
+      callback?.Invoke();
     }
+
+    private bool IsSmaller(float currentValue, float endValue) => 
+      currentValue < endValue;
+
+    private bool IsBigger(float currentValue, float endValue) => 
+      currentValue > endValue;
   }
 }

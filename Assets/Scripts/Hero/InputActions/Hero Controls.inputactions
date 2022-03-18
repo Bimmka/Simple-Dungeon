@@ -28,8 +28,8 @@
                     "type": "Value",
                     "id": "c0df7f4c-c4ab-4ba5-b75b-b4f31f0faffa",
                     "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
+                    "processors": "NormalizeVector2",
+                    "interactions": "Press,Hold",
                     "initialStateCheck": true
                 },
                 {

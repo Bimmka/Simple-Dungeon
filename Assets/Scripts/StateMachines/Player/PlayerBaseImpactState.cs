@@ -19,7 +19,7 @@ namespace StateMachines.Player
       UpdateImpactTime();
     }
 
-    public override bool IsCanBeInterapted(int weight) =>
+    public override bool IsCanBeInterrupted(int weight) =>
       false;
 
     public override void Enter()

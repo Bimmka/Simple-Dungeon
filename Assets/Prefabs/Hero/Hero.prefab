@@ -1457,6 +1457,7 @@ MonoBehaviour:
   _attack: {fileID: 6521555783495855305}
   _stamina: {fileID: 4040344819590722244}
   _clipsContainer: {fileID: 1356732161032312777}
+  _statesData: {fileID: 11400000, guid: 3b123a0132ffb8e4f9345e9aad0ec224, type: 2}
 --- !u!114 &8124249772606008009
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1484,7 +1485,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lowAngleMoveRotationSpeed: 0.35
-  speed: 1
 --- !u!143 &-2693136154511395499
 CharacterController:
   m_ObjectHideFlags: 0

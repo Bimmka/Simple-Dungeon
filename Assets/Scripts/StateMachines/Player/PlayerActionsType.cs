@@ -4,6 +4,7 @@
   {
     Idle,
     Walk,
+    Run,
     TurnLeft,
     TurnRight,
     TurnAround,

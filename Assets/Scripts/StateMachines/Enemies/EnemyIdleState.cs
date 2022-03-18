@@ -25,7 +25,7 @@ namespace StateMachines.Enemies
       this.enemyRotate = enemyRotate;
     }
 
-    public override bool IsCanBeInterapted(int weight) =>
+    public override bool IsCanBeInterrupted(int weight) =>
       true;
 
     public override void LogicUpdate()

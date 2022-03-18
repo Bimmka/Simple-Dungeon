@@ -30,7 +30,7 @@ namespace StateMachines.Player
       }
     }
 
-    public override bool IsCanBeInterapted(int weight) =>
+    public override bool IsCanBeInterrupted(int weight) =>
       true;
   }
 }

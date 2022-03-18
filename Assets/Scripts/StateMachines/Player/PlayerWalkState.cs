@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using Animations;
+﻿using Animations;
 using Hero;
 using Services;
 using StaticData.Hero.Components;
@@ -16,10 +14,10 @@ namespace StateMachines.Player
     private readonly HeroRotate _heroRotate;
     private readonly ICoroutineRunner _coroutineRunner;
     private readonly HeroMoveStaticData _moveStaticData;
-    private readonly float _smoothChangeStep = 5f;
-    private readonly float _smothChangeExitStep = 100f;
 
     private Coroutine _changeCoroutine;
+
+    private bool _isStopping;
     
     public override int Weight { get; }
 
@@ -39,7 +37,7 @@ namespace StateMachines.Player
     {
       base.Enter();
       if (IsLowAngle(hero.MoveAxis) && _heroRotate.IsTurning == false)
-        SmoothChange(ref _changeCoroutine, _coroutineRunner,_floatValueHash,1f, _smoothChangeStep, IsBigger);
+        SmoothChange(ref _changeCoroutine, _coroutineRunner,_floatValueHash,stateData.EnterCurve);
       else if (_heroRotate.IsTurning == false) 
         ChangeState(hero.State<PlayerRotatingState>());
     }
@@ -47,35 +45,74 @@ namespace StateMachines.Player
     public override void LogicUpdate()
     {
       base.LogicUpdate(); 
+#if DEBUG_MOVE
       Debug.DrawRay(hero.transform.position, hero.transform.forward, Color.red);
       Debug.DrawRay(hero.transform.position, MoveAxis(), Color.green);
-      
+#endif
+
       if (IsNotMove())
-        ChangeState(hero.State<PlayerIdleState>());
+      {
+        if (_isStopping == false)
+          StartStopping();
+        _heroMove.StoppingMove();
+      }
       else if (IsLowAngle(hero.MoveAxis) && _heroRotate.IsTurning == false)
       {
         _heroRotate.RotateTo(hero.MoveAxis);
         _heroMove.Move(MoveAxis());
+        if (_isStopping)
+          RefreshState();
       }
       else if (_heroRotate.IsTurning == false) 
-        ChangeState(hero.State<PlayerRotatingState>());
+        InterruptState(hero.State<PlayerRotatingState>());
     }
 
-    private bool IsLowAngle(Vector2 moveAxis) => 
-      Vector3.Angle(hero.transform.forward, new Vector3(moveAxis.x, 0, moveAxis.y)) < _moveStaticData.BigAngleValue;
+    public override void Interrupt()
+    {
+      base.Interrupt();
+      ResetIsStopping();
+      SetFloat(_floatValueHash, 0f);
+    }
 
     public override void Exit()
     {
       base.Exit();
-      SmoothChange(ref _changeCoroutine, _coroutineRunner,_floatValueHash,0f, _smothChangeExitStep, IsSmaller);
+      ResetIsStopping();
+      SmoothChange(ref _changeCoroutine, _coroutineRunner,_floatValueHash, stateData.ExitCurve);
     }
 
-    public override bool IsCanBeInterapted(int weight) =>
-      true;
+    public override bool IsCanBeInterrupted(int weight)
+    {
+      if (stateData.IsInteraptedBySameWeight)
+        return weight >= Weight;
+      return weight > Weight;
+    }
+
+    private void RefreshState()
+    {
+      ResetIsStopping();
+      SmoothChange(ref _changeCoroutine, _coroutineRunner,_floatValueHash,stateData.EnterCurve);
+    }
+
+    private void StartStopping()
+    {
+      _isStopping = true;
+      SmoothChange(ref _changeCoroutine, _coroutineRunner,_floatValueHash,stateData.ExitCurve, callback:SetIdleState);
+    }
+
+    private void SetIdleState()
+    {
+      ChangeState(hero.State<PlayerIdleState>());
+    }
+
+    private void ResetIsStopping() => 
+      _isStopping = false;
+
 
     private Vector3 MoveAxis() => 
       new Vector3(hero.MoveAxis.x, 0 , hero.MoveAxis.y);
 
-   
+    private bool IsLowAngle(Vector2 moveAxis) => 
+      Vector3.Angle(hero.transform.forward, new Vector3(moveAxis.x, 0, moveAxis.y)) < _moveStaticData.BigAngleValue;
   }
 }

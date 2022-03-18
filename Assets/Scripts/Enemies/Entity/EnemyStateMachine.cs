@@ -74,7 +74,7 @@ namespace Enemies.Entity
 
     public void Impact()
     {
-      if (stateMachine.State.IsCanBeInterapted(ImpactState.Weight))
+      if (stateMachine.State.IsCanBeInterrupted(ImpactState.Weight))
         stateMachine.ChangeState(ImpactState);
     }
 

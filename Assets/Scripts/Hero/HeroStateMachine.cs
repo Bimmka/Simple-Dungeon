@@ -57,7 +57,7 @@ namespace Hero
         {
             base.Cleanup();
             _battleAnimator.Triggered -= AnimationTriggered;
-            State<PlayerAttackState>().Cleanup();
+//            State<PlayerAttackState>().Cleanup();
         }
 
 
@@ -74,7 +74,7 @@ namespace Hero
 
         public void SetAttackState()
         {
-            if (stateMachine.State.IsCanBeInterapted(State<PlayerAttackState>().Weight) && State<PlayerAttackState>().IsCanAttack())
+            if (stateMachine.State.IsCanBeInterrupted(State<PlayerAttackState>().Weight) && State<PlayerAttackState>().IsCanAttack())
                 stateMachine.ChangeState(State<PlayerAttackState>());
         }
 
@@ -86,7 +86,7 @@ namespace Hero
 
         public void SetRollState()
         {
-            if (stateMachine.State.IsCanBeInterapted(State<PlayerRollState>().Weight) && State<PlayerRollState>().IsCanRoll())
+            if (stateMachine.State.IsCanBeInterrupted(State<PlayerRollState>().Weight) && State<PlayerRollState>().IsCanRoll())
                 stateMachine.ChangeState(State<PlayerRollState>());
         }
 
@@ -95,7 +95,7 @@ namespace Hero
 
         public void Impact()
         {
-            if (State<PlayerBaseImpactState>().IsKnockbackCooldown() && stateMachine.State.IsCanBeInterapted(State<PlayerBaseImpactState>().Weight))
+            if (State<PlayerBaseImpactState>().IsKnockbackCooldown() && stateMachine.State.IsCanBeInterrupted(State<PlayerBaseImpactState>().Weight))
                 stateMachine.ChangeState(State<PlayerBaseImpactState>());
         }
 

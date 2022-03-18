@@ -14,6 +14,9 @@ namespace Hero
     public void Run(Vector3 direction) => 
       characterController.Move(direction * (moveData.RunSpeed * Time.deltaTime));
 
+    public void StoppingMove() => 
+      characterController.Move(transform.forward * (moveData.StoppingSpeed * Time.deltaTime));
+
     public void Strafe(Vector3 direction) => 
       characterController.Move(direction * (moveData.StrafeSpeed * Time.deltaTime));
 
