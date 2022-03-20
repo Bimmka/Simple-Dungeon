@@ -4,33 +4,52 @@ using UnityEngine;
 
 namespace StateMachines.Enemies
 {
-  public abstract class EnemyBaseMachineState : BaseStateMachineState
+  public abstract class EnemyBaseMachineState 
   {
-    private readonly StateMachine stateMachine;
     protected readonly BattleAnimator animator;
+    private int _triggerName;
+    
+    public virtual int Weight { get; }
 
     public EnemyBaseMachineState(StateMachine stateMachine, string animationName, BattleAnimator animator)
     {
-      this.stateMachine = stateMachine;
-      this._triggerName = Animator.StringToHash(animationName);
+     
+      _triggerName = Animator.StringToHash(animationName);
       this.animator = animator;
     }
     
-    public override void Enter()
+    public virtual void Enter()
     {
-      base.Enter();
+      
       animator.SetBool(_triggerName,true);
     }
 
-    public override void Exit()
+    public virtual void Exit()
     {
-      base.Exit();
+      
       animator.SetBool(_triggerName, false);
     }
+
+    public virtual void LogicUpdate()
+    {
+      
+    }
     
-    public void ChangeState(EnemyBaseMachineState state) => 
-      stateMachine.ChangeState(state);
+    public void ChangeState(EnemyBaseMachineState state)
+    {
+      
+    }
     
+    public virtual bool IsCanBeInterrupted(int weight) =>
+      false;
+    
+    public virtual void TriggerAnimation()
+    {
+      
+      
+    }
+
+
     public void SetFloat(int hash, float value) => 
       animator.SetFloat(hash, value);
   }

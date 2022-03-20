@@ -8,7 +8,7 @@ using Utilities;
 
 namespace Enemies.Entity
 {
-  public class EnemyStateMachine : BaseEntityStateMachine
+  public class EnemyStateMachine : MonoBehaviour
   {
     [SerializeField] protected BattleAnimator battleAnimator;
     [SerializeField] private EntitySearcher entitySearcher;
@@ -39,43 +39,34 @@ namespace Enemies.Entity
       this.health = health;
       this.health.Dead += Dead;
       attack.Construct(this.attackData);
-      Initialize();
     }
 
-    protected override void Subscribe()
+    protected void Subscribe()
     {
-      base.Subscribe();
+   
       battleAnimator.Triggered += AnimationTriggered;
       death.Revived += Revive;
     }
 
-    protected override void Cleanup()
+    private void AnimationTriggered()
     {
-      base.Cleanup();
+      
+    }
+
+    protected void Cleanup()
+    {
+      
       battleAnimator.Triggered -= AnimationTriggered;
       health.Dead -= Dead;
       death.Revived -= Revive;
       AttackState.Cleanup();
     }
-
-    protected override void CreateStates()
-    {
-      AttackState = new EnemyAttackState(stateMachine, "IsSimpleAttack", battleAnimator, this, attack, attackData, damageCoeff);
-      DeathState = new EnemyDeathState(stateMachine, "IsDead", battleAnimator, death);
-      ImpactState = new EnemyHurtState(stateMachine, "IsImpact", battleAnimator, this);
-      IdleState = new EnemyIdleState(stateMachine, "IsIdle", battleAnimator, move, moveData, this, rotate);
-      RunState = new EnemyRunState(stateMachine, "IsRun", battleAnimator, move, moveData, this);
-      SearchState = new EnemySearchState(stateMachine, "IsIdle", battleAnimator, entitySearcher, move, this);
-      WalkState = new EnemyWalkState(stateMachine, "IsWalk", battleAnimator, move, moveData, this);
-    }
-
-    protected override void SetDefaultState() => 
-      stateMachine.Initialize(SearchState);
+    
+    
 
     public void Impact()
     {
-      if (stateMachine.State.IsCanBeInterrupted(ImpactState.Weight))
-        stateMachine.ChangeState(ImpactState);
+     
     }
 
     public void UpdateDamageCoeff(float coeff)
@@ -84,10 +75,14 @@ namespace Enemies.Entity
       AttackState.UpdateDamageCoeff(damageCoeff);
     }
 
-    private void Dead() => 
-      stateMachine.ChangeState(DeathState);
+    private void Dead()
+    {
+      
+    }
 
-    private void Revive() => 
-      stateMachine.ChangeState(SearchState);
+    private void Revive()
+    {
+      
+    }
   }
 }

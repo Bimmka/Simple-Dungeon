@@ -14,8 +14,7 @@ namespace StateMachines.Enemies
     private readonly float attackCooldown;
     
     private float lastAttackTime;
-
-    public override int Weight { get; }
+    
 
     public EnemyAttackState(StateMachine stateMachine, string animationName, BattleAnimator animator,
       EnemyStateMachine enemy, EnemyAttack enemyAttack, EnemyAttackStaticData attackData, float damageCoeff) : base(stateMachine, animationName, animator)

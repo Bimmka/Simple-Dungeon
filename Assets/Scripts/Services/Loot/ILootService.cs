@@ -1,6 +1,4 @@
-﻿using Enemies.Entity;
-
-namespace Services.Loot
+﻿namespace Services.Loot
 {
   public interface ILootService : ICleanupService
   {
