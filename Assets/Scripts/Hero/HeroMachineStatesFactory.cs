@@ -45,10 +45,10 @@ namespace Hero
       _statesData = statesData.StateDatas.ToDictionary(x => x.State, x=>x);
     }
 
-    public void CreateStates(ref Dictionary<Type, PlayerBaseMachineState> states)
+    public void CreateStates(ref Dictionary<Type, HeroBaseMachineState> states)
     {
       Array heroStates = Enum.GetValues(typeof(HeroState));
-      (Type, PlayerBaseMachineState) state;
+      (Type, HeroBaseMachineState) state;
       for (int i = 0; i < heroStates.Length; i++)
       {
         state = CreateState((HeroState) i);
@@ -56,20 +56,20 @@ namespace Hero
       }
     }
 
-    private (Type, PlayerBaseMachineState) CreateState(HeroState state)
+    private (Type, HeroBaseMachineState) CreateState(HeroState state)
     {
       switch (state)
       {
         case HeroState.Idle:
-          return (typeof(PlayerIdleState), new PlayerIdleState(_stateMachine, "IsIdle", _animator, _hero, GetStateData(state)));
+          return (typeof(HeroIdleState), new HeroIdleState(_stateMachine, "IsIdle", _animator, _hero, GetStateData(state)));
         case HeroState.Walk:
-          return (typeof(PlayerWalkState), new PlayerWalkState(_stateMachine, "IsIdle", "MoveX", _animator, _hero, _move, _rotate, _coroutineRunner, _moveStaticData, GetStateData(state)));
+          return (typeof(HeroWalkState), new HeroWalkState(_stateMachine, "IsIdle", "MoveX", _animator, _hero, _move, _rotate, _coroutineRunner, _moveStaticData, GetStateData(state)));
         case HeroState.Run:
-          return (typeof(PlayerRunState), new PlayerRunState(_stateMachine, "IsIdle", "MoveX", _animator, _hero, GetStateData(state)));
+          return (typeof(HeroRunState), new HeroRunState(_stateMachine, "IsIdle", "MoveX", _animator, _hero, GetStateData(state), _stamina, _coroutineRunner, _rotate, _move, _moveStaticData));
         case HeroState.Roll:
-          return (typeof(PlayerRollState), new PlayerRollState(_stateMachine, "IsRoll", _animator, _hero, _move, _stamina, GetStateData(state)));
+          return (typeof(HeroRollState), new HeroRollState(_stateMachine, "IsRoll", _animator, _hero, _move, _stamina, GetStateData(state)));
         case HeroState.Rotating:
-          return (typeof(PlayerRotatingState), new PlayerRotatingState(_stateMachine, "IsRotating", _animator, _hero, "RotateX", "RotateY", _rotate,GetStateData(state)));
+          return (typeof(HeroRotatingState), new HeroRotatingState(_stateMachine, "IsRotating", _animator, _hero, "RotateX", "RotateY", _rotate,GetStateData(state)));
         default:
           throw new ArgumentOutOfRangeException(nameof(state), state, null);
       }

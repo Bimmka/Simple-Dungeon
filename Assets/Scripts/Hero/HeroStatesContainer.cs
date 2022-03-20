@@ -8,12 +8,12 @@ namespace Hero
   public class HeroStatesContainer
   {
     private readonly HeroMachineStatesFactory _factory;
-    private Dictionary<Type, PlayerBaseMachineState> _states; 
+    private Dictionary<Type, HeroBaseMachineState> _states; 
 
     public HeroStatesContainer(HeroMachineStatesFactory factory)
     {
 
-      _states = new Dictionary<Type, PlayerBaseMachineState>(10);
+      _states = new Dictionary<Type, HeroBaseMachineState>(10);
       _factory = factory;
     }
 
@@ -22,7 +22,7 @@ namespace Hero
       _factory.CreateStates(ref _states);
     }
 
-    public TState GetState<TState>() where TState : PlayerBaseMachineState
+    public TState GetState<TState>() where TState : HeroBaseMachineState
     {
       return _states[typeof(TState)] as TState;
     }

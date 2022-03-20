@@ -7,39 +7,39 @@ using UnityEngine;
 
 namespace StateMachines.Player
 {
-  public class PlayerWalkState : PlayerBaseMachineState
+  public class HeroRunState : HeroBaseMachineState
   {
     private readonly int _floatValueHash;
-    private readonly HeroMove _heroMove;
-    private readonly HeroRotate _heroRotate;
+    private readonly HeroStamina _heroStamina;
     private readonly ICoroutineRunner _coroutineRunner;
+    private readonly HeroRotate _heroRotate;
+    private readonly HeroMove _heroMove;
     private readonly HeroMoveStaticData _moveStaticData;
 
     private Coroutine _changeCoroutine;
 
     private bool _isStopping;
-    
-    public override int Weight { get; }
+    private float time = 1f;
 
-
-    public PlayerWalkState(StateMachine stateMachine, string triggerName, string floatValueName,
-      BattleAnimator animator,
-      HeroStateMachine hero, HeroMove heroMove, HeroRotate heroRotate, ICoroutineRunner coroutineRunner, HeroMoveStaticData moveStaticData, HeroStateData stateData) : base(stateMachine, triggerName, animator, hero, stateData)
+    public HeroRunState(StateMachine stateMachine, string triggerName, string floatValue, BattleAnimator animator,
+      HeroStateMachine hero, HeroStateData stateData, HeroStamina heroStamina, ICoroutineRunner coroutineRunner,
+      HeroRotate heroRotate, HeroMove heroMove, HeroMoveStaticData heroMoveStaticData) : base(stateMachine, triggerName, animator, hero, stateData)
     {
-      _floatValueHash = Animator.StringToHash(floatValueName);
-      _heroMove = heroMove;
-      _heroRotate = heroRotate;
+      _floatValueHash = Animator.StringToHash(floatValue);
+      _heroStamina = heroStamina;
       _coroutineRunner = coroutineRunner;
-      _moveStaticData = moveStaticData;
+      _heroRotate = heroRotate;
+      _heroMove = heroMove;
+      _moveStaticData = heroMoveStaticData;
     }
-
-    public override void Enter()
+    
+     public override void Enter()
     {
       base.Enter();
       if (IsLowAngle(hero.MoveAxis) && _heroRotate.IsTurning == false)
         SmoothChange(ref _changeCoroutine, _coroutineRunner,_floatValueHash,stateData.EnterCurve);
       else if (_heroRotate.IsTurning == false) 
-        ChangeState(hero.State<PlayerRotatingState>());
+        ChangeState(hero.State<HeroRotatingState>());
     }
 
     public override void LogicUpdate()
@@ -50,27 +50,56 @@ namespace StateMachines.Player
       Debug.DrawRay(hero.transform.position, MoveAxis(), Color.green);
 #endif
 
+      if (_heroStamina.IsCanRun() && hero.IsRunningPressed && IsNotMove() == false)
+      {
+        Run();
+        UpdateTimerAndStamina();
+      }
+      else
+        TransitionToAnotherState();
+    }
+
+    private void Run()
+    {
+      if (IsLowAngle(hero.MoveAxis) && _heroRotate.IsTurning == false)
+      {
+        _heroRotate.RotateTo(hero.MoveAxis);
+        _heroMove.Run(MoveAxis());
+        if (_isStopping)
+          RefreshState();
+      }
+      else if (_heroRotate.IsTurning == false) 
+        InterruptState(hero.State<HeroRotatingState>());
+    }
+
+    private void UpdateTimerAndStamina()
+    {
+      if (IsNeedWasteStamina())
+      {
+        _heroStamina.WasteToRun();
+        ResetTime();
+      }
+      else
+        UpdateTime(Time.deltaTime);
+    }
+
+    private void TransitionToAnotherState()
+    {
       if (IsNotMove())
       {
         if (_isStopping == false)
           StartStopping();
         _heroMove.StoppingMove();
       }
-      else if (IsLowAngle(hero.MoveAxis) && _heroRotate.IsTurning == false)
-      {
-        _heroRotate.RotateTo(hero.MoveAxis);
-        _heroMove.Move(MoveAxis());
-        if (_isStopping)
-          RefreshState();
-      }
-      else if (_heroRotate.IsTurning == false) 
-        InterruptState(hero.State<PlayerRotatingState>());
+      else
+        ChangeState(hero.State<HeroWalkState>());
     }
 
     public override void Interrupt()
     {
       base.Interrupt();
       ResetIsStopping();
+      ResetTime();
       SetFloat(_floatValueHash, 0f);
     }
 
@@ -78,19 +107,16 @@ namespace StateMachines.Player
     {
       base.Exit();
       ResetIsStopping();
-      SmoothChange(ref _changeCoroutine, _coroutineRunner,_floatValueHash, stateData.ExitCurve);
+      ResetTime();
     }
 
-    public override bool IsCanBeInterrupted(int weight)
-    {
-      if (stateData.IsInteraptedBySameWeight)
-        return weight >= Weight;
-      return weight > Weight;
-    }
+    public bool IsCanRun() => 
+      _heroStamina.IsCanRun();
 
     private void RefreshState()
     {
       ResetIsStopping();
+      ResetTime();
       SmoothChange(ref _changeCoroutine, _coroutineRunner,_floatValueHash,stateData.EnterCurve);
     }
 
@@ -102,11 +128,20 @@ namespace StateMachines.Player
 
     private void SetIdleState()
     {
-      ChangeState(hero.State<PlayerIdleState>());
+      ChangeState(hero.State<HeroIdleState>());
     }
 
     private void ResetIsStopping() => 
       _isStopping = false;
+
+    private void ResetTime() => 
+      time = 1f;
+
+    private void UpdateTime(float deltaTime) => 
+      time -= deltaTime;
+
+    private bool IsNeedWasteStamina() => 
+      time <= 0;
 
 
     private Vector3 MoveAxis() => 

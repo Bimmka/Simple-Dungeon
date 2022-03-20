@@ -4,9 +4,9 @@ using StaticData.Hero.States;
 
 namespace StateMachines.Player
 {
-  public class PlayerShieldImpactState : PlayerBaseImpactState
+  public class HeroHurtState : HeroBaseImpactState
   {
-    public PlayerShieldImpactState(StateMachine stateMachine, string triggerName, BattleAnimator animator,
+    public HeroHurtState(StateMachine stateMachine, string triggerName, BattleAnimator animator,
       HeroStateMachine hero, float cooldown, HeroStateData stateData) : base(stateMachine, triggerName, animator, hero, cooldown, stateData)
     {
     }

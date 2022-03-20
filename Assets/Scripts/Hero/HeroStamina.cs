@@ -30,6 +30,9 @@ namespace Hero
     public bool IsCanRoll() => 
       currentStamina - staminaData.RollCost >= 0;
 
+    public bool IsCanRun() => 
+      currentStamina - staminaData.RunCostPerSecond >= 0;
+
     public void WasteToAttack()
     {
       currentStamina -= staminaData.AttackCost;
@@ -41,6 +44,14 @@ namespace Hero
     public void WasteToRoll()
     {
       currentStamina -= staminaData.RollCost;
+      if (recoveryCoroutine == null)
+        recoveryCoroutine = StartCoroutine(RecoveryValue());
+      Display();
+    }
+
+    public void WasteToRun()
+    {
+      currentStamina -= staminaData.RunCostPerSecond;
       if (recoveryCoroutine == null)
         recoveryCoroutine = StartCoroutine(RecoveryValue());
       Display();

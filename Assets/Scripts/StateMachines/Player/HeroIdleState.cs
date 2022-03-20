@@ -5,11 +5,9 @@ using UnityEngine;
 
 namespace StateMachines.Player
 {
-  public class PlayerIdleState : PlayerBaseMachineState
+  public class HeroIdleState : HeroBaseMachineState
   {
-    public override int Weight { get; }
-
-    public PlayerIdleState(StateMachine stateMachine, string triggerName,
+    public HeroIdleState(StateMachine stateMachine, string triggerName,
       BattleAnimator animator, HeroStateMachine hero, HeroStateData stateData) : base(stateMachine, triggerName, animator, hero, stateData)
     {
     }
@@ -18,11 +16,12 @@ namespace StateMachines.Player
     {
       base.LogicUpdate();
       if (IsNotMove() == false)
-          ChangeState(hero.State<PlayerWalkState>());
-       
+      {
+        if (hero.IsRunningPressed && hero.State<HeroRunState>().IsCanRun())
+          ChangeState(hero.State<HeroRunState>());
+        else
+          ChangeState(hero.State<HeroWalkState>());
+      }
     }
-
-    public override bool IsCanBeInterrupted(int weight) =>
-      true;
   }
 }

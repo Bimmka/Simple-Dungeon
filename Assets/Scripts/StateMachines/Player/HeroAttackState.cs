@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace StateMachines.Player
 {
-  public class PlayerAttackState : PlayerBaseMachineState
+  public class HeroAttackState : HeroBaseMachineState
   {
     private readonly HeroAttack heroAttack;
     private readonly HeroStamina heroStamina;
@@ -16,9 +16,7 @@ namespace StateMachines.Player
 
     private bool isAttackEnded;
 
-    public override int Weight { get; }
-
-    public PlayerAttackState(StateMachine stateMachine, string triggerName, BattleAnimator animator,
+    public HeroAttackState(StateMachine stateMachine, string triggerName, BattleAnimator animator,
       HeroStateMachine hero, HeroAttack heroAttack, HeroAttackStaticData attackData, HeroStamina heroStamina, HeroStateData stateData) : base(stateMachine, triggerName, animator, hero, stateData)
     {
       this.heroAttack = heroAttack;
@@ -43,7 +41,7 @@ namespace StateMachines.Player
     }
 
     public override bool IsCanBeInterrupted(int weight) =>
-      isAttackEnded;
+      base.IsCanBeInterrupted(weight) && isAttackEnded;
 
     public override void TriggerAnimation()
     {
@@ -52,16 +50,16 @@ namespace StateMachines.Player
       if (hero.IsBlockingPressed)
       {
         if (IsStayHorizontal() == false)
-          ChangeState(hero.State<PlayerShieldMoveState>());
+          ChangeState(hero.State<HeroShieldMoveState>());
         else
-          ChangeState(hero.State<PlayerIdleShieldState>());
+          ChangeState(hero.State<HeroIdleShieldState>());
       }
       else
       {
         if (IsStayVertical())
-          ChangeState(hero.State<PlayerIdleState>());
+          ChangeState(hero.State<HeroIdleState>());
         else
-          ChangeState(hero.State<PlayerWalkState>());
+          ChangeState(hero.State<HeroWalkState>());
       }
     }
 

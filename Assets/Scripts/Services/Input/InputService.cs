@@ -38,6 +38,9 @@ namespace Services.Input
     public bool IsBlockButtonPressed() => 
       input.Player.Block.IsPressed();
 
+    public bool IsRunButtonPressed() => 
+      input.Player.Run.IsPressed();
+
     private Vector2 SimpleInputAxis() => 
       input.Player.Move.ReadValue<Vector2>();
 

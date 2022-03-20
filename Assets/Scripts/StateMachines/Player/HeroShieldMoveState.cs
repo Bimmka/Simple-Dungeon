@@ -5,15 +5,13 @@ using UnityEngine;
 
 namespace StateMachines.Player
 {
-  public class PlayerShieldMoveState : PlayerBaseMachineState
+  public class HeroShieldMoveState : HeroBaseMachineState
   {
     private readonly int floatValueHash;
     private readonly HeroMove heroMove;
     private readonly HeroRotate heroRotate;
 
-    public override int Weight { get; }
-
-    public PlayerShieldMoveState(StateMachine stateMachine, string triggerName, string floatValueName,
+    public HeroShieldMoveState(StateMachine stateMachine, string triggerName, string floatValueName,
       BattleAnimator animator, HeroStateMachine hero, HeroMove heroMove, HeroRotate heroRotate, HeroStateData stateData) : base(stateMachine, triggerName, animator, hero, stateData)
     {
       floatValueHash = Animator.StringToHash(floatValueName);
@@ -33,12 +31,12 @@ namespace StateMachines.Player
       if (hero.IsBlockingPressed == false)
       {
         if (IsStayVertical() == false)
-          ChangeState(hero.State<PlayerWalkState>());
+          ChangeState(hero.State<HeroWalkState>());
         else
-          ChangeState(hero.State<PlayerIdleState>());
+          ChangeState(hero.State<HeroIdleState>());
       }
       else if (IsStayHorizontal())
-        ChangeState(hero.State<PlayerIdleShieldState>());
+        ChangeState(hero.State<HeroIdleShieldState>());
       else
       {
         heroMove.Strafe(hero.transform.right * hero.MoveAxis.x);
@@ -51,8 +49,5 @@ namespace StateMachines.Player
       base.Exit();
       SetFloat(floatValueHash, 0);
     }
-
-    public override bool IsCanBeInterrupted(int weight) =>
-      true;
   }
 }

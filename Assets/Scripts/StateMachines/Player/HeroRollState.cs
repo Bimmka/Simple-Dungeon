@@ -5,14 +5,14 @@ using UnityEngine;
 
 namespace StateMachines.Player
 {
-  public class PlayerRollState : PlayerBaseMachineState
+  public class HeroRollState : HeroBaseMachineState
   {
     private readonly HeroMove heroMove;
     private readonly HeroStamina heroStamina;
 
     public override int Weight { get; }
 
-    public PlayerRollState(StateMachine stateMachine, string triggerName, BattleAnimator animator,
+    public HeroRollState(StateMachine stateMachine, string triggerName, BattleAnimator animator,
       HeroStateMachine hero, HeroMove heroMove, HeroStamina heroStamina, HeroStateData stateData) : base(stateMachine, triggerName, animator, hero, stateData)
     {
       this.heroMove = heroMove;
@@ -40,16 +40,16 @@ namespace StateMachines.Player
       if (hero.IsBlockingPressed)
       {
         if (IsStayHorizontal() == false)
-          ChangeState(hero.State<PlayerShieldMoveState>());
+          ChangeState(hero.State<HeroShieldMoveState>());
         else
-          ChangeState(hero.State<PlayerIdleShieldState>());
+          ChangeState(hero.State<HeroIdleShieldState>());
       }
       else
       {
         if (IsStayVertical())
-          ChangeState(hero.State<PlayerIdleState>());
+          ChangeState(hero.State<HeroIdleState>());
         else
-          ChangeState(hero.State<PlayerWalkState>());
+          ChangeState(hero.State<HeroWalkState>());
       }
     }
 

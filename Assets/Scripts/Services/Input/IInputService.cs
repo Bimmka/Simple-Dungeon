@@ -12,5 +12,6 @@ namespace Services.Input
     bool IsAttackButtonDown();
     bool IsRollButtonDown();
     bool IsBlockButtonPressed();
+    bool IsRunButtonPressed();
   }
 }

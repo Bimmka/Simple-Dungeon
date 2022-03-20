@@ -73,6 +73,15 @@ namespace InputActions
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Run"",
+                    ""type"": ""Button"",
+                    ""id"": ""733879a3-4d5d-445f-a030-4a49c657174c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -156,7 +165,7 @@ namespace InputActions
                 {
                     ""name"": """",
                     ""id"": ""39389d48-3689-4176-aef2-16557d587670"",
-                    ""path"": ""<Keyboard>/leftShift"",
+                    ""path"": ""<Keyboard>/space"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -174,6 +183,17 @@ namespace InputActions
                     ""action"": ""Mouse"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""49413463-e59c-43c1-abab-b268e5af6ee2"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Run"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -187,6 +207,7 @@ namespace InputActions
             m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
             m_Player_Roll = m_Player.FindAction("Roll", throwIfNotFound: true);
             m_Player_Mouse = m_Player.FindAction("Mouse", throwIfNotFound: true);
+            m_Player_Run = m_Player.FindAction("Run", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -251,6 +272,7 @@ namespace InputActions
         private readonly InputAction m_Player_Move;
         private readonly InputAction m_Player_Roll;
         private readonly InputAction m_Player_Mouse;
+        private readonly InputAction m_Player_Run;
         public struct PlayerActions
         {
             private @HeroControls m_Wrapper;
@@ -260,6 +282,7 @@ namespace InputActions
             public InputAction @Move => m_Wrapper.m_Player_Move;
             public InputAction @Roll => m_Wrapper.m_Player_Roll;
             public InputAction @Mouse => m_Wrapper.m_Player_Mouse;
+            public InputAction @Run => m_Wrapper.m_Player_Run;
             public InputActionMap Get() { return m_Wrapper.m_Player; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -284,6 +307,9 @@ namespace InputActions
                     @Mouse.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMouse;
                     @Mouse.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMouse;
                     @Mouse.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMouse;
+                    @Run.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRun;
+                    @Run.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRun;
+                    @Run.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRun;
                 }
                 m_Wrapper.m_PlayerActionsCallbackInterface = instance;
                 if (instance != null)
@@ -303,6 +329,9 @@ namespace InputActions
                     @Mouse.started += instance.OnMouse;
                     @Mouse.performed += instance.OnMouse;
                     @Mouse.canceled += instance.OnMouse;
+                    @Run.started += instance.OnRun;
+                    @Run.performed += instance.OnRun;
+                    @Run.canceled += instance.OnRun;
                 }
             }
         }
@@ -314,6 +343,7 @@ namespace InputActions
             void OnMove(InputAction.CallbackContext context);
             void OnRoll(InputAction.CallbackContext context);
             void OnMouse(InputAction.CallbackContext context);
+            void OnRun(InputAction.CallbackContext context);
         }
     }
 }

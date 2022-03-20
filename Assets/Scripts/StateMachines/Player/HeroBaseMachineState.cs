@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace StateMachines.Player
 {
-  public abstract class PlayerBaseMachineState : BaseStateMachineState, IPlayerMachineState
+  public abstract class HeroBaseMachineState : BaseStateMachineState, IPlayerMachineState
   {
     private const float CoeffToFrameSkipp = 3f;
     private event Func<float, float, bool> smoothChangeCheck;
@@ -19,7 +19,9 @@ namespace StateMachines.Player
     protected readonly HeroStateData stateData;
     protected readonly BattleAnimator animator;
 
-    protected PlayerBaseMachineState(StateMachine stateMachine, string triggerName, BattleAnimator animator, HeroStateMachine hero, HeroStateData stateData)
+    public override int Weight => stateData.Weight;
+
+    protected HeroBaseMachineState(StateMachine stateMachine, string triggerName, BattleAnimator animator, HeroStateMachine hero, HeroStateData stateData)
     {
       _stateMachine = stateMachine;
       _triggerName = Animator.StringToHash(triggerName);
@@ -33,6 +35,13 @@ namespace StateMachines.Player
       base.Enter();
       animator.SetBool(_triggerName,true);
     }
+    
+    public override bool IsCanBeInterrupted(int weight)
+    {
+      if (stateData.IsInteraptedBySameWeight)
+        return weight >= Weight;
+      return weight > Weight;
+    }
 
     public override void Exit()
     {
@@ -40,10 +49,10 @@ namespace StateMachines.Player
       animator.SetBool(_triggerName, false);
     }
 
-    protected void ChangeState(PlayerBaseMachineState state) => 
+    protected void ChangeState(HeroBaseMachineState state) => 
       _stateMachine.ChangeState(state);
 
-    protected void InterruptState(PlayerBaseMachineState state) => 
+    protected void InterruptState(HeroBaseMachineState state) => 
       _stateMachine.InterruptState(state);
 
     protected void SetFloat(int hash, float value) => 

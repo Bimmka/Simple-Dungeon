@@ -7,6 +7,7 @@ namespace StaticData.Hero.Components
   {
     public float AttackCost;
     public float RollCost;
+    public float RunCostPerSecond = 1f;
     public float RecoveryRate;
     public float RecoveryCount;
   }

@@ -26,11 +26,13 @@ namespace Hero
         private HeroMoveStaticData _moveData;
 
         public bool IsBlockingPressed { get; private set; }
-        public bool IsBlockingUp => stateMachine.State == State<PlayerIdleShieldState>();
-        public bool IsRolling => stateMachine.State == State<PlayerRollState>();
+        public bool IsRunningPressed { get; private set; }
+        public bool IsBlockingUp => stateMachine.State == State<HeroIdleShieldState>();
+        public bool IsRolling => stateMachine.State == State<HeroRollState>();
 
         public Vector2 MoveAxis { get; private set; }
         public float RotateAngle { get; private set; }
+
 
         public void Construct(HeroAttackStaticData attackData, HeroImpactsStaticData impactData, PlayerCharacteristics characteristics, HeroMoveStaticData moveData)
         {
@@ -69,13 +71,13 @@ namespace Hero
         }
 
         protected override void SetDefaultState() => 
-            stateMachine.Initialize(State<PlayerIdleState>());
+            stateMachine.Initialize(State<HeroIdleState>());
 
 
         public void SetAttackState()
         {
-            if (stateMachine.State.IsCanBeInterrupted(State<PlayerAttackState>().Weight) && State<PlayerAttackState>().IsCanAttack())
-                stateMachine.ChangeState(State<PlayerAttackState>());
+            if (stateMachine.State.IsCanBeInterrupted(State<HeroAttackState>().Weight) && State<HeroAttackState>().IsCanAttack())
+                stateMachine.InterruptState(State<HeroAttackState>());
         }
 
         public void SetMoveAxis(Vector2 moveDirection) => 
@@ -86,26 +88,29 @@ namespace Hero
 
         public void SetRollState()
         {
-            if (stateMachine.State.IsCanBeInterrupted(State<PlayerRollState>().Weight) && State<PlayerRollState>().IsCanRoll())
-                stateMachine.ChangeState(State<PlayerRollState>());
+            if (stateMachine.State.IsCanBeInterrupted(State<HeroRollState>().Weight) && State<HeroRollState>().IsCanRoll())
+                stateMachine.InterruptState(State<HeroRollState>());
         }
 
+        public void SetIsRunning(bool isRunning) => 
+            IsRunningPressed = isRunning;
+
         public void ImpactInShield() => 
-            stateMachine.ChangeState(State<PlayerShieldImpactState>());
+            stateMachine.ChangeState(State<HeroShieldImpactState>());
 
         public void Impact()
         {
-            if (State<PlayerBaseImpactState>().IsKnockbackCooldown() && stateMachine.State.IsCanBeInterrupted(State<PlayerBaseImpactState>().Weight))
-                stateMachine.ChangeState(State<PlayerBaseImpactState>());
+            if (State<HeroBaseImpactState>().IsKnockbackCooldown() && stateMachine.State.IsCanBeInterrupted(State<HeroBaseImpactState>().Weight))
+                stateMachine.InterruptState(State<HeroBaseImpactState>());
         }
 
         public void Dead() => 
-            stateMachine.ChangeState(State<PlayerDeathState>());
+            stateMachine.ChangeState(State<HeroDeathState>());
 
         public float ClipLength(PlayerActionsType actionsType) => 
             _clipsContainer.ClipLength(actionsType);
 
-        public TState State<TState>() where TState : PlayerBaseMachineState => 
+        public TState State<TState>() where TState : HeroBaseMachineState => 
             _statesContainer.GetState<TState>();
     }
 }

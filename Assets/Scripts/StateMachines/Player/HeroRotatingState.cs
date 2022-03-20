@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace StateMachines.Player
 {
-  public class PlayerRotatingState : PlayerBaseMachineState
+  public class HeroRotatingState : HeroBaseMachineState
   {
     private readonly HeroRotate _rotate;
     private readonly int _moveXHash;
@@ -15,18 +15,13 @@ namespace StateMachines.Player
     private Coroutine _turnCoroutine;
     private Coroutine _turnAroundCoroutine;
 
-    public override int Weight { get; }
-
-    public PlayerRotatingState(StateMachine stateMachine, string triggerName, BattleAnimator animator,
+    public HeroRotatingState(StateMachine stateMachine, string triggerName, BattleAnimator animator,
       HeroStateMachine hero, string moveXName, string moveYName, HeroRotate rotate, HeroStateData stateData) : base(stateMachine, triggerName, animator, hero, stateData)
     {
       _rotate = rotate;
       _moveXHash = Animator.StringToHash(moveXName);
       _moveYHash = Animator.StringToHash(moveYName);
     }
-
-    public override bool IsCanBeInterrupted(int weight) => 
-      true;
 
     public override void Enter()
     {
@@ -81,9 +76,9 @@ namespace StateMachines.Player
     private void OnTurnEnd()
     {
       if (IsNotMove())
-        ChangeState(hero.State<PlayerIdleState>());
+        ChangeState(hero.State<HeroIdleState>());
       else
-        ChangeState(hero.State<PlayerWalkState>());
+        ChangeState(hero.State<HeroWalkState>());
     }
   }
 }

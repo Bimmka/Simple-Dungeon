@@ -4,11 +4,9 @@ using StaticData.Hero.States;
 
 namespace StateMachines.Player
 {
-  public class PlayerIdleShieldState : PlayerBaseMachineState
+  public class HeroIdleShieldState : HeroBaseMachineState
   {
-    public override int Weight { get; }
-
-    public PlayerIdleShieldState(StateMachine stateMachine, string triggerName,
+    public HeroIdleShieldState(StateMachine stateMachine, string triggerName,
       BattleAnimator animator, HeroStateMachine hero, HeroStateData stateData) : base(stateMachine, triggerName, animator, hero, stateData)
     {
     }
@@ -19,18 +17,15 @@ namespace StateMachines.Player
       if (hero.IsBlockingPressed)
       {
         if (IsStayHorizontal() == false)
-          ChangeState(hero.State<PlayerShieldMoveState>());
+          ChangeState(hero.State<HeroShieldMoveState>());
       }
       else
       {
         if (IsStayVertical())
-          ChangeState(hero.State<PlayerIdleState>());
+          ChangeState(hero.State<HeroIdleState>());
         else
-          ChangeState(hero.State<PlayerWalkState>());
+          ChangeState(hero.State<HeroWalkState>());
       }
     }
-
-    public override bool IsCanBeInterrupted(int weight) =>
-      true;
   }
 }

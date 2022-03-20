@@ -31,6 +31,8 @@ namespace Hero
 
      /* if (inputService.IsRollButtonDown())
         stateMachine.SetRollState();*/
+     
+       stateMachine.SetIsRunning(inputService.IsRunButtonPressed());
       
      /* stateMachine.SetIsBlocking(inputService.IsBlockButtonPressed());*/
       stateMachine.SetMoveAxis(inputService.Axis);
