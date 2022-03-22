@@ -62,7 +62,7 @@ namespace Hero
       switch (state)
       {
         case HeroUpState.Move:
-          return new HeroMoveUpMachineState(_stateMachine, _hero, _coroutineRunner, _animator);
+          return new HeroMoveUpMachineState(_stateMachine, _hero, _coroutineRunner, _animator, "MoveX");
         case HeroUpState.Rotate:
           return new HeroRotatingUpMachineState(_stateMachine, _hero, _coroutineRunner);
         default:
@@ -70,19 +70,19 @@ namespace Hero
       }
     }
 
-    private List<IHeroBaseSubStateMachineState> CreateSubStates(IHeroBaseUpMachineState upState, HeroStateData[] substatesData, ref Dictionary<Type,IHeroBaseSubStateMachineState> substates)
+    private List<IHeroBaseSubStateMachineState> CreateSubStates(IHeroBaseUpMachineState upState, HeroStateData[] substatesData, ref Dictionary<Type,IHeroBaseSubStateMachineState> subStates)
     {
-      List<IHeroBaseSubStateMachineState> subStates = new List<IHeroBaseSubStateMachineState>(10);
+      List<IHeroBaseSubStateMachineState> createdSubStates = new List<IHeroBaseSubStateMachineState>(10);
       (Type, IHeroBaseSubStateMachineState) createdState;
       for (int i = 0; i < substatesData.Length; i++)
       {
         createdState = CreateSubState(upState, substatesData[i]);
         upState.AddSubstate(createdState.Item2);
-        subStates.Add(createdState.Item2);
-        substates.Add(createdState.Item1, createdState.Item2);
+        createdSubStates.Add(createdState.Item2);
+        subStates.Add(createdState.Item1, createdState.Item2);
       }
 
-      return subStates;
+      return createdSubStates;
     }
 
     private (Type, IHeroBaseSubStateMachineState) CreateSubState(IHeroBaseUpMachineState upState, HeroStateData data)
@@ -92,9 +92,9 @@ namespace Hero
         case HeroState.Idle:
           return (typeof(HeroIdleState), new HeroIdleState((HeroMoveUpMachineState) upState, _hero,  _animator, "IsIdle", data));
         case HeroState.Walk:
-          return (typeof(HeroWalkState), new HeroWalkState((HeroMoveUpMachineState) upState, _hero, _animator, "IsIdle", data, "MoveX", _move, _rotate, _moveStaticData));
+          return (typeof(HeroWalkState), new HeroWalkState((HeroMoveUpMachineState) upState, _hero, _animator, "IsIdle", data, _move, _rotate, _moveStaticData));
         case HeroState.Run:
-          return (typeof(HeroRunState), new HeroRunState( (HeroMoveUpMachineState) upState, _hero, _animator, "IsIdle", data, "MoveX", _stamina, _rotate, _move, _moveStaticData));
+          return (typeof(HeroRunState), new HeroRunState( (HeroMoveUpMachineState) upState, _hero, _animator, "IsIdle", data, _stamina, _rotate, _move, _moveStaticData));
         case HeroState.Roll:
           return (typeof(HeroRollState), new HeroRollState( (HeroRollUpMachineState) upState, _hero, _animator, "IsRoll", data, _move, _stamina));
         case HeroState.Rotating:

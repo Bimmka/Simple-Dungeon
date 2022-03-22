@@ -12,8 +12,8 @@ namespace StateMachines.Player
     
     protected readonly HeroStateMachine hero;
     protected readonly ICoroutineRunner _coroutineRunner;
-    
-    private TSubState currentState;
+
+    protected TSubState currentState;
     
     private readonly StateMachineWithSubstates _stateMachine;
     private readonly Dictionary<Type, TSubState> _subStates = new Dictionary<Type, TSubState>(10);
@@ -69,7 +69,18 @@ namespace StateMachines.Player
       currentState.Interrupt();
 
     public bool IsSameState(IHeroBaseSubStateMachineState state) => 
-      false;
+      currentState as IHeroBaseSubStateMachineState == state;
+
+    protected virtual void SetNewSubstate(IHeroBaseSubStateMachineState to)
+    {
+      currentState = (TSubState) to;
+      currentState.Enter();
+    }
+
+    protected TSubState SubState<TState>()
+    {
+      return _subStates[typeof(TState)];
+    }
 
     private void UpdateState(IHeroBaseSubStateMachineState to)
     {
@@ -77,12 +88,6 @@ namespace StateMachines.Player
         SetNewSubstate(to);
       else
         _stateMachine.ChangeState(hero.GetUpStateForSubstate(to), to);
-    }
-
-    private void SetNewSubstate(IHeroBaseSubStateMachineState to)
-    {
-      currentState = (TSubState) to;
-      currentState.Enter();
     }
   }
 }

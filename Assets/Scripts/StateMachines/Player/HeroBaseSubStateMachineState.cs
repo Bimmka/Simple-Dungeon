@@ -9,9 +9,9 @@ namespace StateMachines.Player
   {
     protected readonly HeroStateMachine hero;
     protected readonly HeroStateData stateData;
+    protected readonly TUpState upState;
 
-    private TUpState _upState;
-    
+
     private readonly BattleAnimator _animator;
     private readonly int _animationNameHash;
     
@@ -21,7 +21,7 @@ namespace StateMachines.Player
     {
       this.hero = hero;
       this.stateData = stateData;
-      _upState = upState;
+      this.upState = upState;
       _animator = animator;
       _animationNameHash = Animator.StringToHash(animationName);
     }
@@ -49,16 +49,16 @@ namespace StateMachines.Player
     
     public virtual void AnimationTriggered() {}
 
-    protected void ChangeState(IHeroBaseSubStateMachineState to) => 
-      _upState.ChangeState(to);
+    protected virtual void ChangeState(IHeroBaseSubStateMachineState to) => 
+      upState.ChangeState(to);
 
-    protected void InterruptState(IHeroBaseSubStateMachineState to)=>  
-      _upState.InterruptState(to);
+    protected virtual void InterruptState(IHeroBaseSubStateMachineState to)=>  
+      upState.InterruptState(to);
 
     protected void SetFloat(int hash, float value) => 
       _animator.SetFloat(hash, value);
 
     protected float ClipLength(PlayerActionsType actionsType) => 
-      _upState.ClipLength(actionsType);
+      upState.ClipLength(actionsType);
   }
 }

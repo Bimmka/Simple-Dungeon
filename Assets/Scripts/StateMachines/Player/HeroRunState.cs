@@ -1,6 +1,5 @@
 ﻿using Animations;
 using Hero;
-using Services;
 using StaticData.Hero.Components;
 using StaticData.Hero.States;
 using UnityEngine;
@@ -9,7 +8,6 @@ namespace StateMachines.Player
 {
   public class HeroRunState : HeroMoveSubState
   {
-    private readonly int _floatValueHash;
     private readonly HeroStamina _heroStamina;
     private readonly HeroRotate _heroRotate;
     private readonly HeroMove _heroMove;
@@ -21,10 +19,9 @@ namespace StateMachines.Player
     private float time = 1f;
 
     public HeroRunState(HeroMoveUpMachineState upState, HeroStateMachine hero, BattleAnimator animator, string triggerName,
-      HeroStateData stateData, string floatValue, HeroStamina heroStamina,
+      HeroStateData stateData, HeroStamina heroStamina,
       HeroRotate heroRotate, HeroMove heroMove, HeroMoveStaticData heroMoveStaticData) : base(upState, hero, animator, triggerName, stateData)
     {
-      _floatValueHash = Animator.StringToHash(floatValue);
       _heroStamina = heroStamina;
       _heroRotate = heroRotate;
       _heroMove = heroMove;
@@ -34,7 +31,7 @@ namespace StateMachines.Player
      public override void Enter()
     {
       base.Enter();
-      if (_heroRotate.IsTurning == false && IsLowAngle(hero.MoveAxis) == false)
+      if (_heroRotate.IsTurning == false && IsLowAngle(hero.MoveAxis, _moveStaticData.BigAngleValue) == false)
         ChangeState(hero.State<HeroRotatingState>());
     }
 
@@ -57,7 +54,7 @@ namespace StateMachines.Player
 
     private void Run()
     {
-      if (IsLowAngle(hero.MoveAxis) && _heroRotate.IsTurning == false)
+      if (IsLowAngle(hero.MoveAxis, _moveStaticData.BigAngleValue) && _heroRotate.IsTurning == false)
       {
         _heroRotate.RotateTo(hero.MoveAxis);
         _heroMove.Run(MoveAxis());
@@ -108,12 +105,7 @@ namespace StateMachines.Player
 
     private bool IsNeedWasteStamina() => 
       time <= 0;
-
-
-    private Vector3 MoveAxis() => 
-      new Vector3(hero.MoveAxis.x, 0 , hero.MoveAxis.y);
-
-    private bool IsLowAngle(Vector2 moveAxis) => 
-      Vector3.Angle(hero.transform.forward, new Vector3(moveAxis.x, 0, moveAxis.y)) < _moveStaticData.BigAngleValue;
+    
+    
   }
 }
