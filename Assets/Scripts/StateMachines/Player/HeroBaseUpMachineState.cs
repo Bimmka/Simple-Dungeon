@@ -1,120 +1,88 @@
 ﻿using System;
-using System.Collections;
-using Animations;
+using System.Collections.Generic;
 using Hero;
 using Services;
-using StaticData.Hero.States;
 using UnityEngine;
 
 namespace StateMachines.Player
 {
-  public class HeroBaseUpMachineState : BaseStateMachineState
+  public abstract class HeroBaseUpMachineState<TSubState> : IHeroBaseUpMachineState where TSubState : IHeroBaseSubStateMachineState
   {
-    private const float CoeffToFrameSkipp = 3f;
-    private event Func<float, float, bool> smoothChangeCheck;
-    
-    private readonly StateMachine _stateMachine;
+    protected Coroutine _changeCoroutine;
     
     protected readonly HeroStateMachine hero;
-    protected readonly HeroStateData stateData;
-    protected readonly BattleAnimator animator;
+    protected readonly ICoroutineRunner _coroutineRunner;
+    
+    private TSubState currentState;
+    
+    private readonly StateMachineWithSubstates _stateMachine;
+    private readonly Dictionary<Type, TSubState> _subStates = new Dictionary<Type, TSubState>(10);
 
-    public override int Weight => stateData.Weight;
-
-    protected HeroBaseUpMachineState(StateMachine stateMachine, string triggerName, BattleAnimator animator, HeroStateMachine hero, HeroStateData stateData)
+    protected HeroBaseUpMachineState(StateMachineWithSubstates stateMachine,HeroStateMachine hero, ICoroutineRunner coroutineRunner)
     {
       _stateMachine = stateMachine;
-      _triggerName = Animator.StringToHash(triggerName);
-      this.animator = animator;
+      _coroutineRunner = coroutineRunner;
       this.hero = hero;
-      this.stateData = stateData;
     }
 
-    public override void Enter()
+    public void AddSubstate(IHeroBaseSubStateMachineState state)
     {
-      base.Enter();
-      animator.SetBool(_triggerName,true);
+      if (_subStates.ContainsKey(state.GetType()))
+        return;
+      
+      _subStates.Add(state.GetType(), (TSubState) state);
     }
-    
-    public override bool IsCanBeInterrupted(int weight)
+
+    public virtual void Exit() { }
+
+    public void Initialize(IHeroBaseSubStateMachineState state) => 
+      SetNewSubstate(state);
+
+    public virtual void LogicUpdate() => 
+      currentState.LogicUpdate();
+
+    public virtual void AnimationTriggered() => 
+      currentState.AnimationTriggered();
+
+    public bool IsCanBeInterrupted(int weight) => 
+      currentState.IsCanBeInterrupted(weight);
+
+
+    public void ChangeState(IHeroBaseSubStateMachineState to)
     {
-      if (stateData.IsInteraptedBySameWeight)
-        return weight >= Weight;
-      return weight > Weight;
+      currentState.Exit();
+
+      UpdateState(to);
     }
 
-    public override void Exit()
+    public void InterruptState(IHeroBaseSubStateMachineState to)
     {
-      base.Exit();
-      animator.SetBool(_triggerName, false);
+      InterruptState();
+      
+      UpdateState(to);
     }
 
-    protected void ChangeState(HeroBaseMachineState state) => 
-      _stateMachine.ChangeState(state);
-
-    protected void InterruptState(HeroBaseMachineState state) => 
-      _stateMachine.InterruptState(state);
-
-    protected void SetFloat(int hash, float value) => 
-      animator.SetFloat(hash, value);
-
-    protected float ClipLength(PlayerActionsType actionsType) => 
+    public float ClipLength(PlayerActionsType actionsType) => 
       hero.ClipLength(actionsType);
 
-    protected void SmoothChange(ref Coroutine changeCoroutine, ICoroutineRunner coroutineRunner, int valueHash, AnimationCurve curve, int direction = 1, Action callback = null)
+    public void InterruptState() => 
+      currentState.Interrupt();
+
+    public bool IsSameState(IHeroBaseSubStateMachineState state) => 
+      false;
+
+    private void UpdateState(IHeroBaseSubStateMachineState to)
     {
-      if (changeCoroutine != null)
-        coroutineRunner.StopCoroutine(changeCoroutine);
-
-      changeCoroutine = coroutineRunner.StartCoroutine(Change(changeCoroutine, valueHash, curve, direction, callback));
-    }
-    protected bool IsStayHorizontal() => 
-      Mathf.Approximately(hero.MoveAxis.x, 0);
-
-    protected bool IsStayVertical() => 
-      Mathf.Approximately(hero.MoveAxis.y, 0);
-
-    protected bool IsNotMove() => 
-      hero.MoveAxis == Vector2.zero;
-
-    private IEnumerator Change(Coroutine changeCoroutine, int valueHash, AnimationCurve curve, int direction, Action callback)
-    {
-      float curveValue;
-      float currentValue = animator.GetFloat(valueHash);
-      float maxCurveValue = curve[curve.length-1].value;
-      float maxTime = curve[curve.length-1].time;
-      float currentTime = 0f;
-
-      if (currentValue > direction * maxCurveValue)
-        smoothChangeCheck = IsBigger;
+      if (_subStates.ContainsKey(to.GetType()))
+        SetNewSubstate(to);
       else
-        smoothChangeCheck = IsSmaller;
-      
-      while (currentTime < maxTime && Mathf.Approximately(currentValue, maxCurveValue) == false)
-      {
-        curveValue = curve.Evaluate(currentTime);
-        if (smoothChangeCheck.Invoke(currentValue, curveValue))
-        {
-          currentValue = direction * curveValue;
-          currentTime += Time.deltaTime;
-        }
-        else
-          currentTime += CoeffToFrameSkipp * Time.deltaTime;
-        
-        yield return null;
-        SetFloat(valueHash, currentValue);
-      }
-      
-      SetFloat(valueHash, direction * maxCurveValue);
-      changeCoroutine = null;
-      
-      callback?.Invoke();
+        _stateMachine.ChangeState(hero.GetUpStateForSubstate(to), to);
     }
 
-    private bool IsSmaller(float currentValue, float endValue) => 
-      currentValue < endValue;
-
-    private bool IsBigger(float currentValue, float endValue) => 
-      currentValue > endValue;
+    private void SetNewSubstate(IHeroBaseSubStateMachineState to)
+    {
+      currentState = (TSubState) to;
+      currentState.Enter();
+    }
   }
 }

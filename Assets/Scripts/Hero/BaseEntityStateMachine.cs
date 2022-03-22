@@ -1,14 +1,11 @@
-﻿using Animations;
-using StateMachines;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Hero
 {
   
   public abstract class BaseEntityStateMachine : MonoBehaviour
   {
-    protected StateMachine stateMachine;
-        
+
     protected virtual void Initialize()
     {
       CreateStateMachine();
@@ -21,21 +18,18 @@ namespace Hero
     private void OnDestroy() => 
       Cleanup();
 
-    private void Update() => 
-      stateMachine.State.LogicUpdate();
 
     protected virtual void Subscribe() {}
 
     protected virtual void Cleanup() {}
+    protected abstract void Update();
 
     protected abstract void CreateStates();
 
     protected abstract void SetDefaultState();
 
-    private void CreateStateMachine() => 
-      stateMachine = new StateMachine();
+    protected abstract void CreateStateMachine();
 
-    protected void AnimationTriggered() => 
-      stateMachine.State.TriggerAnimation();
+    protected abstract void AnimationTriggered();
   }
 }

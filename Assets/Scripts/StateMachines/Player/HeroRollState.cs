@@ -5,15 +5,12 @@ using UnityEngine;
 
 namespace StateMachines.Player
 {
-  public class HeroRollState : HeroBaseMachineState
+  public class HeroRollState : HeroBaseSubStateMachineState<HeroRollUpMachineState, HeroRollState>
   {
     private readonly HeroMove heroMove;
     private readonly HeroStamina heroStamina;
-
-    public override int Weight { get; }
-
-    public HeroRollState(StateMachine stateMachine, string triggerName, BattleAnimator animator,
-      HeroStateMachine hero, HeroMove heroMove, HeroStamina heroStamina, HeroStateData stateData) : base(stateMachine, triggerName, animator, hero, stateData)
+    public HeroRollState(HeroRollUpMachineState upState, HeroStateMachine hero, BattleAnimator animator,
+      string triggerName, HeroStateData stateData, HeroMove heroMove, HeroStamina heroStamina) : base(upState, hero, animator, triggerName, stateData)
     {
       this.heroMove = heroMove;
       this.heroStamina = heroStamina;
@@ -31,22 +28,19 @@ namespace StateMachines.Player
       heroMove.Roll();
     }
 
-    public override bool IsCanBeInterrupted(int weight) =>
-      false;
-
-    public override void TriggerAnimation()
+    public override void AnimationTriggered()
     {
-      base.TriggerAnimation();
+      base.AnimationTriggered();
       if (hero.IsBlockingPressed)
       {
-        if (IsStayHorizontal() == false)
+       /* if (hero.IsStayHorizontal() == false)
           ChangeState(hero.State<HeroShieldMoveState>());
         else
-          ChangeState(hero.State<HeroIdleShieldState>());
+          ChangeState(hero.State<HeroIdleShieldState>());*/
       }
       else
       {
-        if (IsStayVertical())
+        if (hero.IsNotMove())
           ChangeState(hero.State<HeroIdleState>());
         else
           ChangeState(hero.State<HeroWalkState>());

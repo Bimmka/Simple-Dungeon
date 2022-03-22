@@ -12,7 +12,7 @@ namespace Hero
 {
   public class HeroMachineStatesFactory
   {
-    private readonly StateMachine _stateMachine;
+    private readonly StateMachineWithSubstates _stateMachine;
     private readonly HeroStateMachine _hero;
     private readonly BattleAnimator _animator;
     private readonly HeroMove _move;
@@ -23,10 +23,10 @@ namespace Hero
     private readonly HeroImpactsStaticData _impactData;
     private readonly ICoroutineRunner _coroutineRunner;
     private readonly HeroMoveStaticData _moveStaticData;
-    private readonly Dictionary<HeroState, HeroStateData> _statesData;
+    private readonly HeroStatesStaticData _statesData;
 
 
-    public HeroMachineStatesFactory(StateMachine stateMachine, HeroStateMachine hero, BattleAnimator animator,
+    public HeroMachineStatesFactory(StateMachineWithSubstates stateMachine, HeroStateMachine hero, BattleAnimator animator,
       HeroMove move,
       HeroAttack attack, HeroRotate rotate, HeroAttackStaticData attackData, HeroStamina stamina,
       HeroImpactsStaticData impactData, ICoroutineRunner coroutineRunner, HeroMoveStaticData moveStaticData, HeroStatesStaticData statesData)
@@ -42,56 +42,66 @@ namespace Hero
       _impactData = impactData;
       _coroutineRunner = coroutineRunner;
       _moveStaticData = moveStaticData;
-      _statesData = statesData.StateDatas.ToDictionary(x => x.State, x=>x);
+      _statesData = statesData;
     }
 
-    public void CreateStates(ref Dictionary<Type, HeroBaseMachineState> states)
+    public void CreateStates(ref Dictionary<IHeroBaseUpMachineState, List<IHeroBaseSubStateMachineState>> states, ref Dictionary<Type,IHeroBaseSubStateMachineState> substates)
     {
-      Array heroStates = Enum.GetValues(typeof(HeroState));
-      (Type, HeroBaseMachineState) state;
-      for (int i = 0; i < heroStates.Length; i++)
+      List<IHeroBaseSubStateMachineState> subStates = new List<IHeroBaseSubStateMachineState>(10);
+      IHeroBaseUpMachineState upState;
+      for (int i = 0; i < _statesData.StateDatas.Count; i++)
       {
-        state = CreateState((HeroState) i);
-        states.Add(state.Item1, state.Item2);
+        upState = CreateUpState(_statesData.StateDatas[i].UpState);
+        subStates = CreateSubStates(upState, _statesData.StateDatas[i].SubstatesData, ref substates);
+        states.Add(upState, subStates);
       }
     }
 
-    private (Type, HeroBaseMachineState) CreateState(HeroState state)
+    private IHeroBaseUpMachineState CreateUpState(HeroUpState state)
     {
       switch (state)
       {
-        case HeroState.Idle:
-          return (typeof(HeroIdleState), new HeroIdleState(_stateMachine, "IsIdle", _animator, _hero, GetStateData(state)));
-        case HeroState.Walk:
-          return (typeof(HeroWalkState), new HeroWalkState(_stateMachine, "IsIdle", "MoveX", _animator, _hero, _move, _rotate, _coroutineRunner, _moveStaticData, GetStateData(state)));
-        case HeroState.Run:
-          return (typeof(HeroRunState), new HeroRunState(_stateMachine, "IsIdle", "MoveX", _animator, _hero, GetStateData(state), _stamina, _coroutineRunner, _rotate, _move, _moveStaticData));
-        case HeroState.Roll:
-          return (typeof(HeroRollState), new HeroRollState(_stateMachine, "IsRoll", _animator, _hero, _move, _stamina, GetStateData(state)));
-        case HeroState.Rotating:
-          return (typeof(HeroRotatingState), new HeroRotatingState(_stateMachine, "IsRotating", _animator, _hero, "RotateX", "RotateY", _rotate,GetStateData(state)));
+        case HeroUpState.Move:
+          return new HeroMoveUpMachineState(_stateMachine, _hero, _coroutineRunner, _animator);
+        case HeroUpState.Rotate:
+          return new HeroRotatingUpMachineState(_stateMachine, _hero, _coroutineRunner);
         default:
           throw new ArgumentOutOfRangeException(nameof(state), state, null);
       }
-      
-      /*
-        states.Add(typeof(PlayerHurtState),new PlayerHurtState(_stateMachine, "IsImpact", _animator, _hero, _impactData.ImpactCooldown));
-      states.Add(typeof(PlayerIdleShieldState),new PlayerIdleShieldState(_stateMachine, "IsBlocking", _animator, _hero));
-     
-      states.Add(typeof(PlayerRollState), new PlayerRollState(_stateMachine, "IsRoll", _animator, _hero, _move, _stamina));
-      states.Add(typeof(PlayerShieldImpactState), new PlayerShieldImpactState(_stateMachine, "IsShieldImpact", _animator, _hero, _impactData.ShieldImpactCooldown));
-      states.Add(typeof(PlayerShieldMoveState), new PlayerShieldMoveState(_stateMachine, "IsBlocking", "MoveY", _animator, _hero, _move, _rotate));
-      states.Add(typeof(PlayerDeathState), new PlayerDeathState(_stateMachine, "IsDead", _animator, _hero));
-       return ((typeof(PlayerAttackState),new PlayerAttackState(_stateMachine, "IsSimpleAttack", _animator, _hero, _attack, _attackData,
-        _stamina));
-        */
     }
 
-    private HeroStateData GetStateData(HeroState state)
+    private List<IHeroBaseSubStateMachineState> CreateSubStates(IHeroBaseUpMachineState upState, HeroStateData[] substatesData, ref Dictionary<Type,IHeroBaseSubStateMachineState> substates)
     {
-      if (_statesData.ContainsKey(state))
-        return _statesData[state];
-      return new HeroStateData();
+      List<IHeroBaseSubStateMachineState> subStates = new List<IHeroBaseSubStateMachineState>(10);
+      (Type, IHeroBaseSubStateMachineState) createdState;
+      for (int i = 0; i < substatesData.Length; i++)
+      {
+        createdState = CreateSubState(upState, substatesData[i]);
+        upState.AddSubstate(createdState.Item2);
+        subStates.Add(createdState.Item2);
+        substates.Add(createdState.Item1, createdState.Item2);
+      }
+
+      return subStates;
+    }
+
+    private (Type, IHeroBaseSubStateMachineState) CreateSubState(IHeroBaseUpMachineState upState, HeroStateData data)
+    {
+      switch (data.State)
+      {
+        case HeroState.Idle:
+          return (typeof(HeroIdleState), new HeroIdleState((HeroMoveUpMachineState) upState, _hero,  _animator, "IsIdle", data));
+        case HeroState.Walk:
+          return (typeof(HeroWalkState), new HeroWalkState((HeroMoveUpMachineState) upState, _hero, _animator, "IsIdle", data, "MoveX", _move, _rotate, _moveStaticData));
+        case HeroState.Run:
+          return (typeof(HeroRunState), new HeroRunState( (HeroMoveUpMachineState) upState, _hero, _animator, "IsIdle", data, "MoveX", _stamina, _rotate, _move, _moveStaticData));
+        case HeroState.Roll:
+          return (typeof(HeroRollState), new HeroRollState( (HeroRollUpMachineState) upState, _hero, _animator, "IsRoll", data, _move, _stamina));
+        case HeroState.Rotating:
+          return (typeof(HeroRotatingState), new HeroRotatingState((HeroRotatingUpMachineState) upState, _hero, _animator, "IsRotating", data, "RotateX", "RotateY", _rotate));
+        default:
+          throw new ArgumentOutOfRangeException(nameof(data.State), data.State, null);
+      }
     }
   }
 }

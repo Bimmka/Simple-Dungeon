@@ -1,30 +1,43 @@
 ﻿using System;
 using System.Collections.Generic;
 using StateMachines.Player;
-using UnityEngine.UIElements;
 
 namespace Hero
 {
   public class HeroStatesContainer
   {
     private readonly HeroMachineStatesFactory _factory;
-    private Dictionary<Type, HeroBaseMachineState> _states; 
+    private Dictionary<IHeroBaseUpMachineState, List<IHeroBaseSubStateMachineState>> _states;
+    private Dictionary<Type, IHeroBaseSubStateMachineState> _subStates;
 
     public HeroStatesContainer(HeroMachineStatesFactory factory)
     {
-
-      _states = new Dictionary<Type, HeroBaseMachineState>(10);
+      _states = new Dictionary<IHeroBaseUpMachineState, List<IHeroBaseSubStateMachineState>>(10);
+      _subStates = new Dictionary<Type, IHeroBaseSubStateMachineState>(10);
       _factory = factory;
     }
 
     public void CreateState()
     {
-      _factory.CreateStates(ref _states);
+      _factory.CreateStates(ref _states, ref _subStates);
     }
 
-    public TState GetState<TState>() where TState : HeroBaseMachineState
+    public IHeroBaseSubStateMachineState GetState<TState>() where TState : IHeroBaseSubStateMachineState
     {
-      return _states[typeof(TState)] as TState;
+      if (_subStates.ContainsKey(typeof(TState)))
+        return _subStates[typeof(TState)];
+      return null;
+    }
+
+    public IHeroBaseUpMachineState GetUpStateForSubstate(IHeroBaseSubStateMachineState substate) 
+    {
+      foreach (KeyValuePair<IHeroBaseUpMachineState,List<IHeroBaseSubStateMachineState>> valuePair in _states)
+      {
+        if (valuePair.Value.Contains(substate))
+          return valuePair.Key;
+      }
+
+      return null;
     }
   }
 }
