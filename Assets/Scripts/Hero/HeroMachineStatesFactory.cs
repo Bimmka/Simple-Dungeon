@@ -64,7 +64,7 @@ namespace Hero
         case HeroUpState.Move:
           return new HeroMoveUpMachineState(_stateMachine, _hero, _coroutineRunner, _animator, "MoveX");
         case HeroUpState.Rotate:
-          return new HeroRotatingUpMachineState(_stateMachine, _hero, _coroutineRunner);
+          return new HeroRotatingUpMachineState(_stateMachine, _hero, _coroutineRunner, _animator, "RotateX", "RotateY");
         default:
           throw new ArgumentOutOfRangeException(nameof(state), state, null);
       }
@@ -98,7 +98,7 @@ namespace Hero
         case HeroState.Roll:
           return (typeof(HeroRollState), new HeroRollState( (HeroRollUpMachineState) upState, _hero, _animator, "IsRoll", data, _move, _stamina));
         case HeroState.Rotating:
-          return (typeof(HeroRotatingState), new HeroRotatingState((HeroRotatingUpMachineState) upState, _hero, _animator, "IsRotating", data, "RotateX", "RotateY", _rotate));
+          return (typeof(HeroRotatingState), new HeroRotatingState((HeroRotatingUpMachineState) upState, _hero, _animator, "IsRotating", data, _rotate));
         default:
           throw new ArgumentOutOfRangeException(nameof(data.State), data.State, null);
       }

@@ -9,18 +9,12 @@ namespace StateMachines.Player
   public class HeroRotatingState : HeroRotatingSubState
   {
     private readonly HeroRotate _rotate;
-    private readonly int _moveXHash;
-    private readonly int _moveYHash;
-
-    private Coroutine _turnCoroutine;
-    private Coroutine _turnAroundCoroutine;
+ 
 
     public HeroRotatingState(HeroRotatingUpMachineState upState, HeroStateMachine hero, BattleAnimator animator,
-      string triggerName, HeroStateData stateData, string moveXName, string moveYName, HeroRotate rotate) : base(upState, hero, animator, triggerName, stateData)
+      string triggerName, HeroStateData stateData, HeroRotate rotate) : base(upState, hero, animator, triggerName, stateData)
     {
       _rotate = rotate;
-      _moveXHash = Animator.StringToHash(moveXName);
-      _moveYHash = Animator.StringToHash(moveYName);
     }
 
     public override void Enter()
@@ -38,8 +32,6 @@ namespace StateMachines.Player
       base.Exit();
       if (_rotate.IsTurning)
         _rotate.StopRotate();
-     // SmoothChange(ref _turnCoroutine, hero, _moveXHash,  stateData.ExitCurve);
-      //SmoothChange(ref _turnAroundCoroutine, hero, _moveYHash,  stateData.ExitCurve);
     }
 
     private void SetTurn()
@@ -53,7 +45,7 @@ namespace StateMachines.Player
 
     private void SetTurnAround()
     {
-      //SmoothChange(ref _turnAroundCoroutine, hero, _moveYHash, stateData.EnterCurve);
+      upState.TurnAround();
       _rotate.TurnAround
       (
         new Vector3(hero.MoveAxis.x, 0, hero.MoveAxis.y), 
@@ -64,7 +56,7 @@ namespace StateMachines.Player
 
     private void SetHalfTurn(int sign)
     {
-      //SmoothChange(ref _turnCoroutine, hero, _moveXHash, stateData.EnterCurve, sign);
+      upState.Turn(sign);
       _rotate.Turn
       (
         new Vector3(hero.MoveAxis.x, 0, hero.MoveAxis.y),
