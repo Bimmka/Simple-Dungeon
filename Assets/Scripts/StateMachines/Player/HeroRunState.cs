@@ -2,6 +2,7 @@
 using Hero;
 using StaticData.Hero.Components;
 using StaticData.Hero.States;
+using StaticData.Hero.States.Base;
 using UnityEngine;
 
 namespace StateMachines.Player
@@ -19,7 +20,7 @@ namespace StateMachines.Player
     private float time = 1f;
 
     public HeroRunState(HeroMoveUpMachineState upState, HeroStateMachine hero, BattleAnimator animator, string triggerName,
-      HeroStateData stateData, HeroStamina heroStamina,
+      HeroMoveStateData stateData, HeroStamina heroStamina,
       HeroRotate heroRotate, HeroMove heroMove, HeroMoveStaticData heroMoveStaticData) : base(upState, hero, animator, triggerName, stateData)
     {
       _heroStamina = heroStamina;

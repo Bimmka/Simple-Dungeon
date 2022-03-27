@@ -29,29 +29,40 @@ namespace StateMachines.Player
     public override void Exit()
     {
       base.Exit();
-      if (_turnCoroutine != null)
-        _coroutineRunner.StopCoroutine(_turnCoroutine);
-      _turnCoroutine = _coroutineRunner.StartCoroutine(Change(_moveXHash, currentState.ExitCurve, 1));
-      if (_turnAroundCoroutine != null)
-        _coroutineRunner.StopCoroutine(_turnAroundCoroutine);
-      _turnAroundCoroutine = _coroutineRunner.StartCoroutine(Change(_moveYHash, currentState.ExitCurve, 1));
+      switch (currentState.LastActionType)
+      {
+        case PlayerActionsType.TurnAround:
+          SmoothChange(ref _turnAroundCoroutine, _moveYHash, currentState.TurnAroundExitCurve);
+          break;
+        case PlayerActionsType.TurnLeft:
+          SmoothChange(ref _turnCoroutine, _moveXHash, currentState.LeftTurnExitCurve);
+          break;
+        case PlayerActionsType.TurnRight:
+          SmoothChange(ref _turnCoroutine, _moveXHash, currentState.RightTurnExitCurve);
+          break;
+      }
     }
 
-    public void TurnAround()
+    public void TurnAround() => 
+      SmoothChange(ref _turnAroundCoroutine, _moveYHash, currentState.TurnAroundEnterCurve);
+
+    public void Turn(PlayerActionsType playerActionsType)
     {
-      if (_turnAroundCoroutine != null)
-        _coroutineRunner.StopCoroutine(_turnAroundCoroutine);
-      _turnAroundCoroutine = _coroutineRunner.StartCoroutine(Change(_moveYHash, currentState.EnterCurve, 1));
+      if (playerActionsType == PlayerActionsType.TurnLeft)
+        SmoothChange(ref _turnCoroutine, _moveXHash, currentState.LeftTurnEnterCurve);
+      else if (playerActionsType == PlayerActionsType.TurnRight)
+        SmoothChange(ref _turnCoroutine, _moveXHash, currentState.RightTurnEnterCurve);
     }
 
-    public void Turn(int sign)
+    private void SmoothChange(ref Coroutine coroutine, int valueHash, AnimationCurve curve)
     {
-      if (_turnCoroutine != null)
-        _coroutineRunner.StopCoroutine(_turnCoroutine);
-      _turnCoroutine = _coroutineRunner.StartCoroutine(Change(_moveXHash, currentState.EnterCurve, sign));
+      if (coroutine != null)
+        _coroutineRunner.StopCoroutine(coroutine);
+
+      coroutine = _coroutineRunner.StartCoroutine(Change(valueHash, curve));
     }
 
-    private IEnumerator Change(int valueHash, AnimationCurve curve, int direction)
+    private IEnumerator Change(int valueHash, AnimationCurve curve)
     {
       float curveValue;
       float currentValue = _animator.GetFloat(valueHash);
@@ -59,7 +70,7 @@ namespace StateMachines.Player
       float maxTime = curve[curve.length-1].time;
       float currentTime = 0f;
 
-      if (currentValue > direction * maxCurveValue)
+      if (currentValue > maxCurveValue)
         smoothChangeCheck = IsBigger;
       else
         smoothChangeCheck = IsSmaller;
@@ -69,7 +80,7 @@ namespace StateMachines.Player
         curveValue = curve.Evaluate(currentTime);
         if (smoothChangeCheck.Invoke(currentValue, curveValue))
         {
-          currentValue = direction * curveValue;
+          currentValue = curveValue;
           currentTime += Time.deltaTime;
         }
         else
@@ -79,7 +90,7 @@ namespace StateMachines.Player
         SetFloat(valueHash, currentValue);
       }
       
-      SetFloat(valueHash, direction * maxCurveValue);
+      SetFloat(valueHash, maxCurveValue);
     }
 
     private void SetFloat(int hash, float value) => 

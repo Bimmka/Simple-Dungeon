@@ -1,14 +1,15 @@
 ﻿using Animations;
 using Hero;
 using StaticData.Hero.States;
+using StaticData.Hero.States.Base;
 using UnityEngine;
 
 namespace StateMachines.Player
 {
-  public class HeroBaseSubStateMachineState <TUpState, TDownState> : IHeroBaseSubStateMachineState where TUpState : HeroBaseUpMachineState<TDownState> where TDownState : IHeroBaseSubStateMachineState
+  public class HeroBaseSubStateMachineState <TUpState, TDownState, TStateData> : IHeroBaseSubStateMachineState where TUpState : HeroBaseUpMachineState<TDownState> where TDownState : IHeroBaseSubStateMachineState where TStateData: HeroBaseStateData
   {
     protected readonly HeroStateMachine hero;
-    protected readonly HeroStateData stateData;
+    protected readonly TStateData stateData;
     protected readonly TUpState upState;
 
 
@@ -17,7 +18,7 @@ namespace StateMachines.Player
     
     public int Weight => stateData.Weight;
 
-    public HeroBaseSubStateMachineState(TUpState upState, HeroStateMachine hero, BattleAnimator animator, string animationName, HeroStateData stateData)
+    public HeroBaseSubStateMachineState(TUpState upState, HeroStateMachine hero, BattleAnimator animator, string animationName, TStateData stateData)
     {
       this.hero = hero;
       this.stateData = stateData;

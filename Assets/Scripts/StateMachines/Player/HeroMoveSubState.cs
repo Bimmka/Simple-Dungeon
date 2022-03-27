@@ -1,16 +1,19 @@
 ﻿using Animations;
 using Hero;
 using StaticData.Hero.States;
+using StaticData.Hero.States.Base;
 using UnityEngine;
 
 namespace StateMachines.Player
 {
-  public abstract class HeroMoveSubState : HeroBaseSubStateMachineState<HeroMoveUpMachineState, HeroMoveSubState>
+  public abstract class HeroMoveSubState : HeroBaseSubStateMachineState<HeroMoveUpMachineState, HeroMoveSubState, HeroMoveStateData>
   {
     public AnimationCurve EnterCurve => stateData.EnterCurve;
-    public AnimationCurve ExitCurve => stateData.ExitCurve;
+    public AnimationCurve ExitCurve => stateData.ExitCurve; 
+    public AnimationCurve UpStateEnterCurve => stateData.UpStateEnterCurve;
+    public AnimationCurve DownStateEnterCurve => stateData.DownStateEnterCurve;
     
-    public HeroMoveSubState(HeroMoveUpMachineState upState, HeroStateMachine hero, BattleAnimator animator, string animationName, HeroStateData stateData) : base(upState, hero, animator, animationName, stateData)
+    public HeroMoveSubState(HeroMoveUpMachineState upState, HeroStateMachine hero, BattleAnimator animator, string animationName, HeroMoveStateData stateData) : base(upState, hero, animator, animationName, stateData)
     {
     }
     

@@ -11,5 +11,6 @@ namespace StaticData.Hero.Components
     public float StrafeSpeed = 1.5f;
     public float RollSpeed = 2f;
     public float BigAngleValue = 65f;
+    public float Gravity = 1.5f;
   }
 }

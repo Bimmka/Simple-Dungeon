@@ -1,6 +1,7 @@
 ﻿using Animations;
 using Hero;
 using StaticData.Hero.States;
+using StaticData.Hero.States.Base;
 using UnityEngine;
 
 namespace StateMachines.Player
@@ -8,7 +9,7 @@ namespace StateMachines.Player
   public class HeroIdleState : HeroMoveSubState
   {
     public HeroIdleState(HeroMoveUpMachineState upState, HeroStateMachine hero,
-      BattleAnimator animator, string triggerName, HeroStateData stateData) : base(upState, hero, animator, triggerName, stateData)
+      BattleAnimator animator, string triggerName, HeroMoveStateData stateData) : base(upState, hero, animator, triggerName, stateData)
     {
     }
 

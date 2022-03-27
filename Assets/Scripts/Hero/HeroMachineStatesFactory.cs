@@ -7,6 +7,7 @@ using StateMachines;
 using StateMachines.Player;
 using StaticData.Hero.Components;
 using StaticData.Hero.States;
+using StaticData.Hero.States.Base;
 
 namespace Hero
 {
@@ -57,20 +58,20 @@ namespace Hero
       }
     }
 
-    private IHeroBaseUpMachineState CreateUpState(HeroUpState state)
+    private IHeroBaseUpMachineState CreateUpState(HeroParentStateType state)
     {
       switch (state)
       {
-        case HeroUpState.Move:
+        case HeroParentStateType.Move:
           return new HeroMoveUpMachineState(_stateMachine, _hero, _coroutineRunner, _animator, "MoveX");
-        case HeroUpState.Rotate:
+        case HeroParentStateType.Rotate:
           return new HeroRotatingUpMachineState(_stateMachine, _hero, _coroutineRunner, _animator, "RotateX", "RotateY");
         default:
           throw new ArgumentOutOfRangeException(nameof(state), state, null);
       }
     }
 
-    private List<IHeroBaseSubStateMachineState> CreateSubStates(IHeroBaseUpMachineState upState, HeroStateData[] substatesData, ref Dictionary<Type,IHeroBaseSubStateMachineState> subStates)
+    private List<IHeroBaseSubStateMachineState> CreateSubStates(IHeroBaseUpMachineState upState, HeroBaseStateData[] substatesData, ref Dictionary<Type,IHeroBaseSubStateMachineState> subStates)
     {
       List<IHeroBaseSubStateMachineState> createdSubStates = new List<IHeroBaseSubStateMachineState>(10);
       (Type, IHeroBaseSubStateMachineState) createdState;
@@ -85,20 +86,20 @@ namespace Hero
       return createdSubStates;
     }
 
-    private (Type, IHeroBaseSubStateMachineState) CreateSubState(IHeroBaseUpMachineState upState, HeroStateData data)
+    private (Type, IHeroBaseSubStateMachineState) CreateSubState(IHeroBaseUpMachineState upState, HeroBaseStateData data)
     {
       switch (data.State)
       {
         case HeroState.Idle:
-          return (typeof(HeroIdleState), new HeroIdleState((HeroMoveUpMachineState) upState, _hero,  _animator, "IsIdle", data));
+          return (typeof(HeroIdleState), new HeroIdleState((HeroMoveUpMachineState) upState, _hero,  _animator, "IsIdle", (HeroMoveStateData) data));
         case HeroState.Walk:
-          return (typeof(HeroWalkState), new HeroWalkState((HeroMoveUpMachineState) upState, _hero, _animator, "IsIdle", data, _move, _rotate, _moveStaticData));
+          return (typeof(HeroWalkState), new HeroWalkState((HeroMoveUpMachineState) upState, _hero, _animator, "IsIdle", (HeroMoveStateData) data, _move, _rotate, _moveStaticData));
         case HeroState.Run:
-          return (typeof(HeroRunState), new HeroRunState( (HeroMoveUpMachineState) upState, _hero, _animator, "IsIdle", data, _stamina, _rotate, _move, _moveStaticData));
+          return (typeof(HeroRunState), new HeroRunState( (HeroMoveUpMachineState) upState, _hero, _animator, "IsIdle", (HeroMoveStateData) data, _stamina, _rotate, _move, _moveStaticData));
         case HeroState.Roll:
           return (typeof(HeroRollState), new HeroRollState( (HeroRollUpMachineState) upState, _hero, _animator, "IsRoll", data, _move, _stamina));
         case HeroState.Rotating:
-          return (typeof(HeroRotatingState), new HeroRotatingState((HeroRotatingUpMachineState) upState, _hero, _animator, "IsRotating", data, _rotate));
+          return (typeof(HeroRotatingState), new HeroRotatingState((HeroRotatingUpMachineState) upState, _hero, _animator, "IsRotating", (HeroRotateStateData) data, _rotate));
         default:
           throw new ArgumentOutOfRangeException(nameof(data.State), data.State, null);
       }

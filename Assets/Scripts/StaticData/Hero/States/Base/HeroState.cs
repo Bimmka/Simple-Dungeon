@@ -1,4 +1,4 @@
-﻿namespace StaticData.Hero.States
+﻿namespace StaticData.Hero.States.Base
 {
   public enum HeroState
   {

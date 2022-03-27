@@ -2,6 +2,7 @@
 using Hero;
 using StaticData.Hero.Components;
 using StaticData.Hero.States;
+using StaticData.Hero.States.Base;
 using UnityEngine;
 
 namespace StateMachines.Player
@@ -16,7 +17,7 @@ namespace StateMachines.Player
 
     public HeroWalkState(HeroMoveUpMachineState upState, HeroStateMachine hero, BattleAnimator animator,
       string triggerName,
-      HeroStateData stateData,HeroMove heroMove, HeroRotate heroRotate, HeroMoveStaticData moveStaticData) : base( upState, hero, animator, triggerName, stateData)
+      HeroMoveStateData stateData,HeroMove heroMove, HeroRotate heroRotate, HeroMoveStaticData moveStaticData) : base( upState, hero, animator, triggerName, stateData)
     {
       _heroMove = heroMove;
       _heroRotate = heroRotate;

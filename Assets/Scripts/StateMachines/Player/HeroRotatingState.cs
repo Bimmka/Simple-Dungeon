@@ -1,7 +1,7 @@
 ﻿using System;
 using Animations;
 using Hero;
-using StaticData.Hero.States;
+using StaticData.Hero.States.Base;
 using UnityEngine;
 
 namespace StateMachines.Player
@@ -12,7 +12,7 @@ namespace StateMachines.Player
  
 
     public HeroRotatingState(HeroRotatingUpMachineState upState, HeroStateMachine hero, BattleAnimator animator,
-      string triggerName, HeroStateData stateData, HeroRotate rotate) : base(upState, hero, animator, triggerName, stateData)
+      string triggerName, HeroRotateStateData stateData, HeroRotate rotate) : base(upState, hero, animator, triggerName, stateData)
     {
       _rotate = rotate;
     }
@@ -52,17 +52,19 @@ namespace StateMachines.Player
         ClipLength(PlayerActionsType.TurnAround),
         OnTurnEnd
         );
+      LastActionType = PlayerActionsType.TurnAround;
     }
 
     private void SetHalfTurn(int sign)
     {
-      upState.Turn(sign);
       _rotate.Turn
       (
         new Vector3(hero.MoveAxis.x, 0, hero.MoveAxis.y),
         sign == -1 ? ClipLength(PlayerActionsType.TurnLeft) : ClipLength(PlayerActionsType.TurnRight),
         OnTurnEnd
         );
+      LastActionType = sign == -1 ? PlayerActionsType.TurnLeft : PlayerActionsType.TurnRight;
+      upState.Turn(LastActionType);
     }
 
     private void OnTurnEnd()

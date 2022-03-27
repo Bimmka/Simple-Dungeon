@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: Hero Move Static Data
   m_EditorClassIdentifier: 
   MoveSpeed: 3.3
+  RunSpeed: 5
+  StoppingSpeed: 0.3
   StrafeSpeed: 1.5
   RollSpeed: 3
   BigAngleValue: 70
+  Gravity: -1.5

@@ -41,31 +41,23 @@ namespace StateMachines.Player
       if (currentState is HeroWalkState)
         SmoothChange(SubState<HeroWalkState>().ExitCurve);
       else if (currentState is HeroRunState) 
-        SmoothChange(SubState<HeroRunState>().ExitCurve);
+        SmoothChange(SubState<HeroRunState>().DownStateEnterCurve);
     }
 
     private void TransferToWalkState()
     {
       if (currentState is HeroIdleState)
         SmoothChange(SubState<HeroWalkState>().EnterCurve);
-      else if (currentState is HeroRunState)
-      {
-        AnimationCurve curve = SubState<HeroWalkState>().EnterCurve;
-        AnimationCurve runCurve = SubState<HeroRunState>().EnterCurve;
-        SmoothClampedChange(runCurve,runCurve[curve.length-1].value,curve[curve.length-1].value);
-      }
+      else if (currentState is HeroRunState) 
+        SmoothChange(SubState<HeroRunState>().UpStateEnterCurve);
     }
 
     private void TransferToRunState()
     {
       if (currentState is HeroWalkState)
-      {
-        AnimationCurve walkCurve = SubState<HeroWalkState>().EnterCurve;
-        AnimationCurve runCurve = SubState<HeroRunState>().EnterCurve;
-        SmoothClampedChange(runCurve, walkCurve[walkCurve.length-1].value, runCurve[runCurve.length-1].value);
-      }
+        SmoothChange(SubState<HeroWalkState>().UpStateEnterCurve);
       else if (currentState is HeroIdleState) 
-        SmoothChange(SubState<HeroRunState>().EnterCurve);
+        SmoothChange(SubState<HeroIdleState>().UpStateEnterCurve);
     }
 
 
@@ -74,29 +66,18 @@ namespace StateMachines.Player
       if (_changeCoroutine != null)
         _coroutineRunner.StopCoroutine(_changeCoroutine);
 
-      _changeCoroutine = _coroutineRunner.StartCoroutine(Change(curve, curve[0].value, curve[curve.length-1].value));
+      _changeCoroutine = _coroutineRunner.StartCoroutine(Change(curve, curve[curve.length-1].value));
     }
-
-    private void SmoothClampedChange(AnimationCurve curve, float startValue, float endValue)
-    {
-      if (_changeCoroutine != null)
-        _coroutineRunner.StopCoroutine(_changeCoroutine);
-
-      _changeCoroutine = _coroutineRunner.StartCoroutine(Change(curve, startValue, endValue));
-    }
-
+    
     private void SetFloat(int hash, float value) => 
       _animator.SetFloat(hash, value);
 
-    private IEnumerator Change(AnimationCurve curve, float startValue, float endValue)
+    private IEnumerator Change(AnimationCurve curve, float endValue)
     {
       float curveValue;
       float currentValue = _animator.GetFloat(_moveHashName);
       float maxTime = curve[curve.length-1].time;
       float currentTime = 0f;
-      Vector2 curveMinMax = new Vector2(curve[0].value, curve[curve.length-1].value);
-      float oldCurveRange = curveMinMax.y - curveMinMax.x;
-      float newRange = endValue - startValue;
 
       if (currentValue > endValue)
         smoothChangeCheck = IsBigger;
@@ -105,7 +86,7 @@ namespace StateMachines.Player
       
       while (currentTime < maxTime && Mathf.Approximately(currentValue, endValue) == false)
       {
-        curveValue =  ((curve.Evaluate(currentTime) - curveMinMax.x) * newRange / oldCurveRange) + startValue;
+        curveValue = curve.Evaluate(currentTime);
         if (smoothChangeCheck.Invoke(currentValue, curveValue))
         {
           currentValue = curveValue;

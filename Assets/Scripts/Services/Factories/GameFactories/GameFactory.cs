@@ -84,12 +84,6 @@ namespace Services.Factories.GameFactories
       hud.GetComponentInChildren<StaminaDisplayer>().Construct(hero.GetComponentInChildren<IStamina>());
       hud.GetComponentInChildren<HeroMoneyDisplayer>().Construct(progressService.Player.Monies);
       hud.GetComponentInChildren<HeroScoreDisplayer>().Construct(progressService.Player.Score);
-#if DEBUG_MOVE
-      if (hud.TryGetComponent(out DebugHeroComponentsValue debug))
-      {
-        debug.Construct(hero.GetComponent<HeroRotate>());
-      }
-#endif
       InitButtons(hud);
       return hud;
     }

@@ -1,16 +1,17 @@
 ﻿using Animations;
 using Hero;
 using StaticData.Hero.States;
+using StaticData.Hero.States.Base;
 using UnityEngine;
 
 namespace StateMachines.Player
 {
-  public class HeroRollState : HeroBaseSubStateMachineState<HeroRollUpMachineState, HeroRollState>
+  public class HeroRollState : HeroBaseSubStateMachineState<HeroRollUpMachineState, HeroRollState, HeroBaseStateData>
   {
     private readonly HeroMove heroMove;
     private readonly HeroStamina heroStamina;
     public HeroRollState(HeroRollUpMachineState upState, HeroStateMachine hero, BattleAnimator animator,
-      string triggerName, HeroStateData stateData, HeroMove heroMove, HeroStamina heroStamina) : base(upState, hero, animator, triggerName, stateData)
+      string triggerName, HeroBaseStateData stateData, HeroMove heroMove, HeroStamina heroStamina) : base(upState, hero, animator, triggerName, stateData)
     {
       this.heroMove = heroMove;
       this.heroStamina = heroStamina;
@@ -42,8 +43,10 @@ namespace StateMachines.Player
       {
         if (hero.IsNotMove())
           ChangeState(hero.State<HeroIdleState>());
-        else
+        else if (hero.IsRunningPressed == false)
           ChangeState(hero.State<HeroWalkState>());
+        else 
+          ChangeState(hero.State<HeroRunState>());
       }
     }
 

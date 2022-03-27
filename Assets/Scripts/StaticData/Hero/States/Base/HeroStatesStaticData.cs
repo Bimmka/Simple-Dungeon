@@ -2,9 +2,9 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace StaticData.Hero.States
+namespace StaticData.Hero.States.Base
 {
-  [CreateAssetMenu(fileName = "HeroStateStaticData", menuName = "Static Data/Hero/Create Hero State Data", order = 55)]
+  [CreateAssetMenu(fileName = "HeroStatesStaticData", menuName = "Static Data/Hero/Create Hero States Data", order = 55)]
   public class HeroStatesStaticData : ScriptableObject
   {
     [ValidateInput("IsNotHaveDuplicate", "Cannot set same weight", InfoMessageType.Error)]

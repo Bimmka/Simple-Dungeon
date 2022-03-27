@@ -5,6 +5,7 @@ using StateMachines;
 using StateMachines.Player;
 using StaticData.Hero.Components;
 using StaticData.Hero.States;
+using StaticData.Hero.States.Base;
 using UnityEngine;
 
 namespace Hero

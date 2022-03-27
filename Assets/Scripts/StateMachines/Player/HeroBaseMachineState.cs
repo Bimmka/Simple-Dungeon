@@ -4,6 +4,7 @@ using Animations;
 using Hero;
 using Services;
 using StaticData.Hero.States;
+using StaticData.Hero.States.Base;
 using UnityEngine;
 
 namespace StateMachines.Player
@@ -16,12 +17,12 @@ namespace StateMachines.Player
     private readonly StateMachine _stateMachine;
     
     protected readonly HeroStateMachine hero;
-    protected readonly HeroStateData stateData;
+    protected readonly HeroBaseStateData stateData;
     protected readonly BattleAnimator animator;
 
     public override int Weight => stateData.Weight;
 
-    protected HeroBaseMachineState(StateMachine stateMachine, string triggerName, BattleAnimator animator, HeroStateMachine hero, HeroStateData stateData)
+    protected HeroBaseMachineState(StateMachine stateMachine, string triggerName, BattleAnimator animator, HeroStateMachine hero, HeroBaseStateData stateData)
     {
       _stateMachine = stateMachine;
       _triggerName = Animator.StringToHash(triggerName);
