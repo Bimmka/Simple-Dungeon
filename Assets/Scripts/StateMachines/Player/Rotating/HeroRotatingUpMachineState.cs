@@ -3,9 +3,10 @@ using System.Collections;
 using Animations;
 using Hero;
 using Services;
+using StateMachines.Player.Base;
 using UnityEngine;
 
-namespace StateMachines.Player
+namespace StateMachines.Player.Rotating
 {
   public class HeroRotatingUpMachineState : HeroBaseUpMachineState<HeroRotatingSubState>
   {

@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Animations;
 using Services;
 using StateMachines;
-using StateMachines.Player;
+using StateMachines.Player.Base;
+using StateMachines.Player.Move;
+using StateMachines.Player.Roll;
+using StateMachines.Player.Rotating;
 using StaticData.Hero.Components;
-using StaticData.Hero.States;
 using StaticData.Hero.States.Base;
 
 namespace Hero
@@ -66,6 +67,8 @@ namespace Hero
           return new HeroMoveUpMachineState(_stateMachine, _hero, _coroutineRunner, _animator, "MoveX");
         case HeroParentStateType.Rotate:
           return new HeroRotatingUpMachineState(_stateMachine, _hero, _coroutineRunner, _animator, "RotateX", "RotateY");
+        case HeroParentStateType.Roll:
+          return new HeroRollUpMachineState(_stateMachine, _hero, _coroutineRunner);
         default:
           throw new ArgumentOutOfRangeException(nameof(state), state, null);
       }
@@ -97,9 +100,9 @@ namespace Hero
         case HeroState.Run:
           return (typeof(HeroRunState), new HeroRunState( (HeroMoveUpMachineState) upState, _hero, _animator, "IsIdle", (HeroMoveStateData) data, _stamina, _rotate, _move, _moveStaticData));
         case HeroState.Roll:
-          return (typeof(HeroRollState), new HeroRollState( (HeroRollUpMachineState) upState, _hero, _animator, "IsRoll", data, _move, _stamina));
+          return (typeof(HeroRollSubState), new HeroRollSubState( (HeroRollUpMachineState) upState, _hero, _animator, "IsRoll", data, _move, _stamina));
         case HeroState.Rotating:
-          return (typeof(HeroRotatingState), new HeroRotatingState((HeroRotatingUpMachineState) upState, _hero, _animator, "IsRotating", (HeroRotateStateData) data, _rotate));
+          return (typeof(HeroRotatingSubState), new HeroRotatingSubState((HeroRotatingUpMachineState) upState, _hero, _animator, "IsRotating", (HeroRotateStateData) data, _rotate));
         default:
           throw new ArgumentOutOfRangeException(nameof(data.State), data.State, null);
       }

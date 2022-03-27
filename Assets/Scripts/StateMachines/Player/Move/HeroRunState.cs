@@ -1,11 +1,11 @@
 ﻿using Animations;
 using Hero;
+using StateMachines.Player.Rotating;
 using StaticData.Hero.Components;
-using StaticData.Hero.States;
 using StaticData.Hero.States.Base;
 using UnityEngine;
 
-namespace StateMachines.Player
+namespace StateMachines.Player.Move
 {
   public class HeroRunState : HeroMoveSubState
   {
@@ -33,7 +33,7 @@ namespace StateMachines.Player
     {
       base.Enter();
       if (_heroRotate.IsTurning == false && IsLowAngle(hero.MoveAxis, _moveStaticData.BigAngleValue) == false)
-        ChangeState(hero.State<HeroRotatingState>());
+        ChangeState(hero.State<HeroRotatingSubState>());
     }
 
     public override void LogicUpdate()
@@ -61,7 +61,7 @@ namespace StateMachines.Player
         _heroMove.Run(MoveAxis());
       }
       else if (_heroRotate.IsTurning == false) 
-        InterruptState(hero.State<HeroRotatingState>());
+        InterruptState(hero.State<HeroRotatingSubState>());
     }
 
     private void UpdateTimerAndStamina()

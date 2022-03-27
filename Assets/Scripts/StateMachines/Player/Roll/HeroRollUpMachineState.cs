@@ -1,9 +1,10 @@
 ﻿using Hero;
 using Services;
+using StateMachines.Player.Base;
 
-namespace StateMachines.Player
+namespace StateMachines.Player.Roll
 {
-  public abstract class HeroRollUpMachineState : HeroBaseUpMachineState<HeroRollState>
+  public class HeroRollUpMachineState : HeroBaseUpMachineState<HeroRollSubState>
   {
     public HeroRollUpMachineState(StateMachineWithSubstates stateMachine, HeroStateMachine hero, ICoroutineRunner coroutineRunner) : base(stateMachine, hero, coroutineRunner)
     {

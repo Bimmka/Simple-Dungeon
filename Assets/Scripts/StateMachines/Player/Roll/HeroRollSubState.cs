@@ -1,16 +1,16 @@
 ﻿using Animations;
 using Hero;
-using StaticData.Hero.States;
+using StateMachines.Player.Base;
+using StateMachines.Player.Move;
 using StaticData.Hero.States.Base;
-using UnityEngine;
 
-namespace StateMachines.Player
+namespace StateMachines.Player.Roll
 {
-  public class HeroRollState : HeroBaseSubStateMachineState<HeroRollUpMachineState, HeroRollState, HeroBaseStateData>
+  public class HeroRollSubState : HeroBaseSubStateMachineState<HeroRollUpMachineState, HeroRollSubState, HeroBaseStateData>
   {
     private readonly HeroMove heroMove;
     private readonly HeroStamina heroStamina;
-    public HeroRollState(HeroRollUpMachineState upState, HeroStateMachine hero, BattleAnimator animator,
+    public HeroRollSubState(HeroRollUpMachineState upState, HeroStateMachine hero, BattleAnimator animator,
       string triggerName, HeroBaseStateData stateData, HeroMove heroMove, HeroStamina heroStamina) : base(upState, hero, animator, triggerName, stateData)
     {
       this.heroMove = heroMove;

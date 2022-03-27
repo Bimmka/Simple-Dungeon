@@ -1,4 +1,5 @@
 ﻿using StateMachines.Player;
+using StateMachines.Player.Base;
 
 namespace StateMachines
 {

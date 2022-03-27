@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using StateMachines.Player;
+using StateMachines.Player.Base;
 using UnityEngine;
 
 namespace Animations

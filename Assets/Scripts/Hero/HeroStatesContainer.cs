@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using StateMachines.Player;
+using StateMachines.Player.Base;
 
 namespace Hero
 {

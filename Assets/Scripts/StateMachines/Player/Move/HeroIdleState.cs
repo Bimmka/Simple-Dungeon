@@ -1,10 +1,8 @@
 ﻿using Animations;
 using Hero;
-using StaticData.Hero.States;
 using StaticData.Hero.States.Base;
-using UnityEngine;
 
-namespace StateMachines.Player
+namespace StateMachines.Player.Move
 {
   public class HeroIdleState : HeroMoveSubState
   {

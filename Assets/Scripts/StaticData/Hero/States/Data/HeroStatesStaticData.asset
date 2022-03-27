@@ -21,3 +21,6 @@ MonoBehaviour:
   - UpState: 1
     SubstatesData:
     - {fileID: 11400000, guid: f32a544ff17c88d4abe85be264ab595b, type: 2}
+  - UpState: 2
+    SubstatesData:
+    - {fileID: 11400000, guid: 473247f801eda5f44b7b296df3b74c00, type: 2}

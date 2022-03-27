@@ -3,6 +3,9 @@ using Services;
 using Services.PlayerData;
 using StateMachines;
 using StateMachines.Player;
+using StateMachines.Player.Base;
+using StateMachines.Player.Move;
+using StateMachines.Player.Roll;
 using StaticData.Hero.Components;
 using StaticData.Hero.States;
 using StaticData.Hero.States.Base;
@@ -32,7 +35,7 @@ namespace Hero
         public bool IsBlockingPressed { get; private set; }
         public bool IsRunningPressed { get; private set; }
         public bool IsBlockingUp => false;//_stateMachine.State == State<HeroIdleShieldState>();
-        public bool IsRolling => _stateMachine.State.IsSameState(State<HeroRollState>());
+        public bool IsRolling => _stateMachine.State.IsSameState(State<HeroRollSubState>());
 
         public Vector2 MoveAxis { get; private set; }
         public float RotateAngle { get; private set; }
@@ -99,8 +102,8 @@ namespace Hero
 
         public void SetRollState()
         {
-            if (_stateMachine.State.IsCanBeInterrupted(State<HeroRollState>().Weight) && State<HeroRollState>().IsCanRoll())
-                _stateMachine.InterruptState(GetUpStateForSubstate(State<HeroRollState>()), State<HeroRollState>());
+            if (_stateMachine.State.IsCanBeInterrupted(State<HeroRollSubState>().Weight) && State<HeroRollSubState>().IsCanRoll())
+                _stateMachine.InterruptState(GetUpStateForSubstate(State<HeroRollSubState>()), State<HeroRollSubState>());
         }
 
         public void SetIsRunning(bool isRunning) => 

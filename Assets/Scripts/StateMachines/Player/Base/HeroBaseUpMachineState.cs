@@ -4,7 +4,7 @@ using Hero;
 using Services;
 using UnityEngine;
 
-namespace StateMachines.Player
+namespace StateMachines.Player.Base
 {
   public abstract class HeroBaseUpMachineState<TSubState> : IHeroBaseUpMachineState where TSubState : IHeroBaseSubStateMachineState
   {

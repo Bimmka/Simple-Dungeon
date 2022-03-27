@@ -3,6 +3,7 @@
   public enum HeroParentStateType
   {
     Move,
-    Rotate
+    Rotate, 
+    Roll
   }
 }

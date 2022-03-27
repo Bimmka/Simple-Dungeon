@@ -1,17 +1,27 @@
 ﻿using System;
 using Animations;
 using Hero;
+using StateMachines.Player.Base;
+using StateMachines.Player.Move;
 using StaticData.Hero.States.Base;
 using UnityEngine;
 
-namespace StateMachines.Player
+namespace StateMachines.Player.Rotating
 {
-  public class HeroRotatingState : HeroRotatingSubState
+  public class HeroRotatingSubState : HeroBaseSubStateMachineState<HeroRotatingUpMachineState, HeroRotatingSubState, HeroRotateStateData>
   {
     private readonly HeroRotate _rotate;
  
+    public AnimationCurve LeftTurnEnterCurve => stateData.LeftTurnEnterCurve;
+    public AnimationCurve LeftTurnExitCurve => stateData.LeftTurnEnterCurve;
+    public AnimationCurve RightTurnEnterCurve => stateData.LeftTurnEnterCurve;
+    public AnimationCurve RightTurnExitCurve => stateData.LeftTurnEnterCurve;
+    public AnimationCurve TurnAroundEnterCurve => stateData.LeftTurnEnterCurve;
+    public AnimationCurve TurnAroundExitCurve => stateData.LeftTurnEnterCurve;
 
-    public HeroRotatingState(HeroRotatingUpMachineState upState, HeroStateMachine hero, BattleAnimator animator,
+    public PlayerActionsType LastActionType { get; protected set; }
+
+    public HeroRotatingSubState(HeroRotatingUpMachineState upState, HeroStateMachine hero, BattleAnimator animator,
       string triggerName, HeroRotateStateData stateData, HeroRotate rotate) : base(upState, hero, animator, triggerName, stateData)
     {
       _rotate = rotate;

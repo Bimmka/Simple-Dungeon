@@ -1,10 +1,9 @@
 ﻿using Animations;
 using Hero;
-using StaticData.Hero.States;
 using StaticData.Hero.States.Base;
 using UnityEngine;
 
-namespace StateMachines.Player
+namespace StateMachines.Player.Base
 {
   public class HeroBaseSubStateMachineState <TUpState, TDownState, TStateData> : IHeroBaseSubStateMachineState where TUpState : HeroBaseUpMachineState<TDownState> where TDownState : IHeroBaseSubStateMachineState where TStateData: HeroBaseStateData
   {
@@ -40,14 +39,14 @@ namespace StateMachines.Player
     }
 
     public virtual void LogicUpdate() { }
-    public virtual void Interrupt() { }
 
-
-    public virtual void Exit()
-    {
+    public virtual void Interrupt() => 
       _animator.SetBool(_animationNameHash, false);
-    }
-    
+
+
+    public virtual void Exit() => 
+      _animator.SetBool(_animationNameHash, false);
+
     public virtual void AnimationTriggered() {}
 
     protected virtual void ChangeState(IHeroBaseSubStateMachineState to) => 

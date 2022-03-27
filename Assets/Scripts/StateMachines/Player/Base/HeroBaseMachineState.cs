@@ -3,11 +3,10 @@ using System.Collections;
 using Animations;
 using Hero;
 using Services;
-using StaticData.Hero.States;
 using StaticData.Hero.States.Base;
 using UnityEngine;
 
-namespace StateMachines.Player
+namespace StateMachines.Player.Base
 {
   public abstract class HeroBaseMachineState : BaseStateMachineState, IPlayerMachineState
   {

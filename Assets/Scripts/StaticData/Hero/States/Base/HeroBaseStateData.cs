@@ -7,8 +7,6 @@ namespace StaticData.Hero.States.Base
   {
     public HeroState State;
     public int Weight;
-    public AnimationCurve EnterCurve;
-    public AnimationCurve ExitCurve;
     public bool IsInteraptedBySameWeight;
   }
 }
