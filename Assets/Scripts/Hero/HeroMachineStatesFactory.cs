@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using Animations;
 using Services;
 using StateMachines;
+using StateMachines.Player.AnimationStatesBehaviour;
 using StateMachines.Player.Base;
 using StateMachines.Player.Move;
 using StateMachines.Player.Roll;
 using StateMachines.Player.Rotating;
 using StaticData.Hero.Components;
 using StaticData.Hero.States.Base;
+using UnityEngine;
 
 namespace Hero
 {
@@ -16,7 +18,7 @@ namespace Hero
   {
     private readonly StateMachineWithSubstates _stateMachine;
     private readonly HeroStateMachine _hero;
-    private readonly BattleAnimator _animator;
+    private readonly HeroAnimator _animator;
     private readonly HeroMove _move;
     private readonly HeroAttack _attack;
     private readonly HeroRotate _rotate;
@@ -26,12 +28,13 @@ namespace Hero
     private readonly ICoroutineRunner _coroutineRunner;
     private readonly HeroMoveStaticData _moveStaticData;
     private readonly HeroStatesStaticData _statesData;
+    private readonly AnimatorStateBehaviourContainer _behaviourContainer;
 
 
-    public HeroMachineStatesFactory(StateMachineWithSubstates stateMachine, HeroStateMachine hero, BattleAnimator animator,
+    public HeroMachineStatesFactory(StateMachineWithSubstates stateMachine, HeroStateMachine hero, HeroAnimator animator,
       HeroMove move,
       HeroAttack attack, HeroRotate rotate, HeroAttackStaticData attackData, HeroStamina stamina,
-      HeroImpactsStaticData impactData, ICoroutineRunner coroutineRunner, HeroMoveStaticData moveStaticData, HeroStatesStaticData statesData)
+      HeroImpactsStaticData impactData, ICoroutineRunner coroutineRunner, HeroMoveStaticData moveStaticData, HeroStatesStaticData statesData, AnimatorStateBehaviourContainer behaviourContainer)
     {
       _stateMachine = stateMachine;
       _hero = hero;
@@ -45,9 +48,12 @@ namespace Hero
       _coroutineRunner = coroutineRunner;
       _moveStaticData = moveStaticData;
       _statesData = statesData;
+      _behaviourContainer = behaviourContainer;
     }
 
-    public void CreateStates(ref Dictionary<IHeroBaseUpMachineState, List<IHeroBaseSubStateMachineState>> states, ref Dictionary<Type,IHeroBaseSubStateMachineState> substates)
+    public void CreateStates(
+      ref Dictionary<IHeroBaseUpMachineState, List<IHeroBaseSubStateMachineState>> states,
+      ref Dictionary<Type, IHeroBaseSubStateMachineState> substates)
     {
       List<IHeroBaseSubStateMachineState> subStates = new List<IHeroBaseSubStateMachineState>(10);
       IHeroBaseUpMachineState upState;
@@ -74,7 +80,8 @@ namespace Hero
       }
     }
 
-    private List<IHeroBaseSubStateMachineState> CreateSubStates(IHeroBaseUpMachineState upState, HeroBaseStateData[] substatesData, ref Dictionary<Type,IHeroBaseSubStateMachineState> subStates)
+    private List<IHeroBaseSubStateMachineState> CreateSubStates(IHeroBaseUpMachineState upState,
+      HeroBaseStateData[] substatesData, ref Dictionary<Type, IHeroBaseSubStateMachineState> subStates)
     {
       List<IHeroBaseSubStateMachineState> createdSubStates = new List<IHeroBaseSubStateMachineState>(10);
       (Type, IHeroBaseSubStateMachineState) createdState;
@@ -89,7 +96,8 @@ namespace Hero
       return createdSubStates;
     }
 
-    private (Type, IHeroBaseSubStateMachineState) CreateSubState(IHeroBaseUpMachineState upState, HeroBaseStateData data)
+    private (Type, IHeroBaseSubStateMachineState) CreateSubState(IHeroBaseUpMachineState upState,
+      HeroBaseStateData data)
     {
       switch (data.State)
       {
@@ -100,7 +108,7 @@ namespace Hero
         case HeroState.Run:
           return (typeof(HeroRunState), new HeroRunState( (HeroMoveUpMachineState) upState, _hero, _animator, "IsIdle", (HeroMoveStateData) data, _stamina, _rotate, _move, _moveStaticData));
         case HeroState.Roll:
-          return (typeof(HeroRollSubState), new HeroRollSubState( (HeroRollUpMachineState) upState, _hero, _animator, "IsRoll", data, _move, _stamina));
+          return (typeof(HeroRollSubState), new HeroRollSubState( (HeroRollUpMachineState) upState, _hero, _animator, "IsRoll", data, _move, _stamina, _behaviourContainer.GetStateBehaviour<RollBehaviour>()));
         case HeroState.Rotating:
           return (typeof(HeroRotatingSubState), new HeroRotatingSubState((HeroRotatingUpMachineState) upState, _hero, _animator, "IsRotating", (HeroRotateStateData) data, _rotate));
         default:

@@ -18,10 +18,9 @@ namespace Hero
       _factory = factory;
     }
 
-    public void CreateState()
-    {
+    public void CreateStates() => 
       _factory.CreateStates(ref _states, ref _subStates);
-    }
+
 
     public IHeroBaseSubStateMachineState GetState<TState>() where TState : IHeroBaseSubStateMachineState
     {
@@ -40,5 +39,7 @@ namespace Hero
 
       return null;
     }
+
+
   }
 }

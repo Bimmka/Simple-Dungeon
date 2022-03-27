@@ -15,7 +15,8 @@ namespace Hero
 {
     public class HeroStateMachine : BaseEntityStateMachine, ICoroutineRunner
     {
-        [SerializeField] private BattleAnimator _battleAnimator;
+        [SerializeField] private AnimatorStateBehaviourContainer _behaviourContainer;
+        [SerializeField] private HeroAnimator _heroAnimator;
         [SerializeField] private HeroMove _move;
         [SerializeField] private HeroRotate _rotate;
         [SerializeField] private HeroAttack _attack;
@@ -53,19 +54,20 @@ namespace Hero
         protected override void Initialize()
         {
             _clipsContainer.CollectClips();
+            _behaviourContainer.Initialize();
             base.Initialize();
         }
 
         protected override void Subscribe()
         {
             base.Subscribe();
-            _battleAnimator.Triggered += AnimationTriggered;
+            _heroAnimator.Triggered += AnimationTriggered;
         }
 
         protected override void Cleanup()
         {
             base.Cleanup();
-            _battleAnimator.Triggered -= AnimationTriggered;
+            _heroAnimator.Triggered -= AnimationTriggered;
 //            State<PlayerAttackState>().Cleanup();
         }
 
@@ -75,9 +77,9 @@ namespace Hero
 
         protected override void CreateStates()
         {
-            _statesFactory = new HeroMachineStatesFactory(_stateMachine,this, _battleAnimator, _move, _attack, _rotate, _attackData, _stamina, _impactsData, this, _moveData, _statesData);
+            _statesFactory = new HeroMachineStatesFactory(_stateMachine,this, _heroAnimator, _move, _attack, _rotate, _attackData, _stamina, _impactsData, this, _moveData, _statesData, _behaviourContainer);
             _statesContainer = new HeroStatesContainer(_statesFactory);
-            _statesContainer.CreateState();
+            _statesContainer.CreateStates();
         }
 
         protected override void SetDefaultState() => 
