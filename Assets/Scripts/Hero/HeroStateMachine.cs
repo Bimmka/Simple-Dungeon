@@ -104,8 +104,12 @@ namespace Hero
 
         public void SetRollState()
         {
-            if (_stateMachine.State.IsCanBeInterrupted(State<HeroRollSubState>().Weight) && State<HeroRollSubState>().IsCanRoll())
+            if (_stateMachine.State.IsCanBeInterrupted(State<HeroRollSubState>().Weight) &&
+                State<HeroRollSubState>().IsCanRoll())
+            {
+                Debug.Log("<color=yellow>Set Roll State</color>");
                 _stateMachine.InterruptState(GetUpStateForSubstate(State<HeroRollSubState>()), State<HeroRollSubState>());
+            }
         }
 
         public void SetIsRunning(bool isRunning) => 

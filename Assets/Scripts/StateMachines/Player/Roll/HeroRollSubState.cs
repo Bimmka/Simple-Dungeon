@@ -4,39 +4,38 @@ using StateMachines.Player.AnimationStatesBehaviour;
 using StateMachines.Player.Base;
 using StateMachines.Player.Move;
 using StaticData.Hero.States.Base;
+using UnityEngine;
 
 namespace StateMachines.Player.Roll
 {
-  public class HeroRollSubState : HeroBaseSubStateMachineState<HeroRollUpMachineState, HeroRollSubState, HeroBaseStateData>
+  public class HeroRollSubState : HeroBaseSubStateMachineState<HeroRollUpMachineState, HeroRollSubState, HeroBaseStateData, RollBehaviour>
   {
-    private readonly HeroMove heroMove;
-    private readonly HeroStamina heroStamina;
-    private readonly RollBehaviour _rollBehaviour;
+    private readonly HeroMove _heroMove;
+    private readonly HeroStamina _heroStamina;
 
     public bool IsImmune { get; private set; }
     public bool IsMove { get; private set; }
     
     public HeroRollSubState(HeroRollUpMachineState upState, HeroStateMachine hero, BattleAnimator animator,
-      string triggerName, HeroBaseStateData stateData, HeroMove heroMove, HeroStamina heroStamina, RollBehaviour rollBehaviour) : base(upState, hero, animator, triggerName, stateData)
+      string triggerName, HeroBaseStateData stateData,RollBehaviour rollBehaviour, HeroMove heroMove, HeroStamina heroStamina) : base(upState, hero, animator, triggerName, stateData,rollBehaviour)
     {
-      this.heroMove = heroMove;
-      this.heroStamina = heroStamina;
-      _rollBehaviour = rollBehaviour;
-      _rollBehaviour.Immuned += SetImmune;
-      _rollBehaviour.Moved += SetIsMove;
+      _heroMove = heroMove;
+      _heroStamina = heroStamina;
+      behaviour.Immuned += SetImmune;
+      behaviour.Moved += SetIsMove;
     }
 
     public override void Enter()
     {
       base.Enter();
-      heroStamina.WasteToRoll();
+      _heroStamina.WasteToRoll();
     }
 
     public override void LogicUpdate()
     {
       base.LogicUpdate();
       if (IsMove)
-        heroMove.Roll();
+        _heroMove.Roll();
     }
 
     public override void AnimationTriggered()
@@ -58,16 +57,17 @@ namespace StateMachines.Player.Roll
         else 
           ChangeState(hero.State<HeroRunState>());
       }
+      Debug.Log("Exit SubState");
     }
 
     public void Cleanup()
     {
-      _rollBehaviour.Immuned -= SetImmune;
-      _rollBehaviour.Moved -= SetIsMove;
+      behaviour.Immuned -= SetImmune;
+      behaviour.Moved -= SetIsMove;
     }
 
     public bool IsCanRoll() => 
-      heroStamina.IsCanRoll();
+      _heroStamina.IsCanRoll();
 
     private void SetImmune(bool isImmune) => 
       IsImmune = isImmune;

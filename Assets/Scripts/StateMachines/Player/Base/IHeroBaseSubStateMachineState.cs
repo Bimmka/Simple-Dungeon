@@ -3,6 +3,7 @@
   public interface IHeroBaseSubStateMachineState
   {
     int Weight { get; }
+    bool IsAnimationInit { get; }
     bool IsCanBeInterrupted(int weight);
     void Enter();
     void LogicUpdate();

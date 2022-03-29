@@ -7,18 +7,18 @@ namespace Hero
   {
     [SerializeField] private HeroStateMachine stateMachine;
 
-    private IInputService inputService;
+    private IInputService _inputService;
     private bool isDisabled;
 
     public void Construct(IInputService inputService)
     {
-      this.inputService = inputService;
+      _inputService = inputService;
       inputService.Enable();
     }
 
     private void OnDestroy()
     {
-      inputService.Disable();
+      _inputService.Disable();
     }
 
     private void Update()
@@ -28,13 +28,13 @@ namespace Hero
       /* if (inputService.IsAttackButtonDown())
          stateMachine.SetAttackState();*/
 
-      if (inputService.IsRollButtonDown())
+      if (_inputService.IsRollButtonDown())
         stateMachine.SetRollState();
 
-      stateMachine.SetIsRunning(inputService.IsRunButtonPressed());
+      stateMachine.SetIsRunning(_inputService.IsRunButtonPressed());
 
       /* stateMachine.SetIsBlocking(inputService.IsBlockButtonPressed());*/
-      stateMachine.SetMoveAxis(inputService.Axis);
+      stateMachine.SetMoveAxis(_inputService.Axis);
     }
 
     public void Disable()

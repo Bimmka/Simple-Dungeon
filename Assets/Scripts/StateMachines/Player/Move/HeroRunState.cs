@@ -1,5 +1,6 @@
 ﻿using Animations;
 using Hero;
+using StateMachines.Player.AnimationStatesBehaviour;
 using StateMachines.Player.Rotating;
 using StaticData.Hero.Components;
 using StaticData.Hero.States.Base;
@@ -20,8 +21,8 @@ namespace StateMachines.Player.Move
     private float time = 1f;
 
     public HeroRunState(HeroMoveUpMachineState upState, HeroStateMachine hero, BattleAnimator animator, string triggerName,
-      HeroMoveStateData stateData, HeroStamina heroStamina,
-      HeroRotate heroRotate, HeroMove heroMove, HeroMoveStaticData heroMoveStaticData) : base(upState, hero, animator, triggerName, stateData)
+      HeroMoveStateData stateData, MoveBehaviour behaviour, HeroStamina heroStamina,
+      HeroRotate heroRotate, HeroMove heroMove, HeroMoveStaticData heroMoveStaticData) : base(upState, hero, animator, triggerName, stateData, behaviour)
     {
       _heroStamina = heroStamina;
       _heroRotate = heroRotate;

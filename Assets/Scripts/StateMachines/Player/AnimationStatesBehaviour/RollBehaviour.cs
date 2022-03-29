@@ -3,23 +3,13 @@ using UnityEngine;
 
 namespace StateMachines.Player.AnimationStatesBehaviour
 {
-  public class RollBehaviour : StateMachineBehaviour
+  public class RollBehaviour : BaseStateBehaviour
   {
     [SerializeField] private Vector2[] immuneRanges;
     [SerializeField] private Vector2 moveRange;
     
     public event Action<bool> Immuned;
-    public event Action<bool> Moved; 
-    public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo,
-      int layerIndex)
-    {
-      
-    }
-
-    public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo,
-      int layerIndex)
-    {
-    }
+    public event Action<bool> Moved;
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo,
       int layerIndex)

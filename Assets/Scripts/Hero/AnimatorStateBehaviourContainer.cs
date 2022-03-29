@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using StateMachines.Player.AnimationStatesBehaviour;
 using UnityEngine;
 
 namespace Hero
@@ -8,7 +9,7 @@ namespace Hero
   {
     [SerializeField] private Animator _animator;
 
-    private Dictionary<Type, StateMachineBehaviour> _subStatesBehaviour;
+    private Dictionary<Type, BaseStateBehaviour> _subStatesBehaviour;
 
 
     public void Initialize()
@@ -16,7 +17,7 @@ namespace Hero
       FillBehaviours();
     }
 
-    public TBehaviour GetStateBehaviour<TBehaviour>() where TBehaviour : StateMachineBehaviour
+    public TBehaviour GetStateBehaviour<TBehaviour>() where TBehaviour : BaseStateBehaviour
     {
       if (_subStatesBehaviour.ContainsKey(typeof(TBehaviour)))
         return (TBehaviour) _subStatesBehaviour[typeof(TBehaviour)];
@@ -25,8 +26,8 @@ namespace Hero
 
     private void FillBehaviours()
     {
-      StateMachineBehaviour[] behaviours = _animator.GetBehaviours<StateMachineBehaviour>();
-      _subStatesBehaviour = new Dictionary<Type, StateMachineBehaviour>(behaviours.Length);
+      BaseStateBehaviour[] behaviours = _animator.GetBehaviours<BaseStateBehaviour>();
+      _subStatesBehaviour = new Dictionary<Type, BaseStateBehaviour>(behaviours.Length);
       for (int i = 0; i < behaviours.Length; i++)
       {
         _subStatesBehaviour.Add(behaviours[i].GetType(), behaviours[i]);

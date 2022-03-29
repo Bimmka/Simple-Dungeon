@@ -2,6 +2,7 @@
 {
   public interface IHeroBaseUpMachineState
   {
+    bool IsAnimationInit { get; }
     void AddSubstate(IHeroBaseSubStateMachineState state);
     void Exit();
     void Initialize(IHeroBaseSubStateMachineState state);

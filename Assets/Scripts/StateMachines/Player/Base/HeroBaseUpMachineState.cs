@@ -18,6 +18,8 @@ namespace StateMachines.Player.Base
     private readonly StateMachineWithSubstates _stateMachine;
     private readonly Dictionary<Type, TSubState> _subStates = new Dictionary<Type, TSubState>(10);
 
+    public bool IsAnimationInit => currentState.IsAnimationInit;
+
     protected HeroBaseUpMachineState(StateMachineWithSubstates stateMachine,HeroStateMachine hero, ICoroutineRunner coroutineRunner)
     {
       _stateMachine = stateMachine;
@@ -33,7 +35,10 @@ namespace StateMachines.Player.Base
       _subStates.Add(state.GetType(), (TSubState) state);
     }
 
-    public virtual void Exit() { }
+    public virtual void Exit()
+    {
+      currentState.Exit();
+    }
 
     public void Initialize(IHeroBaseSubStateMachineState state) => 
       SetNewSubstate(state);

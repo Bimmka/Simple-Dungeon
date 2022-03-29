@@ -1,6 +1,7 @@
 ﻿using System;
 using Animations;
 using Hero;
+using StateMachines.Player.AnimationStatesBehaviour;
 using StateMachines.Player.Base;
 using StateMachines.Player.Move;
 using StaticData.Hero.States.Base;
@@ -8,7 +9,7 @@ using UnityEngine;
 
 namespace StateMachines.Player.Rotating
 {
-  public class HeroRotatingSubState : HeroBaseSubStateMachineState<HeroRotatingUpMachineState, HeroRotatingSubState, HeroRotateStateData>
+  public class HeroRotatingSubState : HeroBaseSubStateMachineState<HeroRotatingUpMachineState, HeroRotatingSubState, HeroRotateStateData, RotatingBehaviour>
   {
     private readonly HeroRotate _rotate;
  
@@ -22,7 +23,7 @@ namespace StateMachines.Player.Rotating
     public PlayerActionsType LastActionType { get; protected set; }
 
     public HeroRotatingSubState(HeroRotatingUpMachineState upState, HeroStateMachine hero, BattleAnimator animator,
-      string triggerName, HeroRotateStateData stateData, HeroRotate rotate) : base(upState, hero, animator, triggerName, stateData)
+      string triggerName, HeroRotateStateData stateData, RotatingBehaviour rotatingBehaviour, HeroRotate rotate) : base(upState, hero, animator, triggerName, stateData, rotatingBehaviour)
     {
       _rotate = rotate;
     }

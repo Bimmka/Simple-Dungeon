@@ -1,27 +1,30 @@
 ﻿using Animations;
 using Hero;
+using StateMachines.Player.AnimationStatesBehaviour;
 using StaticData.Hero.States.Base;
 using UnityEngine;
 
 namespace StateMachines.Player.Base
 {
-  public class HeroBaseSubStateMachineState <TUpState, TDownState, TStateData> : IHeroBaseSubStateMachineState where TUpState : HeroBaseUpMachineState<TDownState> where TDownState : IHeroBaseSubStateMachineState where TStateData: HeroBaseStateData
+  public class HeroBaseSubStateMachineState <TUpState, TDownState, TStateData, TStateBehaviour> : IHeroBaseSubStateMachineState where TUpState : HeroBaseUpMachineState<TDownState> where TDownState : IHeroBaseSubStateMachineState where TStateData: HeroBaseStateData where TStateBehaviour: BaseStateBehaviour
   {
     protected readonly HeroStateMachine hero;
     protected readonly TStateData stateData;
     protected readonly TUpState upState;
-
+    protected readonly TStateBehaviour behaviour;
 
     private readonly BattleAnimator _animator;
     private readonly int _animationNameHash;
     
     public int Weight => stateData.Weight;
+    public bool IsAnimationInit => behaviour.IsPlaying;
 
-    public HeroBaseSubStateMachineState(TUpState upState, HeroStateMachine hero, BattleAnimator animator, string animationName, TStateData stateData)
+    public HeroBaseSubStateMachineState(TUpState upState, HeroStateMachine hero, BattleAnimator animator, string animationName, TStateData stateData, TStateBehaviour behaviour)
     {
       this.hero = hero;
       this.stateData = stateData;
       this.upState = upState;
+      this.behaviour = behaviour;
       _animator = animator;
       _animationNameHash = Animator.StringToHash(animationName);
     }
@@ -36,6 +39,7 @@ namespace StateMachines.Player.Base
     public virtual void Enter()
     {
       _animator.SetBool(_animationNameHash, true);
+      _animator.Play(_animationNameHash);
     }
 
     public virtual void LogicUpdate() { }

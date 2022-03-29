@@ -102,15 +102,15 @@ namespace Hero
       switch (data.State)
       {
         case HeroState.Idle:
-          return (typeof(HeroIdleState), new HeroIdleState((HeroMoveUpMachineState) upState, _hero,  _animator, "IsIdle", (HeroMoveStateData) data));
+          return (typeof(HeroIdleState), new HeroIdleState((HeroMoveUpMachineState) upState, _hero,  _animator, "IsIdle", (HeroMoveStateData) data, _behaviourContainer.GetStateBehaviour<MoveBehaviour>()));
         case HeroState.Walk:
-          return (typeof(HeroWalkState), new HeroWalkState((HeroMoveUpMachineState) upState, _hero, _animator, "IsIdle", (HeroMoveStateData) data, _move, _rotate, _moveStaticData));
+          return (typeof(HeroWalkState), new HeroWalkState((HeroMoveUpMachineState) upState, _hero, _animator, "IsIdle", (HeroMoveStateData) data,_behaviourContainer.GetStateBehaviour<MoveBehaviour>(), _move, _rotate, _moveStaticData));
         case HeroState.Run:
-          return (typeof(HeroRunState), new HeroRunState( (HeroMoveUpMachineState) upState, _hero, _animator, "IsIdle", (HeroMoveStateData) data, _stamina, _rotate, _move, _moveStaticData));
+          return (typeof(HeroRunState), new HeroRunState( (HeroMoveUpMachineState) upState, _hero, _animator, "IsIdle", (HeroMoveStateData) data,_behaviourContainer.GetStateBehaviour<MoveBehaviour>(), _stamina, _rotate, _move, _moveStaticData));
         case HeroState.Roll:
-          return (typeof(HeroRollSubState), new HeroRollSubState( (HeroRollUpMachineState) upState, _hero, _animator, "IsRoll", data, _move, _stamina, _behaviourContainer.GetStateBehaviour<RollBehaviour>()));
+          return (typeof(HeroRollSubState), new HeroRollSubState( (HeroRollUpMachineState) upState, _hero, _animator, "IsRoll", data, _behaviourContainer.GetStateBehaviour<RollBehaviour>(), _move, _stamina));
         case HeroState.Rotating:
-          return (typeof(HeroRotatingSubState), new HeroRotatingSubState((HeroRotatingUpMachineState) upState, _hero, _animator, "IsRotating", (HeroRotateStateData) data, _rotate));
+          return (typeof(HeroRotatingSubState), new HeroRotatingSubState((HeroRotatingUpMachineState) upState, _hero, _animator, "IsRotating", (HeroRotateStateData) data,_behaviourContainer.GetStateBehaviour<RotatingBehaviour>(), _rotate));
         default:
           throw new ArgumentOutOfRangeException(nameof(data.State), data.State, null);
       }
