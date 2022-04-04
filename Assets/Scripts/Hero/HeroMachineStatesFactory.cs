@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Animations;
 using Services;
 using StateMachines;
+using StateMachines.Player;
 using StateMachines.Player.AnimationStatesBehaviour;
 using StateMachines.Player.Base;
 using StateMachines.Player.Move;
@@ -75,6 +76,8 @@ namespace Hero
           return new HeroRotatingUpMachineState(_stateMachine, _hero, _coroutineRunner, _animator, "RotateX", "RotateY");
         case HeroParentStateType.Roll:
           return new HeroRollUpMachineState(_stateMachine, _hero, _coroutineRunner);
+        case HeroParentStateType.Attack:
+          return new HeroAttackUpMachineState(_stateMachine, _hero, _coroutineRunner);
         default:
           throw new ArgumentOutOfRangeException(nameof(state), state, null);
       }
@@ -111,6 +114,8 @@ namespace Hero
           return (typeof(HeroRollSubState), new HeroRollSubState( (HeroRollUpMachineState) upState, _hero, _animator, "IsRoll", data, _behaviourContainer.GetStateBehaviour<RollBehaviour>(), _move, _stamina));
         case HeroState.Rotating:
           return (typeof(HeroRotatingSubState), new HeroRotatingSubState((HeroRotatingUpMachineState) upState, _hero, _animator, "IsRotating", (HeroRotateStateData) data,_behaviourContainer.GetStateBehaviour<RotatingBehaviour>(), _rotate));
+        case HeroState.SimpleAttack:
+          return (typeof(HeroAttackState), new HeroAttackState((HeroAttackUpMachineState) upState, _hero, _animator, "IsSimpleAttack", data,_behaviourContainer.GetStateBehaviour<AttackBehaviour>(), _attack, _attackData, _stamina));
         default:
           throw new ArgumentOutOfRangeException(nameof(data.State), data.State, null);
       }

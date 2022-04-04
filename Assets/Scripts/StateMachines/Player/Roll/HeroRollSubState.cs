@@ -60,6 +60,9 @@ namespace StateMachines.Player.Roll
       Debug.Log("Exit SubState");
     }
 
+    public override bool IsCanBeInterrupted(int weight) => 
+      base.IsCanBeInterrupted(weight) && behaviour.IsCanBeInterrupted;
+
     public void Cleanup()
     {
       behaviour.Immuned -= SetImmune;

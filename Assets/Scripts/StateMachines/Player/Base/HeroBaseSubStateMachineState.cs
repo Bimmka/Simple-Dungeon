@@ -12,8 +12,8 @@ namespace StateMachines.Player.Base
     protected readonly TStateData stateData;
     protected readonly TUpState upState;
     protected readonly TStateBehaviour behaviour;
+    protected readonly BattleAnimator animator;
 
-    private readonly BattleAnimator _animator;
     private readonly int _animationNameHash;
     
     public int Weight => stateData.Weight;
@@ -25,31 +25,28 @@ namespace StateMachines.Player.Base
       this.stateData = stateData;
       this.upState = upState;
       this.behaviour = behaviour;
-      _animator = animator;
+      this.animator = animator;
       _animationNameHash = Animator.StringToHash(animationName);
     }
 
-    public bool IsCanBeInterrupted(int weight)
+    public virtual bool IsCanBeInterrupted(int weight)
     {
       if (stateData.IsInteraptedBySameWeight)
         return weight >= Weight;
       return weight > Weight;
     }
 
-    public virtual void Enter()
-    {
-      _animator.SetBool(_animationNameHash, true);
-      _animator.Play(_animationNameHash);
-    }
+    public virtual void Enter() => 
+      animator.SetBool(_animationNameHash, true);
 
     public virtual void LogicUpdate() { }
 
     public virtual void Interrupt() => 
-      _animator.SetBool(_animationNameHash, false);
+      animator.SetBool(_animationNameHash, false);
 
 
     public virtual void Exit() => 
-      _animator.SetBool(_animationNameHash, false);
+      animator.SetBool(_animationNameHash, false);
 
     public virtual void AnimationTriggered() {}
 
@@ -60,7 +57,7 @@ namespace StateMachines.Player.Base
       upState.InterruptState(to);
 
     protected void SetFloat(int hash, float value) => 
-      _animator.SetFloat(hash, value);
+      animator.SetFloat(hash, value);
 
     protected float ClipLength(PlayerActionsType actionsType) => 
       upState.ClipLength(actionsType);

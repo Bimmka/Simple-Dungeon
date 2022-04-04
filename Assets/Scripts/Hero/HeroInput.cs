@@ -25,8 +25,8 @@ namespace Hero
     {
       if (isDisabled)
         return;
-      /* if (inputService.IsAttackButtonDown())
-         stateMachine.SetAttackState();*/
+      if (_inputService.IsAttackButtonDown())
+        stateMachine.SetAttackState();
 
       if (_inputService.IsRollButtonDown())
         stateMachine.SetRollState();

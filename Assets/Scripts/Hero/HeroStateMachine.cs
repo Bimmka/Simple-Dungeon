@@ -94,6 +94,8 @@ namespace Hero
 
         public void SetAttackState()
         {
+            if (_stateMachine.State.IsCanBeInterrupted(State<HeroAttackState>().Weight) && State<HeroAttackState>().IsCanAttack())
+                _stateMachine.InterruptState(GetUpStateForSubstate(State<HeroAttackState>()), State<HeroAttackState>());
         }
 
         public void SetMoveAxis(Vector2 moveDirection) => 
@@ -104,12 +106,8 @@ namespace Hero
 
         public void SetRollState()
         {
-            if (_stateMachine.State.IsCanBeInterrupted(State<HeroRollSubState>().Weight) &&
-                State<HeroRollSubState>().IsCanRoll())
-            {
-                Debug.Log("<color=yellow>Set Roll State</color>");
+            if (_stateMachine.State.IsCanBeInterrupted(State<HeroRollSubState>().Weight) && State<HeroRollSubState>().IsCanRoll())
                 _stateMachine.InterruptState(GetUpStateForSubstate(State<HeroRollSubState>()), State<HeroRollSubState>());
-            }
         }
 
         public void SetIsRunning(bool isRunning) => 

@@ -4,6 +4,7 @@
   {
     Move,
     Rotate, 
-    Roll
+    Roll,
+    Attack
   }
 }
