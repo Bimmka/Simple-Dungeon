@@ -1,5 +1,7 @@
 ﻿using Interfaces;
 using Services.PlayerData;
+using StateMachines.Player.Attack;
+using StaticData.Hero.Attacks;
 using StaticData.Hero.Components;
 using UnityEngine;
 
@@ -9,30 +11,34 @@ namespace Hero
   {
     [SerializeField] private Transform attackPoint;
 
-    private HeroAttackStaticData attackData;
+    private AttacksStaticData attackData;
     private PlayerCharacteristics characteristics;
 
     private Collider[] hits;
 
-    public void Construct(HeroAttackStaticData data, PlayerCharacteristics characteristics)
+    public void Construct(AttacksStaticData data, PlayerCharacteristics characteristics)
     {
       attackData = data;
       hits = new Collider[attackData.MaxAttackedEntitiesCount];
       this.characteristics = characteristics;
     }
 
-    public void Attack()
+    public void Attack(AttackType attackType)
     {
-      for (int i = 0; i < Hit(); i++)
+      for (int i = 0; i < Hit(AttackData(attackType)); i++)
       {
         hits[i].GetComponentInChildren<IDamageableEntity>().TakeDamage(characteristics.Damage(), transform.position);
       }
     }
 
-    private int Hit() => 
-      Physics.OverlapSphereNonAlloc(attackPoint.position, attackData.AttackRadius, hits, attackData.Mask);
+    private AttackStaticData AttackData(AttackType attackType)
+    {
+      if (attackData.AttacksData.ContainsKey(attackType))
+        return attackData.AttacksData[attackType];
+      return new AttackStaticData();
+    }
 
-    private void OnDrawGizmosSelected() => 
-      Gizmos.DrawWireSphere(attackPoint.position, attackData.AttackRadius);
+    private int Hit(AttackStaticData data) => 
+      Physics.OverlapSphereNonAlloc(attackPoint.position, data.AttackRadius, hits, attackData.Mask);
   }
 }

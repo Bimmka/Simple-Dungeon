@@ -1,4 +1,5 @@
 ﻿using StaticData.Hero;
+using StaticData.Hero.Attacks;
 using StaticData.Hero.Components;
 
 namespace Services.PlayerData
@@ -12,7 +13,7 @@ namespace Services.PlayerData
     public readonly PlayerScore Score;
     
     public HeroStaminaStaticData StaminaStaticData { get; private set; }
-    public HeroAttackStaticData AttackData { get; private set; }
+    public AttacksStaticData AttackData { get; private set; }
     public HeroImpactsStaticData ImpactsData { get; private set; }
     public HeroMoveStaticData MoveData { get; private set; }
 

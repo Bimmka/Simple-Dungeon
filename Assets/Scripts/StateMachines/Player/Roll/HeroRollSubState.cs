@@ -57,7 +57,6 @@ namespace StateMachines.Player.Roll
         else 
           ChangeState(hero.State<HeroRunState>());
       }
-      Debug.Log("Exit SubState");
     }
 
     public override bool IsCanBeInterrupted(int weight) => 

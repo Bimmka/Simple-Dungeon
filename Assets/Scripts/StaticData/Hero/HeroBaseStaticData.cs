@@ -1,4 +1,5 @@
 ﻿using Loots;
+using StaticData.Hero.Attacks;
 using StaticData.Hero.Components;
 using UnityEngine;
 
@@ -11,7 +12,7 @@ namespace StaticData.Hero
     public int InventorySlotCount = 20;
     public LootType[] EquipmentSlots;
     public HeroStaminaStaticData StaminaStaticData;
-    public HeroAttackStaticData AttackData;
+    public AttacksStaticData AttackData;
     public HeroImpactsStaticData ImpactsData;
     public HeroMoveStaticData MoveData;
   }

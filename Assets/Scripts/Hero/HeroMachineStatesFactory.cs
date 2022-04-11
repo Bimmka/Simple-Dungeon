@@ -5,10 +5,12 @@ using Services;
 using StateMachines;
 using StateMachines.Player;
 using StateMachines.Player.AnimationStatesBehaviour;
+using StateMachines.Player.Attack;
 using StateMachines.Player.Base;
 using StateMachines.Player.Move;
 using StateMachines.Player.Roll;
 using StateMachines.Player.Rotating;
+using StaticData.Hero.Attacks;
 using StaticData.Hero.Components;
 using StaticData.Hero.States.Base;
 using UnityEngine;
@@ -23,7 +25,7 @@ namespace Hero
     private readonly HeroMove _move;
     private readonly HeroAttack _attack;
     private readonly HeroRotate _rotate;
-    private readonly HeroAttackStaticData _attackData;
+    private readonly AttacksStaticData _attackData;
     private readonly HeroStamina _stamina;
     private readonly HeroImpactsStaticData _impactData;
     private readonly ICoroutineRunner _coroutineRunner;
@@ -34,7 +36,7 @@ namespace Hero
 
     public HeroMachineStatesFactory(StateMachineWithSubstates stateMachine, HeroStateMachine hero, HeroAnimator animator,
       HeroMove move,
-      HeroAttack attack, HeroRotate rotate, HeroAttackStaticData attackData, HeroStamina stamina,
+      HeroAttack attack, HeroRotate rotate, AttacksStaticData attackData, HeroStamina stamina,
       HeroImpactsStaticData impactData, ICoroutineRunner coroutineRunner, HeroMoveStaticData moveStaticData, HeroStatesStaticData statesData, AnimatorStateBehaviourContainer behaviourContainer)
     {
       _stateMachine = stateMachine;
@@ -115,10 +117,17 @@ namespace Hero
         case HeroState.Rotating:
           return (typeof(HeroRotatingSubState), new HeroRotatingSubState((HeroRotatingUpMachineState) upState, _hero, _animator, "IsRotating", (HeroRotateStateData) data,_behaviourContainer.GetStateBehaviour<RotatingBehaviour>(), _rotate));
         case HeroState.SimpleAttack:
-          return (typeof(HeroAttackState), new HeroAttackState((HeroAttackUpMachineState) upState, _hero, _animator, "IsSimpleAttack", data,_behaviourContainer.GetStateBehaviour<AttackBehaviour>(), _attack, _attackData, _stamina));
+          return (typeof(HeroAttackState), new HeroAttackState((HeroAttackUpMachineState) upState, _hero, _animator, "IsSimpleAttack", data,_behaviourContainer.GetStateBehaviour<AttackBehaviour>(), _attack, AttackData(AttackType.BaseAttack), _stamina));
         default:
           throw new ArgumentOutOfRangeException(nameof(data.State), data.State, null);
       }
+    }
+
+    private AttackStaticData AttackData(AttackType attack)
+    {
+      if (_attackData.AttacksData.ContainsKey(attack))
+        return _attackData.AttacksData[attack];
+      return new AttackStaticData();
     }
   }
 }

@@ -6,6 +6,7 @@ using StateMachines.Player;
 using StateMachines.Player.Base;
 using StateMachines.Player.Move;
 using StateMachines.Player.Roll;
+using StaticData.Hero.Attacks;
 using StaticData.Hero.Components;
 using StaticData.Hero.States;
 using StaticData.Hero.States.Base;
@@ -24,7 +25,7 @@ namespace Hero
         [SerializeField] private AnimatorClipsContainer _clipsContainer;
         [SerializeField] private HeroStatesStaticData _statesData;
         
-        private HeroAttackStaticData _attackData;
+        private AttacksStaticData _attackData;
         private HeroImpactsStaticData _impactsData;
 
         private HeroMachineStatesFactory _statesFactory;
@@ -39,10 +40,9 @@ namespace Hero
         public bool IsRolling => _stateMachine.State.IsSameState(State<HeroRollSubState>());
 
         public Vector2 MoveAxis { get; private set; }
-        public float RotateAngle { get; private set; }
 
 
-        public void Construct(HeroAttackStaticData attackData, HeroImpactsStaticData impactData, PlayerCharacteristics characteristics, HeroMoveStaticData moveData)
+        public void Construct(AttacksStaticData attackData, HeroImpactsStaticData impactData, PlayerCharacteristics characteristics, HeroMoveStaticData moveData)
         {
             _attackData = attackData;
             _moveData = moveData;
@@ -68,7 +68,7 @@ namespace Hero
         {
             base.Cleanup();
             _heroAnimator.Triggered -= AnimationTriggered;
-//            State<PlayerAttackState>().Cleanup();
+            State<HeroAttackState>().Cleanup();
         }
 
         protected override void Update() => 

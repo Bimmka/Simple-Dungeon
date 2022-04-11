@@ -38,7 +38,6 @@ namespace StateMachines.Player.AnimationStatesBehaviour
     private void SetInCanBeInterrupted(bool isInterrupted)
     {
       IsCanBeInterrupted = isInterrupted;
-      Debug.Log($"IsInterrupted {IsCanBeInterrupted}");
     }
 
     private bool IsInMoveRange(float time) => 

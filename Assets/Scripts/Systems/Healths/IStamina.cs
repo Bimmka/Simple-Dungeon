@@ -2,9 +2,9 @@
 {
   public interface IStamina : IChangedValue
   {
-    bool IsCanAttack();
+    bool IsCanAttack(int attackCost);
     bool IsCanRoll();
-    void WasteToAttack();
+    void WasteToAttack(int attackCost);
     void WasteToRoll();
   }
 }

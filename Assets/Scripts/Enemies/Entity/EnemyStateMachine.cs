@@ -41,11 +41,16 @@ namespace Enemies.Entity
       attack.Construct(this.attackData);
     }
 
-    protected void Subscribe()
+    private void Awake()
     {
    
       battleAnimator.Triggered += AnimationTriggered;
       death.Revived += Revive;
+    }
+
+    private void CreateStates()
+    {
+      
     }
 
     private void AnimationTriggered()
@@ -53,7 +58,7 @@ namespace Enemies.Entity
       
     }
 
-    protected void Cleanup()
+    private void OnDestroy()
     {
       
       battleAnimator.Triggered -= AnimationTriggered;
