@@ -97,8 +97,6 @@ namespace Hero
         upState.AddSubstate(createdState.Item2);
         createdSubStates.Add(createdState.Item2);
         subStates.Add(createdState.Item1, createdState.Item2);
-        if (createdState.Item1 == typeof(HeroAttackSubState))
-          Debug.Log("Attacl");
       }
 
       return createdSubStates;

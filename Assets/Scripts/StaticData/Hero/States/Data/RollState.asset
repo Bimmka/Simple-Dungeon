@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: RollState
   m_EditorClassIdentifier: 
   State: 3
-  Weight: 4
-  IsInteraptedBySameWeight: 1
+  Weight: 5
+  IsInteraptedBySameWeight: 0

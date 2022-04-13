@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7b90d8c72dd41c197e4d07b6b4f141b, type: 3}
   m_Name: FatalityAttackState
   m_EditorClassIdentifier: 
-  State: 5
+  State: 7
   Weight: 4
-  IsInteraptedBySameWeight: 1
+  IsInteraptedBySameWeight: 0

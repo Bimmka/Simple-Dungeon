@@ -25,7 +25,7 @@ MonoBehaviour:
     - PreviousAttack: 2
       NextAttack: 3
       Delay: 0
-      LifeTime: 2
+      LifeTime: 0
   EmptyStep:
     PreviousAttack: 0
     NextAttack: 0
