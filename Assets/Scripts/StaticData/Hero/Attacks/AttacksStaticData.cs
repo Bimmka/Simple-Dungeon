@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using StateMachines.Player.Attack;
+using StaticData.Hero.Attacks.Combo;
 using UnityEngine;
 
 namespace StaticData.Hero.Attacks
@@ -13,5 +14,7 @@ namespace StaticData.Hero.Attacks
     
     public int MaxAttackedEntitiesCount;
     public LayerMask Mask;
+
+    public HeroCombosStaticData ComboStaticData;
   }
 }

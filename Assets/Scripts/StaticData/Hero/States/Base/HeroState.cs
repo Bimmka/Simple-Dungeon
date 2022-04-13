@@ -7,6 +7,8 @@
     Run = 2,
     Roll = 3,
     Rotating = 4,
-    SimpleAttack = 5
+    SimpleAttack = 5,
+    ComboAttack = 6,
+    FatalityAttack = 7,
   }
 }

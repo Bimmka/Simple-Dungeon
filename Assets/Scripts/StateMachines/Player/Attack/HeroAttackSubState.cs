@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace StateMachines.Player.Attack
 {
-  public class HeroAttackSubState : HeroBaseSubStateMachineState<HeroAttackUpMachineState, HeroAttackSubState, HeroBaseStateData, AttackBehaviour>
+  public class HeroAttackSubState : HeroBaseSubStateMachineState<HeroAttackUpMachineState, HeroAttackSubState, HeroBaseStateData, BaseAttackBehaviour>
   {
     private readonly HeroAttack _heroAttack;
     private readonly HeroStamina _heroStamina;
@@ -21,7 +21,7 @@ namespace StateMachines.Player.Attack
 
     private bool isAttackEnded;
     
-    public HeroAttackSubState(HeroAttackUpMachineState upState, HeroStateMachine hero, BattleAnimator animator, string animationName, HeroBaseStateData stateData, AttackBehaviour behaviour, HeroAttack heroAttack, AttackStaticData attackData, HeroStamina heroStamina) : base(upState, hero, animator, animationName, stateData, behaviour)
+    public HeroAttackSubState(HeroAttackUpMachineState upState, HeroStateMachine hero, BattleAnimator animator, string animationName, HeroBaseStateData stateData, BaseAttackBehaviour behaviour, HeroAttack heroAttack, AttackStaticData attackData, HeroStamina heroStamina) : base(upState, hero, animator, animationName, stateData, behaviour)
     {
       _heroAttack = heroAttack;
       _heroStamina = heroStamina;
@@ -48,6 +48,18 @@ namespace StateMachines.Player.Attack
     public override bool IsCanBeInterrupted(int weight) =>
       base.IsCanBeInterrupted(weight) && behaviour.IsCanBeInterrupted;
 
+    public override void Exit()
+    {
+      base.Exit();
+      hero.FinishAttack();
+    }
+
+    public override void Interrupt()
+    {
+      base.Interrupt();
+      hero.FinishAttack();
+    }
+
     public override void AnimationTriggered()
     {
       base.AnimationTriggered();
@@ -62,6 +74,9 @@ namespace StateMachines.Player.Attack
 
     private void Attack()
     {
+      if (IsAnimationInit == false)
+        return;
+      
       _heroAttack.Attack(_attackData.Attack);
       _heroStamina.WasteToAttack(_attackData.Cost);
     }

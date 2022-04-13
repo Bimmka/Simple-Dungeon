@@ -1,7 +1,6 @@
 ﻿namespace StateMachines.Player.AnimationStatesBehaviour
 {
-  public class AttackBehaviour : BaseAttackBehaviour
+  public class FatalityAttackBehaviour : BaseAttackBehaviour
   {
-    
   }
 }

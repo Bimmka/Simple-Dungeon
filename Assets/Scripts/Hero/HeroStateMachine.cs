@@ -3,6 +3,7 @@ using Services;
 using Services.PlayerData;
 using StateMachines;
 using StateMachines.Player;
+using StateMachines.Player.Attack;
 using StateMachines.Player.Base;
 using StateMachines.Player.Move;
 using StateMachines.Player.Roll;
@@ -34,6 +35,8 @@ namespace Hero
 
         private StateMachineWithSubstates _stateMachine;
 
+        private HeroAttacksCombo _comboObserver;
+
         public bool IsBlockingPressed { get; private set; }
         public bool IsRunningPressed { get; private set; }
         public bool IsBlockingUp => false;//_stateMachine.State == State<HeroIdleShieldState>();
@@ -48,6 +51,7 @@ namespace Hero
             _moveData = moveData;
             _impactsData = impactData;
             _attack.Construct(attackData, characteristics);
+            _comboObserver = new HeroAttacksCombo(attackData.ComboStaticData, this);
             Initialize();
         }
 
@@ -94,8 +98,17 @@ namespace Hero
 
         public void SetAttackState()
         {
-            if (_stateMachine.State.IsCanBeInterrupted(State<HeroAttackState>().Weight) && State<HeroAttackState>().IsCanAttack())
-                _stateMachine.InterruptState(GetUpStateForSubstate(State<HeroAttackState>()), State<HeroAttackState>());
+            AttackType attackType = _comboObserver.NextAttack();
+            if (attackType == AttackType.None)
+                return;
+            
+            HeroAttackSubState state = AttackState(attackType);
+
+            if (_stateMachine.State.IsCanBeInterrupted(state.Weight) && state.IsCanAttack())
+            {
+                _stateMachine.InterruptState(GetUpStateForSubstate(state), state);
+                _comboObserver.ApplyAttack();
+            }
         }
 
         public void SetMoveAxis(Vector2 moveDirection) => 
@@ -143,7 +156,13 @@ namespace Hero
         public TState State<TState>() where TState : IHeroBaseSubStateMachineState => 
             (TState) _statesContainer.GetState<TState>();
 
+        public HeroAttackSubState AttackState(AttackType type) => 
+            _statesContainer.GetAttackState(type);
+
         public IHeroBaseUpMachineState GetUpStateForSubstate(IHeroBaseSubStateMachineState state )=> 
             _statesContainer.GetUpStateForSubstate(state);
+
+        public void FinishAttack() => 
+            _comboObserver.AttackFinished();
     }
 }

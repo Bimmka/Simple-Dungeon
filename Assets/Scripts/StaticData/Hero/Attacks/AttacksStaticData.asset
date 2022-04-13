@@ -142,3 +142,4 @@ MonoBehaviour:
   Mask:
     serializedVersion: 2
     m_Bits: 128
+  ComboStaticData: {fileID: 11400000, guid: 89bd048d909d7fa4d9b5f27deacdfdb4, type: 2}

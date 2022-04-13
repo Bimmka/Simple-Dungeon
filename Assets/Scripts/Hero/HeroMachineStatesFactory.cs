@@ -37,7 +37,8 @@ namespace Hero
     public HeroMachineStatesFactory(StateMachineWithSubstates stateMachine, HeroStateMachine hero, HeroAnimator animator,
       HeroMove move,
       HeroAttack attack, HeroRotate rotate, AttacksStaticData attackData, HeroStamina stamina,
-      HeroImpactsStaticData impactData, ICoroutineRunner coroutineRunner, HeroMoveStaticData moveStaticData, HeroStatesStaticData statesData, AnimatorStateBehaviourContainer behaviourContainer)
+      HeroImpactsStaticData impactData, ICoroutineRunner coroutineRunner, HeroMoveStaticData moveStaticData, HeroStatesStaticData statesData, 
+      AnimatorStateBehaviourContainer behaviourContainer)
     {
       _stateMachine = stateMachine;
       _hero = hero;
@@ -56,14 +57,14 @@ namespace Hero
 
     public void CreateStates(
       ref Dictionary<IHeroBaseUpMachineState, List<IHeroBaseSubStateMachineState>> states,
-      ref Dictionary<Type, IHeroBaseSubStateMachineState> substates)
+      ref Dictionary<Type, IHeroBaseSubStateMachineState> substates, ref Dictionary<AttackType, HeroAttackSubState> attackStates)
     {
       List<IHeroBaseSubStateMachineState> subStates = new List<IHeroBaseSubStateMachineState>(10);
       IHeroBaseUpMachineState upState;
       for (int i = 0; i < _statesData.StateDatas.Count; i++)
       {
         upState = CreateUpState(_statesData.StateDatas[i].UpState);
-        subStates = CreateSubStates(upState, _statesData.StateDatas[i].SubstatesData, ref substates);
+        subStates = CreateSubStates(upState, _statesData.StateDatas[i].SubstatesData, ref substates, ref attackStates);
         states.Add(upState, subStates);
       }
     }
@@ -85,24 +86,25 @@ namespace Hero
       }
     }
 
-    private List<IHeroBaseSubStateMachineState> CreateSubStates(IHeroBaseUpMachineState upState,
-      HeroBaseStateData[] substatesData, ref Dictionary<Type, IHeroBaseSubStateMachineState> subStates)
+    private List<IHeroBaseSubStateMachineState> CreateSubStates(IHeroBaseUpMachineState upState, HeroBaseStateData[] substatesData, 
+      ref Dictionary<Type, IHeroBaseSubStateMachineState> subStates, ref Dictionary<AttackType, HeroAttackSubState> attackStates)
     {
       List<IHeroBaseSubStateMachineState> createdSubStates = new List<IHeroBaseSubStateMachineState>(10);
       (Type, IHeroBaseSubStateMachineState) createdState;
       for (int i = 0; i < substatesData.Length; i++)
       {
-        createdState = CreateSubState(upState, substatesData[i]);
+        createdState = CreateSubState(upState, substatesData[i], ref attackStates);
         upState.AddSubstate(createdState.Item2);
         createdSubStates.Add(createdState.Item2);
         subStates.Add(createdState.Item1, createdState.Item2);
+        if (createdState.Item1 == typeof(HeroAttackSubState))
+          Debug.Log("Attacl");
       }
 
       return createdSubStates;
     }
 
-    private (Type, IHeroBaseSubStateMachineState) CreateSubState(IHeroBaseUpMachineState upState,
-      HeroBaseStateData data)
+    private (Type, IHeroBaseSubStateMachineState) CreateSubState(IHeroBaseUpMachineState upState, HeroBaseStateData data, ref Dictionary<AttackType, HeroAttackSubState> attackStates)
     {
       switch (data.State)
       {
@@ -117,7 +119,17 @@ namespace Hero
         case HeroState.Rotating:
           return (typeof(HeroRotatingSubState), new HeroRotatingSubState((HeroRotatingUpMachineState) upState, _hero, _animator, "IsRotating", (HeroRotateStateData) data,_behaviourContainer.GetStateBehaviour<RotatingBehaviour>(), _rotate));
         case HeroState.SimpleAttack:
-          return (typeof(HeroAttackState), new HeroAttackState((HeroAttackUpMachineState) upState, _hero, _animator, "IsSimpleAttack", data,_behaviourContainer.GetStateBehaviour<AttackBehaviour>(), _attack, AttackData(AttackType.BaseAttack), _stamina));
+          HeroAttackState attack = new HeroAttackState((HeroAttackUpMachineState) upState, _hero, _animator, "IsSimpleAttack", data, _behaviourContainer.GetStateBehaviour<AttackBehaviour>(), _attack, AttackData(AttackType.BaseAttack), _stamina);
+          attackStates.Add(AttackType.BaseAttack, attack);
+          return (attack.GetType(), attack);
+        case HeroState.ComboAttack:
+          HeroComboAttackState comboAttack = new HeroComboAttackState((HeroAttackUpMachineState) upState, _hero, _animator, "IsComboAttack", data, _behaviourContainer.GetStateBehaviour<ComboAttackBehaviour>(), _attack, AttackData(AttackType.Combo), _stamina);
+          attackStates.Add(AttackType.Combo, comboAttack);
+          return (comboAttack.GetType(), comboAttack);
+        case HeroState.FatalityAttack:
+          HeroFatalityAttackState fatalityAttack = new HeroFatalityAttackState((HeroAttackUpMachineState) upState, _hero, _animator, "IsFatalityAttack", data, _behaviourContainer.GetStateBehaviour<FatalityAttackBehaviour>(), _attack, AttackData(AttackType.Fatality), _stamina);
+          attackStates.Add(AttackType.Fatality, fatalityAttack);
+          return (fatalityAttack.GetType(), fatalityAttack);
         default:
           throw new ArgumentOutOfRangeException(nameof(data.State), data.State, null);
       }

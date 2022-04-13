@@ -17,5 +17,7 @@
     ShieldTurnRight,
     ShieldTurnAround,
     SimpleAttack,
+    ComboAttack,
+    FatalityAttack
   }
 }

@@ -55,16 +55,12 @@ namespace StateMachines.Player.Base
 
     public void ChangeState(IHeroBaseSubStateMachineState to)
     {
-      currentState.Exit();
-
-      UpdateState(to);
+      UpdateState(to, ExitCurrentState);
     }
 
     public void InterruptState(IHeroBaseSubStateMachineState to)
     {
-      InterruptState();
-      
-      UpdateState(to);
+      UpdateState(to, InterruptState);
     }
 
     public float ClipLength(PlayerActionsType actionsType) => 
@@ -87,12 +83,17 @@ namespace StateMachines.Player.Base
       return _subStates[typeof(TState)];
     }
 
-    private void UpdateState(IHeroBaseSubStateMachineState to)
+    private void UpdateState(IHeroBaseSubStateMachineState to, Action actionWithPreviousState)
     {
       if (_subStates.ContainsKey(to.GetType()))
+      {
+        actionWithPreviousState?.Invoke();
         SetNewSubstate(to);
+      }
       else
         _stateMachine.ChangeState(hero.GetUpStateForSubstate(to), to);
     }
+    private void ExitCurrentState() => 
+      currentState.Exit();
   }
 }

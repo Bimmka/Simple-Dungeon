@@ -2,6 +2,7 @@
 {
   public enum AttackType
   {
+    None,
     BaseAttack, 
     Combo,
     Fatality
