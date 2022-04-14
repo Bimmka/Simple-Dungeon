@@ -96,7 +96,7 @@ namespace Hero
             _stateMachine.AnimationTriggered();
 
 
-        public void SetAttackState()
+        public void SetAttackState(Vector3 clickPosition)
         {
             AttackType attackType = _comboObserver.NextAttack();
             if (attackType == AttackType.None)
@@ -106,6 +106,7 @@ namespace Hero
 
             if (_stateMachine.State.IsCanBeInterrupted(state.Weight) && state.IsCanAttack())
             {
+                _rotate.ForceRotateTo(clickPosition);
                 _stateMachine.InterruptState(GetUpStateForSubstate(state), state);
                 _comboObserver.ApplyAttack();
             }

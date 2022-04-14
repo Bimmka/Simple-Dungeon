@@ -13,6 +13,15 @@ namespace Hero
 
     public void RotateTo(Vector2 moveAxis) => 
       transform.forward = Vector3.Lerp(transform.forward, new Vector3(moveAxis.x, 0, moveAxis.y), lowAngleMoveRotationSpeed);
+    
+    public void ForceRotateTo(Vector3 to)
+    {
+      Vector3 directionToClick = to - transform.position;
+      directionToClick.y = 0;
+      directionToClick = directionToClick.normalized;
+
+     transform.forward = Vector3.Lerp(transform.forward, directionToClick, 1f);
+    }
 
     public void TurnAround(Vector3 endDirection, float duration, Action callback)
     {
@@ -28,13 +37,6 @@ namespace Hero
 
     public void SetIsTurning() => 
       IsTurning = true;
-
-#if DEBUG_MOVE
-    public void SetInterpolateValue(float value)
-    {
-      lowAngleMoveRotationSpeed = value;
-    }
-#endif
 
     private void Rotate(Vector3 endDirection, float length, Action callback = null)
     {
