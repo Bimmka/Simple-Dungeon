@@ -29,18 +29,15 @@ namespace Hero
     {
       if (_isDisabled)
         return;
-      if (_inputService.IsAttackButtonDown())
-      {
-        Debug.Log(ClickPoint());
+      if (_inputService.IsAttackButtonDown()) 
         stateMachine.SetAttackState(ClickPoint());
-      }
 
       if (_inputService.IsRollButtonDown())
         stateMachine.SetRollState();
 
       stateMachine.SetIsRunning(_inputService.IsRunButtonPressed());
 
-      /* stateMachine.SetIsBlocking(inputService.IsBlockButtonPressed());*/
+      stateMachine.SetIsBlocking(_inputService.IsBlockButtonPressed());
       stateMachine.SetMoveAxis(_inputService.Axis);
     }
 

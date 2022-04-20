@@ -29,3 +29,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: ed2da2c353a20a04ba5c363580a49f03, type: 2}
     - {fileID: 11400000, guid: cee98429a71d47b41a38d8835e382ec7, type: 2}
     - {fileID: 11400000, guid: 2908c2ea49edabf4390621c4e8aa5aa5, type: 2}
+  - UpState: 4
+    SubstatesData:
+    - {fileID: 11400000, guid: e08d272d66b21d944bbdcebdc508d7ef, type: 2}
+    - {fileID: 11400000, guid: ed78cf000259f2c44bc8db084b7a745e, type: 2}

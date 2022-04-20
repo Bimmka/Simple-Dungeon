@@ -15,7 +15,14 @@ namespace StateMachines.Player.Move
     public override void LogicUpdate()
     {
       base.LogicUpdate();
-      if (hero.IsNotMove() == false)
+      if (hero.IsBlockingPressed)
+      {
+        if (hero.IsNotMove())
+          ChangeState(hero.State<HeroIdleShieldState>());
+        else
+          ChangeState(hero.State<HeroShieldMoveState>());
+      }
+      else if (hero.IsNotMove() == false)
       {
         if (hero.IsRunningPressed && hero.State<HeroRunState>().IsCanRun())
           ChangeState(hero.State<HeroRunState>());

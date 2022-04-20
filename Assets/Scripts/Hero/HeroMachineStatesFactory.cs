@@ -81,6 +81,8 @@ namespace Hero
           return new HeroRollUpMachineState(_stateMachine, _hero, _coroutineRunner);
         case HeroParentStateType.Attack:
           return new HeroAttackUpMachineState(_stateMachine, _hero, _coroutineRunner);
+        case HeroParentStateType.Block:
+          return new HeroShieldMoveUpMachineState(_stateMachine, _hero, _coroutineRunner, _animator, "MoveX");
         default:
           throw new ArgumentOutOfRangeException(nameof(state), state, null);
       }
@@ -116,6 +118,10 @@ namespace Hero
           return (typeof(HeroRollSubState), new HeroRollSubState( (HeroRollUpMachineState) upState, _hero, _animator, "IsRoll", data, _behaviourContainer.GetStateBehaviour<RollBehaviour>(), _move, _stamina));
         case HeroState.Rotating:
           return (typeof(HeroRotatingSubState), new HeroRotatingSubState((HeroRotatingUpMachineState) upState, _hero, _animator, "IsRotating", (HeroRotateStateData) data,_behaviourContainer.GetStateBehaviour<RotatingBehaviour>(), _rotate));
+        case HeroState.BlockIdle:
+          return (typeof(HeroIdleShieldState), new HeroIdleShieldState((HeroShieldMoveUpMachineState) upState, _hero, _animator, "IsBlocking", (HeroMoveStateData) data,_behaviourContainer.GetStateBehaviour<ShieldMoveBehaviour>()));
+        case HeroState.BlockWalk:
+          return (typeof(HeroShieldMoveState), new HeroShieldMoveState((HeroShieldMoveUpMachineState) upState, _hero, _animator, "IsBlocking", (HeroMoveStateData) data,_behaviourContainer.GetStateBehaviour<ShieldMoveBehaviour>(), _move, _rotate, _moveStaticData));
         case HeroState.SimpleAttack:
           HeroAttackState attack = new HeroAttackState((HeroAttackUpMachineState) upState, _hero, _animator, "IsSimpleAttack", data, _behaviourContainer.GetStateBehaviour<AttackBehaviour>(), _attack, AttackData(AttackType.BaseAttack), _stamina);
           attackStates.Add(AttackType.BaseAttack, attack);

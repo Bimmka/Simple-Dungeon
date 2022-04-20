@@ -5,6 +5,7 @@
     Move,
     Rotate, 
     Roll,
-    Attack
+    Attack,
+    Block,
   }
 }

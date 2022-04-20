@@ -43,10 +43,10 @@ namespace StateMachines.Player.Roll
       base.AnimationTriggered();
       if (hero.IsBlockingPressed)
       {
-       /* if (hero.IsStayHorizontal() == false)
-          ChangeState(hero.State<HeroShieldMoveState>());
+        if (hero.IsNotMove())
+          ChangeState(hero.State<HeroIdleShieldState>());
         else
-          ChangeState(hero.State<HeroIdleShieldState>());*/
+          ChangeState(hero.State<HeroShieldMoveState>());
       }
       else
       {

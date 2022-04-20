@@ -1,5 +1,4 @@
-﻿using System;
-using GameStates;
+﻿using GameStates;
 using GameStates.States;
 using Loots;
 using SceneLoading;

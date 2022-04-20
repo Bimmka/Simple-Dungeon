@@ -18,6 +18,9 @@
     ShieldTurnAround,
     SimpleAttack,
     ComboAttack,
-    FatalityAttack
+    FatalityAttack,
+    BlockIdle,
+    BlockWalk,
+    BlockImpact,
   }
 }

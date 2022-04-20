@@ -1,6 +1,7 @@
 ﻿namespace StateMachines.Player.AnimationStatesBehaviour
 {
-  public class MoveBehaviour : BaseMoveBehaviour
+  public abstract class BaseMoveBehaviour : BaseStateBehaviour
   {
+    
   }
 }

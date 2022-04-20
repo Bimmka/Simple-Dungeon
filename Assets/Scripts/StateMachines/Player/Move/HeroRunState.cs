@@ -44,8 +44,14 @@ namespace StateMachines.Player.Move
       Debug.DrawRay(hero.transform.position, hero.transform.forward, Color.red);
       Debug.DrawRay(hero.transform.position, MoveAxis(), Color.green);
 #endif
-
-      if (_heroStamina.IsCanRun() && hero.IsRunningPressed && hero.IsNotMove() == false)
+      if (hero.IsBlockingPressed)
+      {
+        if (hero.IsNotMove())
+          ChangeState(hero.State<HeroIdleShieldState>());
+        else
+          ChangeState(hero.State<HeroShieldMoveState>());
+      }
+      else if (_heroStamina.IsCanRun() && hero.IsRunningPressed && hero.IsNotMove() == false)
       {
         Run();
         UpdateTimerAndStamina();
