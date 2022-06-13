@@ -9,7 +9,6 @@ using StateMachines.Player.Move;
 using StateMachines.Player.Roll;
 using StaticData.Hero.Attacks;
 using StaticData.Hero.Components;
-using StaticData.Hero.States;
 using StaticData.Hero.States.Base;
 using UnityEngine;
 
