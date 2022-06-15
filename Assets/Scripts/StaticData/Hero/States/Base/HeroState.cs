@@ -10,9 +10,6 @@
     SimpleAttack = 5,
     ComboAttack = 6,
     FatalityAttack = 7,
-    BlockIdle = 8, 
-    BlockWalk = 9,
-    BlockImpact = 10,
     Impact = 11,
   }
 }

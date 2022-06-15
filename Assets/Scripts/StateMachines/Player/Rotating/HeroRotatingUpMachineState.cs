@@ -47,14 +47,6 @@ namespace StateMachines.Player.Rotating
     public void TurnAround() => 
       SmoothChange(ref _turnAroundCoroutine, _moveYHash, currentState.TurnAroundEnterCurve);
 
-    public void Turn(PlayerActionsType playerActionsType)
-    {
-      if (playerActionsType == PlayerActionsType.TurnLeft)
-        SmoothChange(ref _turnCoroutine, _moveXHash, currentState.LeftTurnEnterCurve);
-      else if (playerActionsType == PlayerActionsType.TurnRight)
-        SmoothChange(ref _turnCoroutine, _moveXHash, currentState.RightTurnEnterCurve);
-    }
-
     private void SmoothChange(ref Coroutine coroutine, int valueHash, AnimationCurve curve)
     {
       if (coroutine != null)

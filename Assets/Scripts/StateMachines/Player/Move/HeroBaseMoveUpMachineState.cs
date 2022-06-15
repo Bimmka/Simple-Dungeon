@@ -16,6 +16,8 @@ namespace StateMachines.Player.Move
     private readonly BattleAnimator _animator;
 
     private readonly int _moveHashName; 
+    
+    private Vector2 previousMoveAxis;
 
     public HeroBaseMoveUpMachineState(StateMachineWithSubstates stateMachine, HeroStateMachine hero,
       ICoroutineRunner coroutineRunner, BattleAnimator animator, string moveHashName) : base(stateMachine, hero, coroutineRunner)
@@ -24,6 +26,11 @@ namespace StateMachines.Player.Move
       _moveHashName = Animator.StringToHash(moveHashName);
     }
 
+    public bool IsNeedTurnAround(Vector2 moveAxis, float maxAngle)
+    {
+      Vector2 forward = new Vector2(hero.transform.forward.x, hero.transform.forward.z);
+      return Vector2.Dot(forward, moveAxis) < maxAngle;
+    }
 
     protected override void SetNewSubstate(IHeroBaseSubStateMachineState to)
     {
@@ -50,7 +57,7 @@ namespace StateMachines.Player.Move
 
       _changeCoroutine = _coroutineRunner.StartCoroutine(Change(curve, curve[curve.length-1].value));
     }
-    
+
     private void SetFloat(int hash, float value) => 
       _animator.SetFloat(hash, value);
 

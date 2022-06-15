@@ -7,10 +7,11 @@ namespace StaticData.Hero.Components
   {
     public float MoveSpeed = 3f;
     public float RunSpeed = 5f;
-    public float StoppingSpeed = 0.3f;
-    public float StrafeSpeed = 1.5f;
+    public float ShieldMoveSpeed = 1.5f;
+    public float ShieldRunMoveSpeed = 2.5f;
     public float RollSpeed = 2f;
-    public float BigAngleValue = 65f;
+    [Range(-1f,1f)]
+    public float TurnAroundTriggerValue = -0.8f;
     public float Gravity = 1.5f;
   }
 }

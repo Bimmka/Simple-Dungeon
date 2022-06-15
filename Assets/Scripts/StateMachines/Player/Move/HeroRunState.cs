@@ -20,21 +20,15 @@ namespace StateMachines.Player.Move
     private bool _isStopping;
     private float time = 1f;
 
-    public HeroRunState(HeroMoveUpMachineState upState, HeroStateMachine hero, BattleAnimator animator, string triggerName,
-      HeroMoveStateData stateData, MoveBehaviour behaviour, HeroStamina heroStamina,
-      HeroRotate heroRotate, HeroMove heroMove, HeroMoveStaticData heroMoveStaticData) : base(upState, hero, animator, triggerName, stateData, behaviour)
+    public HeroRunState(HeroMoveUpMachineState upState, HeroStateMachine hero, BattleAnimator animator,
+      string triggerName, string speed, HeroMoveStateData stateData, MoveBehaviour behaviour, HeroStamina heroStamina,
+      HeroRotate heroRotate, HeroMove heroMove, HeroMoveStaticData heroMoveStaticData) : 
+      base(upState, hero, animator, triggerName, speed,stateData, behaviour)
     {
       _heroStamina = heroStamina;
       _heroRotate = heroRotate;
       _heroMove = heroMove;
       _moveStaticData = heroMoveStaticData;
-    }
-    
-     public override void Enter()
-    {
-      base.Enter();
-      if (_heroRotate.IsTurning == false && IsLowAngle(hero.MoveAxis, _moveStaticData.BigAngleValue) == false)
-        ChangeState(hero.State<HeroRotatingSubState>());
     }
 
     public override void LogicUpdate()
@@ -44,14 +38,7 @@ namespace StateMachines.Player.Move
       Debug.DrawRay(hero.transform.position, hero.transform.forward, Color.red);
       Debug.DrawRay(hero.transform.position, MoveAxis(), Color.green);
 #endif
-      if (hero.IsBlockingPressed)
-      {
-        if (hero.IsNotMove())
-          ChangeState(hero.State<HeroIdleShieldState>());
-        else
-          ChangeState(hero.State<HeroShieldMoveState>());
-      }
-      else if (_heroStamina.IsCanRun() && hero.IsRunningPressed && hero.IsNotMove() == false)
+      if (_heroStamina.IsCanRun() && hero.IsRunningPressed && hero.IsNotMove() == false)
       {
         Run();
         UpdateTimerAndStamina();
@@ -62,10 +49,19 @@ namespace StateMachines.Player.Move
 
     private void Run()
     {
-      if (IsLowAngle(hero.MoveAxis, _moveStaticData.BigAngleValue) && _heroRotate.IsTurning == false)
+      if (IsNeedTurnAround(hero.MoveAxis, _moveStaticData.TurnAroundTriggerValue) == false)
       {
         _heroRotate.RotateTo(hero.MoveAxis);
-        _heroMove.Run(MoveAxis());
+        if (hero.IsBlockingPressed == false)
+        {
+          _heroMove.Run(MoveAxis());
+          SetTriggerSpeedValue(_moveStaticData.RunSpeed);
+        }
+        else
+        {
+          _heroMove.ShieldRun(MoveAxis());
+          SetTriggerSpeedValue(_moveStaticData.ShieldRunMoveSpeed);
+        }
       }
       else if (_heroRotate.IsTurning == false) 
         InterruptState(hero.State<HeroRotatingSubState>());
@@ -85,7 +81,10 @@ namespace StateMachines.Player.Move
     private void TransitionToAnotherState()
     {
       if (hero.IsNotMove())
+      {
         ChangeState(hero.State<HeroIdleState>());
+        SetTriggerSpeedValue(0f);
+      }
       else
         ChangeState(hero.State<HeroWalkState>());
     }

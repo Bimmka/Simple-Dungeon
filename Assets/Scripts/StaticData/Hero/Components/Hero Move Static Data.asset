@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoveSpeed: 3.3
   RunSpeed: 5
-  StoppingSpeed: 0.3
-  StrafeSpeed: 1.5
+  ShieldMoveSpeed: 1.65
+  ShieldRunMoveSpeed: 2.5
   RollSpeed: 5
-  BigAngleValue: 70
+  TurnAroundTriggerValue: -0.8
   Gravity: -1.5

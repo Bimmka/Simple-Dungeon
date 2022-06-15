@@ -25,5 +25,17 @@ namespace Hero
       Vector3 direction = new Vector3(transform.forward.x, moveData.Gravity, transform.forward.z);
       characterController.Move(direction * (moveData.RollSpeed * Time.deltaTime));
     }
+
+    public void ShieldMove(Vector3 direction)
+    {
+      direction.y = moveData.Gravity;
+      characterController.Move(direction * (moveData.ShieldMoveSpeed * Time.deltaTime));
+    }
+
+    public void ShieldRun(Vector3 direction)
+    {
+      direction.y = moveData.Gravity;
+      characterController.Move(direction * (moveData.ShieldRunMoveSpeed * Time.deltaTime));
+    }
   }
 }

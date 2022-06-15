@@ -14,22 +14,17 @@ namespace StateMachines.Player.Move
     private readonly HeroRotate _heroRotate;
     private readonly HeroMoveStaticData _moveStaticData;
 
+    
+
     private Coroutine _changeCoroutine;
 
     public HeroWalkState(HeroMoveUpMachineState upState, HeroStateMachine hero, BattleAnimator animator,
-      string triggerName,
-      HeroMoveStateData stateData, MoveBehaviour behaviour, HeroMove heroMove, HeroRotate heroRotate, HeroMoveStaticData moveStaticData) : base( upState, hero, animator, triggerName, stateData, behaviour)
+      string triggerName, string speedName, HeroMoveStateData stateData, MoveBehaviour behaviour, HeroMove heroMove, HeroRotate heroRotate, 
+      HeroMoveStaticData moveStaticData) : base( upState, hero, animator, triggerName, speedName,stateData, behaviour)
     {
       _heroMove = heroMove;
       _heroRotate = heroRotate;
       _moveStaticData = moveStaticData;
-    }
-
-    public override void Enter()
-    {
-      base.Enter(); 
-      if (_heroRotate.IsTurning == false && IsLowAngle(hero.MoveAxis, _moveStaticData.BigAngleValue) == false) 
-        ChangeState(hero.State<HeroRotatingSubState>());
     }
 
     public override void LogicUpdate()
@@ -40,23 +35,26 @@ namespace StateMachines.Player.Move
       Debug.DrawRay(hero.transform.position, MoveAxis(), Color.green);
 #endif
 
-      if (hero.IsBlockingPressed)
-      {
-        if (hero.IsNotMove())
-          ChangeState(hero.State<HeroIdleShieldState>());
-        else
-          ChangeState(hero.State<HeroShieldMoveState>());
-      }
-      else if (hero.IsNotMove())
+      if (hero.IsNotMove())
       {
         ChangeState(hero.State<HeroIdleState>());
+        SetTriggerSpeedValue(0f);
       }
       else if (hero.IsRunningPressed && hero.State<HeroRunState>().IsCanRun())
         ChangeState(hero.State<HeroRunState>());
-      else if (IsLowAngle(hero.MoveAxis, _moveStaticData.BigAngleValue) && _heroRotate.IsTurning == false)
+      else if (IsNeedTurnAround(hero.MoveAxis, _moveStaticData.TurnAroundTriggerValue) == false && _heroRotate.IsTurning == false)
       {
         _heroRotate.RotateTo(hero.MoveAxis);
-        _heroMove.Move(MoveAxis());
+        if (hero.IsBlockingPressed == false)
+        {
+          _heroMove.Move(MoveAxis());
+          SetTriggerSpeedValue(_moveStaticData.MoveSpeed);
+        }
+        else
+        {
+          _heroMove.ShieldMove(MoveAxis());
+          SetTriggerSpeedValue(_moveStaticData.ShieldMoveSpeed);
+        }
       }
       else if (_heroRotate.IsTurning == false) 
         InterruptState(hero.State<HeroRotatingSubState>());

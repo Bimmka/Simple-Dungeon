@@ -1,5 +1,6 @@
 ﻿using StateMachines.Player;
 using StateMachines.Player.Base;
+using UnityEngine;
 
 namespace StateMachines
 {
@@ -25,14 +26,18 @@ namespace StateMachines
       InitializeCurrentState(substate);
     }
 
-    public void LogicUpdate() => 
+    public void LogicUpdate()
+    {
+      Debug.Log($"<color=yellow>Logic Update {State.GetType()}</color>");
       State.LogicUpdate();
+    }
 
     public void AnimationTriggered() => 
       State.AnimationTriggered();
 
     public void InterruptState(IHeroBaseUpMachineState upState, IHeroBaseSubStateMachineState state)
     {
+      Debug.Log($"<color=green>Interrupt state {State.GetType()}. IsInit {State.IsAnimationInit}</color>");
       if (State.IsAnimationInit == false)
         return;
       

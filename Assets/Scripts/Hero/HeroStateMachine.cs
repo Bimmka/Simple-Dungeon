@@ -27,19 +27,20 @@ namespace Hero
         
         private AttacksStaticData _attackData;
         private HeroImpactsStaticData _impactsData;
+        private HeroMoveStaticData _moveData;
 
         private HeroMachineStatesFactory _statesFactory;
         private HeroStatesContainer _statesContainer;
-        private HeroMoveStaticData _moveData;
 
         private StateMachineWithSubstates _stateMachine;
 
         private HeroAttacksCombo _comboObserver;
+        private HeroEffectsObserver _effectsObserver;
 
-        public bool IsBlockingPressed { get; private set; }
-        public bool IsRunningPressed { get; private set; }
+        public bool IsBlockingPressed => _effectsObserver.IsBlocking;
+        public bool IsRunningPressed => _effectsObserver.IsRunning;
         public bool IsBlockingUp => false;//_stateMachine.State == State<HeroIdleShieldState>();
-        public bool IsRolling => _stateMachine.State.IsSameState(State<HeroRollSubState>());
+        public bool IsRolling => _effectsObserver.IsRolling;
 
         public Vector2 MoveAxis { get; private set; }
 
@@ -51,6 +52,7 @@ namespace Hero
             _impactsData = impactData;
             _attack.Construct(attackData, characteristics);
             _comboObserver = new HeroAttacksCombo(attackData.ComboStaticData, this);
+            _effectsObserver = new HeroEffectsObserver(_heroAnimator);
             Initialize();
         }
 
@@ -65,6 +67,10 @@ namespace Hero
         {
             base.Subscribe();
             _heroAnimator.Triggered += AnimationTriggered;
+
+            HeroRollSubState rollSubState = State<HeroRollSubState>();
+            rollSubState.Started += OnStartRoll;
+            rollSubState.Ended += OnEndRoll;
         }
 
         protected override void Cleanup()
@@ -72,6 +78,11 @@ namespace Hero
             base.Cleanup();
             _heroAnimator.Triggered -= AnimationTriggered;
             State<HeroAttackState>().Cleanup();
+            
+            HeroRollSubState rollSubState = State<HeroRollSubState>();
+            rollSubState.Started -= OnStartRoll;
+            rollSubState.Ended -= OnEndRoll;
+            rollSubState.Cleanup();
         }
 
         protected override void Update() => 
@@ -105,8 +116,9 @@ namespace Hero
 
             if (_stateMachine.State.IsCanBeInterrupted(state.Weight) && state.IsCanAttack())
             {
-                _rotate.ForceRotateTo(clickPosition);
+                Debug.Log("<color=red>Set Attack State</color>");
                 _stateMachine.InterruptState(GetUpStateForSubstate(state), state);
+                _rotate.ForceRotateTo(clickPosition);
                 _comboObserver.ApplyAttack();
             }
         }
@@ -114,8 +126,12 @@ namespace Hero
         public void SetMoveAxis(Vector2 moveDirection) => 
             MoveAxis = moveDirection;
 
-        public void SetIsBlocking(bool isBlocking) => 
-            IsBlockingPressed = isBlocking;
+        public void SetIsBlocking(bool isBlocking)
+        {
+            if (IsBlockingPressed != isBlocking) 
+                _effectsObserver.UpdateIsBlockingPressed(isBlocking);
+        }
+
 
         public void SetRollState()
         {
@@ -123,8 +139,11 @@ namespace Hero
                 _stateMachine.InterruptState(GetUpStateForSubstate(State<HeroRollSubState>()), State<HeroRollSubState>());
         }
 
-        public void SetIsRunning(bool isRunning) => 
-            IsRunningPressed = isRunning;
+        public void SetIsRunning(bool isRunning)
+        {
+            if (IsRunningPressed != isRunning) 
+                _effectsObserver.UpdateIsRunningPressed(isRunning);
+        }
 
         public void ImpactInShield()
         {
@@ -164,5 +183,11 @@ namespace Hero
 
         public void FinishAttack() => 
             _comboObserver.AttackFinished();
+
+        private void OnStartRoll() => 
+            _effectsObserver.SetIsStartRoll();
+
+        private void OnEndRoll() => 
+            _effectsObserver.SetIsEndRoll();
     }
 }
