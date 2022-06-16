@@ -117,8 +117,8 @@ namespace Hero
             if (_stateMachine.State.IsCanBeInterrupted(state.Weight) && state.IsCanAttack())
             {
                 Debug.Log("<color=red>Set Attack State</color>");
-                _stateMachine.InterruptState(GetUpStateForSubstate(state), state);
-                _rotate.ForceRotateTo(clickPosition);
+                state.SetClickPosition(clickPosition);
+                _stateMachine.InterruptState(GetUpStateForSubstate(state), state); ;
                 _comboObserver.ApplyAttack();
             }
         }

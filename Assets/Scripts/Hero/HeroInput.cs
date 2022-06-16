@@ -38,7 +38,7 @@ namespace Hero
       stateMachine.SetIsRunning(_inputService.IsRunButtonPressed());
 
       stateMachine.SetIsBlocking(_inputService.IsBlockButtonPressed());
-      stateMachine.SetMoveAxis(new Vector2(1,0));
+      stateMachine.SetMoveAxis(_inputService.Axis);
     }
 
     public void Disable()

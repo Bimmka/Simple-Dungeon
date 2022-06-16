@@ -128,21 +128,21 @@ namespace Hero
         
         case HeroState.SimpleAttack:
           HeroAttackState attack = new HeroAttackState((HeroAttackUpMachineState) upState, _hero, _animator, "IsSimpleAttack",
-            data, _behaviourContainer.GetStateBehaviour<AttackBehaviour>(), _attack, AttackData(AttackType.BaseAttack), _stamina);
+            data, _behaviourContainer.GetStateBehaviour<AttackBehaviour>(), _attack, AttackData(AttackType.BaseAttack), _stamina, _rotate);
           attackStates.Add(AttackType.BaseAttack, attack);
           return (attack.GetType(), attack);
         
         case HeroState.ComboAttack:
           HeroComboAttackState comboAttack = new HeroComboAttackState((HeroAttackUpMachineState) upState, _hero, _animator, 
             "IsComboAttack", data, _behaviourContainer.GetStateBehaviour<ComboAttackBehaviour>(), _attack, AttackData(AttackType.Combo),
-            _stamina);
+            _stamina, _rotate);
           attackStates.Add(AttackType.Combo, comboAttack);
           return (comboAttack.GetType(), comboAttack);
         
         case HeroState.FatalityAttack:
           HeroFatalityAttackState fatalityAttack = new HeroFatalityAttackState((HeroAttackUpMachineState) upState, _hero, _animator, 
             "IsFatalityAttack", data, _behaviourContainer.GetStateBehaviour<FatalityAttackBehaviour>(), _attack, 
-            AttackData(AttackType.Fatality), _stamina);
+            AttackData(AttackType.Fatality), _stamina, _rotate);
           attackStates.Add(AttackType.Fatality, fatalityAttack);
           return (fatalityAttack.GetType(), fatalityAttack);
         

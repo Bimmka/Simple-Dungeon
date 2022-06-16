@@ -13,35 +13,39 @@ namespace StateMachines.Player.Attack
   {
     private readonly HeroAttack _heroAttack;
     private readonly HeroStamina _heroStamina;
+    private readonly HeroRotate _rotate;
 
     private readonly AttackStaticData _attackData;
     
-    private float _lastAttackTime;
     private readonly float attackCooldown;
 
+    private float _lastAttackTime;
+
     private bool isAttackEnded;
-    
-    public HeroAttackSubState(HeroAttackUpMachineState upState, HeroStateMachine hero, BattleAnimator animator, string animationName, HeroBaseStateData stateData, BaseAttackBehaviour behaviour, HeroAttack heroAttack, AttackStaticData attackData, HeroStamina heroStamina) : base(upState, hero, animator, animationName, stateData, behaviour)
+    private Vector3 _lastClickPosition;
+
+    public HeroAttackSubState(HeroAttackUpMachineState upState, HeroStateMachine hero, BattleAnimator animator, 
+      string animationName, HeroBaseStateData stateData, BaseAttackBehaviour behaviour, HeroAttack heroAttack, 
+      AttackStaticData attackData, HeroStamina heroStamina, HeroRotate rotate) : base(upState, hero, animator, animationName, stateData, behaviour)
     {
       _heroAttack = heroAttack;
       _heroStamina = heroStamina;
+      _rotate = rotate;
       this.animator.Attacked += Attack;
       _attackData = attackData;
       attackCooldown = attackData.AttackCooldown;
       UpdateAttackTime();
     }
-    
-    public bool IsCanAttack() => 
-      Time.time >= _lastAttackTime + attackCooldown && _heroStamina.IsCanAttack(_attackData.Cost);
-    
+
     public void Cleanup()
     {
       animator.Attacked -= Attack;
     }
-    
+
     public override void Enter()
     {
       base.Enter();
+      _rotate.ForceRotateTo(_lastClickPosition);
       isAttackEnded = false;
     }
 
@@ -70,6 +74,14 @@ namespace StateMachines.Player.Attack
         else
           ChangeState(hero.State<HeroWalkState>());
       }
+    }
+
+    public bool IsCanAttack() => 
+      Time.time >= _lastAttackTime + attackCooldown && _heroStamina.IsCanAttack(_attackData.Cost);
+
+    public void SetClickPosition(Vector3 clickPosition)
+    {
+      _lastClickPosition = clickPosition;
     }
 
     private void Attack()
