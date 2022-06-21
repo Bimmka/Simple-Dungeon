@@ -57,13 +57,15 @@ namespace Hero
       switch (stateFinishType)
       {
         case StateFinishType.Canceling:
+          ResetCombo();
           break;
         case StateFinishType.Interrupted:
         case StateFinishType.Finish:
           ApplyAttack();
+          _lifeTimeCoroutine = _coroutineRunner.StartCoroutine(CountdownComboStepLifeTime(_previousComboStep.LifeTime));
           break;
       }
-      _lifeTimeCoroutine = _coroutineRunner.StartCoroutine(CountdownComboStepLifeTime(_previousComboStep.LifeTime));
+      
     }
 
     private IEnumerator CountdownComboStepLifeTime(float lifeTime)

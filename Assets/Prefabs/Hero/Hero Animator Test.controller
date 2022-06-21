@@ -441,7 +441,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c264c1070ed1463d9a3c2082848a4599, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  notInterruptedTime: 0.7
+  notInterruptedRange: {x: 0.1, y: 0.8}
 --- !u!1102 &-1732705741776245503
 AnimatorState:
   serializedVersion: 6
@@ -911,7 +911,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b207046cdf84080aec663bab757718c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  notInterruptedTime: 0.7
+  notInterruptedRange: {x: 0.1, y: 0.8}
 --- !u!1102 &3826898986467158271
 AnimatorState:
   serializedVersion: 6
@@ -1052,7 +1052,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7aea386cf2054c219abe6d90f0c84073, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  notInterruptedTime: 0.9
+  notInterruptedRange: {x: 0.1, y: 0.8}
 --- !u!206 &7733938974331122364
 BlendTree:
   m_ObjectHideFlags: 1
