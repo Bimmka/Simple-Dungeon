@@ -1,4 +1,6 @@
-﻿namespace StateMachines.Player.Base
+﻿using StateMachines.Player.Attack;
+
+namespace StateMachines.Player.Base
 {
   public interface IHeroBaseUpMachineState
   {
@@ -14,5 +16,6 @@
     float ClipLength(PlayerActionsType actionsType);
     void InterruptState();
     bool IsSameState(IHeroBaseSubStateMachineState state);
+    void SetAnimationFinishType(StateFinishType type);
   }
 }

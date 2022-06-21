@@ -8,6 +8,7 @@ namespace StaticData.Hero.Attacks.Combo
   {
     public AttackType PreviousAttack;
     public AttackType NextAttack;
+    public ComboStepType StepType;
     public float Delay;
     public float LifeTime;
   }

@@ -30,7 +30,6 @@ namespace StateMachines.Player.Rotating
     public override void Enter()
     {
       base.Enter();
-      Debug.Log("Enter to Rotating State");
       if (_rotate.IsTurning == false)
       {
         _rotate.SetIsTurning();
@@ -41,7 +40,6 @@ namespace StateMachines.Player.Rotating
     public override void Exit()
     {
       base.Exit();
-      Debug.Log("Exit from Rotating stateS");
       if (_rotate.IsTurning)
         _rotate.StopRotate();
     }
@@ -61,15 +59,9 @@ namespace StateMachines.Player.Rotating
     private void OnTurnEnd()
     {
       if (hero.IsNotMove())
-      {
-        Debug.Log("Enter Ro Idle State");
         ChangeState(hero.State<HeroIdleState>());
-      }
       else
-      {
-        Debug.Log("Enter Ro Walk State");
         ChangeState(hero.State<HeroWalkState>());
-      }
     }
   }
 }

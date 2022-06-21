@@ -1,6 +1,7 @@
 ﻿using Animations;
 using Hero;
 using StateMachines.Player.AnimationStatesBehaviour;
+using StateMachines.Player.Attack;
 using StaticData.Hero.States.Base;
 using UnityEngine;
 
@@ -13,6 +14,8 @@ namespace StateMachines.Player.Base
     protected readonly TUpState upState;
     protected readonly TStateBehaviour behaviour;
     protected readonly BattleAnimator animator;
+
+    protected StateFinishType behaviourFinishType;
 
     private readonly int _animationNameHash;
     
@@ -49,6 +52,8 @@ namespace StateMachines.Player.Base
       animator.SetBool(_animationNameHash, false);
 
     public virtual void AnimationTriggered() {}
+    public void SetAnimationFinishType(StateFinishType type) => 
+      behaviourFinishType = type;
 
     protected virtual void ChangeState(IHeroBaseSubStateMachineState to) => 
       upState.ChangeState(to);

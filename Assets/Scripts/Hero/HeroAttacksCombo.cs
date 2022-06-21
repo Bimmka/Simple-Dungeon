@@ -39,17 +39,30 @@ namespace Hero
       return AttackType.None;
     }
 
-    public void ApplyAttack()
+    public void StartAttack()
     {
-      _previousComboStep = _nextComboStep;
-      _previousAttackStepIndex++;
       if (_lifeTimeCoroutine != null)
         _coroutineRunner.StopCoroutine(_lifeTimeCoroutine);
     }
 
-    public void AttackFinished()
+    public void ApplyAttack()
+    {
+      _previousComboStep = _nextComboStep;
+      _previousAttackStepIndex++;
+    }
+
+    public void AttackFinished(StateFinishType stateFinishType)
     {
       _previousAttackFinishTime = Time.time;
+      switch (stateFinishType)
+      {
+        case StateFinishType.Canceling:
+          break;
+        case StateFinishType.Interrupted:
+        case StateFinishType.Finish:
+          ApplyAttack();
+          break;
+      }
       _lifeTimeCoroutine = _coroutineRunner.StartCoroutine(CountdownComboStepLifeTime(_previousComboStep.LifeTime));
     }
 

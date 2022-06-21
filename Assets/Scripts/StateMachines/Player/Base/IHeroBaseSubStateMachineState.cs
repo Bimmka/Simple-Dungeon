@@ -1,4 +1,6 @@
-﻿namespace StateMachines.Player.Base
+﻿using StateMachines.Player.Attack;
+
+namespace StateMachines.Player.Base
 {
   public interface IHeroBaseSubStateMachineState
   {
@@ -10,5 +12,6 @@
     void Interrupt();
     void Exit();
     void AnimationTriggered();
+    void SetAnimationFinishType(StateFinishType type);
   }
 }

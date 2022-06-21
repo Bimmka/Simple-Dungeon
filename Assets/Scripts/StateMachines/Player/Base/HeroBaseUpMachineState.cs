@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Hero;
 using Services;
+using StateMachines.Player.Attack;
 using UnityEngine;
 
 namespace StateMachines.Player.Base
@@ -71,6 +72,12 @@ namespace StateMachines.Player.Base
 
     public bool IsSameState(IHeroBaseSubStateMachineState state) => 
       currentState as IHeroBaseSubStateMachineState == state;
+
+    public void SetAnimationFinishType(StateFinishType type)
+    {
+      if (currentState != null)
+        currentState.SetAnimationFinishType(type);
+    }
 
     protected virtual void SetNewSubstate(IHeroBaseSubStateMachineState to)
     {

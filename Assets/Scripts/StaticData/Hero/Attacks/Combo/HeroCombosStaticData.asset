@@ -16,18 +16,22 @@ MonoBehaviour:
   - Steps:
     - PreviousAttack: 0
       NextAttack: 1
+      StepType: 0
       Delay: 0
       LifeTime: 2
     - PreviousAttack: 1
       NextAttack: 2
+      StepType: 1
       Delay: 0
       LifeTime: 2
     - PreviousAttack: 2
       NextAttack: 3
+      StepType: 2
       Delay: 0
       LifeTime: 0
   EmptyStep:
     PreviousAttack: 0
     NextAttack: 0
+    StepType: 0
     Delay: 0
     LifeTime: 0

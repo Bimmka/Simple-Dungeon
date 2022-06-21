@@ -12,8 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e3dcc4fd330406a8f509fd2991bc36a, type: 3}
   m_Name: HeroStaminaStaticData
   m_EditorClassIdentifier: 
-  AttackCost: 5
   RollCost: 5
   RunCostPerSecond: 15
   RecoveryRate: 1
-  RecoveryCount: 10
+  RecoveryCount: 100

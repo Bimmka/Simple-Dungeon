@@ -4,7 +4,7 @@ namespace StateMachines.Player.AnimationStatesBehaviour
 {
   public abstract class BaseAttackBehaviour : BaseStateBehaviour
   {
-    [SerializeField] private float notInterruptedTime = 0.7f;
+    [SerializeField] private Vector2 notInterruptedRange;
 
     public bool IsCanBeInterrupted { get; private set; }
     
@@ -24,6 +24,6 @@ namespace StateMachines.Player.AnimationStatesBehaviour
     private void SetInCanBeInterrupted(bool isInterrupted) => 
       IsCanBeInterrupted = isInterrupted;
     private bool CheckInterrupted(float time) => 
-      time >= notInterruptedTime;
+      notInterruptedRange.x > time || notInterruptedRange.y < time;
   }
 }

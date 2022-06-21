@@ -47,6 +47,7 @@ namespace StateMachines.Player.Attack
       base.Enter();
       _rotate.ForceRotateTo(_lastClickPosition);
       isAttackEnded = false;
+      hero.StartAttack();
     }
 
     public override bool IsCanBeInterrupted(int weight) =>
@@ -55,13 +56,13 @@ namespace StateMachines.Player.Attack
     public override void Exit()
     {
       base.Exit();
-      hero.FinishAttack();
+      hero.FinishAttack(behaviourFinishType);
     }
 
     public override void Interrupt()
     {
       base.Interrupt();
-      hero.FinishAttack();
+      hero.FinishAttack(behaviourFinishType);
     }
 
     public override void AnimationTriggered()

@@ -116,10 +116,10 @@ namespace Hero
 
             if (_stateMachine.State.IsCanBeInterrupted(state.Weight) && state.IsCanAttack())
             {
-                Debug.Log("<color=red>Set Attack State</color>");
+                Debug.Log($"Interrupted State {_stateMachine.State.GetType()}");
+                Debug.Log($"Set Attack Type {attackType.ToString()}");
                 state.SetClickPosition(clickPosition);
                 _stateMachine.InterruptState(GetUpStateForSubstate(state), state); ;
-                _comboObserver.ApplyAttack();
             }
         }
 
@@ -181,13 +181,25 @@ namespace Hero
         public IHeroBaseUpMachineState GetUpStateForSubstate(IHeroBaseSubStateMachineState state )=> 
             _statesContainer.GetUpStateForSubstate(state);
 
-        public void FinishAttack() => 
-            _comboObserver.AttackFinished();
+        public void FinishAttack(StateFinishType finishType) => 
+            _comboObserver.AttackFinished(finishType);
+
+        public void StartAttack() => 
+            _comboObserver.StartAttack();
 
         private void OnStartRoll() => 
             _effectsObserver.SetIsStartRoll();
 
         private void OnEndRoll() => 
             _effectsObserver.SetIsEndRoll();
+
+        private void SetAnimationCancelingState() => 
+            _stateMachine.SetStateFinishType(StateFinishType.Canceling);
+
+        private void SetAnimationInterruptingState() => 
+            _stateMachine.SetStateFinishType(StateFinishType.Interrupted);
+
+        private void SetAnimationFinishState() => 
+            _stateMachine.SetStateFinishType(StateFinishType.Finish);
     }
 }
