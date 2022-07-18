@@ -39,7 +39,7 @@ namespace InputActions
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Block"",
+                    ""name"": ""SpecialAction"",
                     ""type"": ""Button"",
                     ""id"": ""f1ec722e-d230-4686-9763-7be7c2fcb19d"",
                     ""expectedControlType"": ""Button"",
@@ -103,7 +103,7 @@ namespace InputActions
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Block"",
+                    ""action"": ""SpecialAction"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -198,12 +198,29 @@ namespace InputActions
             ]
         }
     ],
-    ""controlSchemes"": []
+    ""controlSchemes"": [
+        {
+            ""name"": ""Keyboard & Mouse"",
+            ""bindingGroup"": ""Keyboard & Mouse"",
+            ""devices"": [
+                {
+                    ""devicePath"": ""<Keyboard>"",
+                    ""isOptional"": false,
+                    ""isOR"": false
+                },
+                {
+                    ""devicePath"": ""<Mouse>"",
+                    ""isOptional"": false,
+                    ""isOR"": false
+                }
+            ]
+        }
+    ]
 }");
             // Player
             m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
             m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
-            m_Player_Block = m_Player.FindAction("Block", throwIfNotFound: true);
+            m_Player_SpecialAction = m_Player.FindAction("SpecialAction", throwIfNotFound: true);
             m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
             m_Player_Roll = m_Player.FindAction("Roll", throwIfNotFound: true);
             m_Player_Mouse = m_Player.FindAction("Mouse", throwIfNotFound: true);
@@ -268,7 +285,7 @@ namespace InputActions
         private readonly InputActionMap m_Player;
         private IPlayerActions m_PlayerActionsCallbackInterface;
         private readonly InputAction m_Player_Attack;
-        private readonly InputAction m_Player_Block;
+        private readonly InputAction m_Player_SpecialAction;
         private readonly InputAction m_Player_Move;
         private readonly InputAction m_Player_Roll;
         private readonly InputAction m_Player_Mouse;
@@ -278,7 +295,7 @@ namespace InputActions
             private @HeroControls m_Wrapper;
             public PlayerActions(@HeroControls wrapper) { m_Wrapper = wrapper; }
             public InputAction @Attack => m_Wrapper.m_Player_Attack;
-            public InputAction @Block => m_Wrapper.m_Player_Block;
+            public InputAction @SpecialAction => m_Wrapper.m_Player_SpecialAction;
             public InputAction @Move => m_Wrapper.m_Player_Move;
             public InputAction @Roll => m_Wrapper.m_Player_Roll;
             public InputAction @Mouse => m_Wrapper.m_Player_Mouse;
@@ -295,9 +312,9 @@ namespace InputActions
                     @Attack.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAttack;
                     @Attack.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAttack;
                     @Attack.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAttack;
-                    @Block.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnBlock;
-                    @Block.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnBlock;
-                    @Block.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnBlock;
+                    @SpecialAction.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSpecialAction;
+                    @SpecialAction.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSpecialAction;
+                    @SpecialAction.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSpecialAction;
                     @Move.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMove;
                     @Move.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMove;
                     @Move.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMove;
@@ -317,9 +334,9 @@ namespace InputActions
                     @Attack.started += instance.OnAttack;
                     @Attack.performed += instance.OnAttack;
                     @Attack.canceled += instance.OnAttack;
-                    @Block.started += instance.OnBlock;
-                    @Block.performed += instance.OnBlock;
-                    @Block.canceled += instance.OnBlock;
+                    @SpecialAction.started += instance.OnSpecialAction;
+                    @SpecialAction.performed += instance.OnSpecialAction;
+                    @SpecialAction.canceled += instance.OnSpecialAction;
                     @Move.started += instance.OnMove;
                     @Move.performed += instance.OnMove;
                     @Move.canceled += instance.OnMove;
@@ -336,10 +353,19 @@ namespace InputActions
             }
         }
         public PlayerActions @Player => new PlayerActions(this);
+        private int m_KeyboardMouseSchemeIndex = -1;
+        public InputControlScheme KeyboardMouseScheme
+        {
+            get
+            {
+                if (m_KeyboardMouseSchemeIndex == -1) m_KeyboardMouseSchemeIndex = asset.FindControlSchemeIndex("Keyboard & Mouse");
+                return asset.controlSchemes[m_KeyboardMouseSchemeIndex];
+            }
+        }
         public interface IPlayerActions
         {
             void OnAttack(InputAction.CallbackContext context);
-            void OnBlock(InputAction.CallbackContext context);
+            void OnSpecialAction(InputAction.CallbackContext context);
             void OnMove(InputAction.CallbackContext context);
             void OnRoll(InputAction.CallbackContext context);
             void OnMouse(InputAction.CallbackContext context);

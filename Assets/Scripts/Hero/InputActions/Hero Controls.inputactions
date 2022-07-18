@@ -15,7 +15,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Block",
+                    "name": "SpecialAction",
                     "type": "Button",
                     "id": "f1ec722e-d230-4686-9763-7be7c2fcb19d",
                     "expectedControlType": "Button",
@@ -79,7 +79,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Block",
+                    "action": "SpecialAction",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -174,5 +174,22 @@
             ]
         }
     ],
-    "controlSchemes": []
+    "controlSchemes": [
+        {
+            "name": "Keyboard & Mouse",
+            "bindingGroup": "Keyboard & Mouse",
+            "devices": [
+                {
+                    "devicePath": "<Keyboard>",
+                    "isOptional": false,
+                    "isOR": false
+                },
+                {
+                    "devicePath": "<Mouse>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        }
+    ]
 }

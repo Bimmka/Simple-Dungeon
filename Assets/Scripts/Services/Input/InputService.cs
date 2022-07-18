@@ -1,4 +1,5 @@
-﻿using InputActions;
+﻿using System;
+using InputActions;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,6 +9,19 @@ namespace Services.Input
   {
     private readonly HeroControls input;
     private Mouse currentMouse;
+
+    public Vector2 Axis => 
+      SimpleInputAxis();
+
+    public Vector2 ClickPosition => 
+      MousePosition();
+
+    public Guid AttackActionGuid => input.Player.Attack.id;
+    public Guid MoveActionGuid => input.Player.Move.id;
+    public Guid RollActionGuid => input.Player.Roll.id;
+    public Guid SpecialActionGuid => input.Player.SpecialAction.id;
+    public Guid RunActionGuid => input.Player.Run.id;
+
 
     public InputService(HeroControls inputMap)
     {
@@ -23,12 +37,6 @@ namespace Services.Input
     public void Disable() => 
       input.Disable();
 
-    public Vector2 Axis => 
-      SimpleInputAxis();
-
-    public Vector2 ClickPosition => 
-      MousePosition();
-
     public bool IsAttackButtonDown() => 
       input.Player.Attack.triggered;
 
@@ -36,7 +44,7 @@ namespace Services.Input
       input.Player.Roll.triggered;
 
     public bool IsBlockButtonPressed() => 
-      input.Player.Block.IsPressed();
+      input.Player.SpecialAction.IsPressed();
 
     public bool IsRunButtonPressed() => 
       input.Player.Run.IsPressed();

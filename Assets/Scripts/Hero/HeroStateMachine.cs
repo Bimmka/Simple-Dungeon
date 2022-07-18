@@ -37,10 +37,10 @@ namespace Hero
         private HeroAttacksCombo _comboObserver;
         private HeroEffectsObserver _effectsObserver;
 
-        public bool IsBlockingPressed => _effectsObserver.IsBlocking;
-        public bool IsRunningPressed => _effectsObserver.IsRunning;
+        public bool IsBlockingPressed => false;
+        public bool IsRunningPressed => false;
         public bool IsBlockingUp => false;//_stateMachine.State == State<HeroIdleShieldState>();
-        public bool IsRolling => _effectsObserver.IsRolling;
+        public bool IsRolling => false;
 
         public Vector2 MoveAxis { get; private set; }
 

@@ -6,9 +6,12 @@ namespace Hero
   public class HeroInput : MonoBehaviour
   {
     [SerializeField] private HeroStateMachine stateMachine;
+    [SerializeField] private int _collectionInputFrameCount = 3;
 
     private IInputService _inputService;
     private bool _isDisabled;
+
+    private int _frameCount;
 
     private Camera _mainCamera;
     private readonly RaycastHit[] hits = new RaycastHit[1];
@@ -16,7 +19,7 @@ namespace Hero
     public void Construct(IInputService inputService)
     {
       _inputService = inputService;
-      inputService.Enable();
+      _inputService.Enable();
       _mainCamera = Camera.main;
     }
 
@@ -29,6 +32,7 @@ namespace Hero
     {
       if (_isDisabled)
         return;
+      
       if (_inputService.IsAttackButtonDown()) 
         stateMachine.SetAttackState(ClickPoint());
 
@@ -45,13 +49,17 @@ namespace Hero
     {
       _isDisabled = true;
       stateMachine.SetMoveAxis(Vector2.zero);
+      ResetFrameCount();
     }
-    
+
     private Vector3 ClickPoint()
     {
       Ray ray = _mainCamera.ScreenPointToRay(_inputService.ClickPosition);
       Physics.RaycastNonAlloc(ray, hits);
       return hits[0].point;
     }
+
+    private void ResetFrameCount() => 
+      _frameCount = 0;
   }
 }

@@ -1,14 +1,20 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Services.Input
 {
   public interface IInputService : IService
   {
-    void Enable();
-    void Disable();
     Vector2 Axis { get; }
     Vector2 ClickPosition { get; }
+    Guid AttackActionGuid { get; }
+    Guid MoveActionGuid { get; }
+    Guid RollActionGuid { get; }
+    Guid SpecialActionGuid { get; }
+    Guid RunActionGuid { get; }
 
+    void Enable();
+    void Disable();
     bool IsAttackButtonDown();
     bool IsRollButtonDown();
     bool IsBlockButtonPressed();
